@@ -11,5 +11,6 @@ export enum Status {
   AF = 10,
   A = 11,
   HA = 12,
-  SN = 13
+  SN = 13,
+  GRAY = 14,
 }

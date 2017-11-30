@@ -1,8 +1,10 @@
-import {User} from './user';
-import {Status} from 'tslint/lib/runner';
+import {Employee} from './employee';
+import {Status} from './status.enum';
+
 
 export class Absence {
-  user: User;
-  date: Date;
-  status: Status;
+  Id: Number;
+  Employee: Employee;
+  Date: Date;
+  Status: Status;
 }

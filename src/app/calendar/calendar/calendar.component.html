@@ -1,0 +1,162 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h2 style="text-align: center">Fraværsregistrering</h2>
+    </div>
+  </div>
+  <div class="row">
+      <div class="col-sm-3">
+        <h1>Brugerinfo:</h1>
+        <div *ngIf="employee != null">
+          <hr>
+          <div class="col-sm-3">
+            <b>Fornavn:</b> {{employee.FirstName}}
+          </div>
+          <div class="col-sm-3">
+            <b>Efternavn:</b> {{employee.LastName}}
+          </div>
+          <div class="col-sm-3">
+            <b>Brugernavn:</b> {{employee.UserName}}
+          </div>
+          <div class="col-sm-3">
+            <b>Email:</b> {{employee.Email}}
+          </div>
+          <div class="col-sm-3">
+            <b>Afdeling:</b> {{employee.Department.Name}}
+          </div>
+          <div class="col-sm-3">
+            <b>Rolle:</b> {{getRole(employee.EmployeeRole)}}
+          </div>
+          <hr>
+          <div *ngIf="isAdmin()">
+            <div class="btn btn-success">
+              Rediger
+            </div>
+          </div>
+          <div *ngIf="isAdmin()" class="btn btn-danger">
+            Slet
+          </div>
+          <div  class="btn btn-info" (click)="back()">
+            Tilbage
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-7" style="text-align: center">
+        <div class="btn btn-info" type="button" (click)="previousMonth($event)">
+          Forrige
+        </div>
+        <b>{{getCurrentMonth()}} {{currentMonth.getFullYear()}}</b>
+        <div class="btn btn-info" type="button" (click)="nextMonth($event)">
+          Næste
+        </div>
+        <div class="row">
+          <div class="WeekEndDay col-sm-1">
+            <p>Søn</p>
+          </div>
+          <div class="WeekDay col-sm-2">
+            <p>Man</p>
+          </div>
+          <div class="WeekDay col-sm-2">
+            <p>Tir</p>
+          </div>
+          <div class="WeekDay col-sm-2">
+            <p>Ons</p>
+          </div>
+          <div class="WeekDay col-sm-2">
+            <p>Tor</p>
+          </div>
+          <div class="WeekDay col-sm-2">
+            <p>Fre</p>
+          </div>
+          <div class="WeekEndDay col-sm-1">
+            <p>Lør</p>
+          </div>
+        </div>
+        <div>
+          <div class="row" *ngFor="let week of weeksInCurrentMonth; let i = index">
+            <div *ngIf="getWeekList(i, 0) === -1" class="weekendSquare col-sm-1">
+              {{convertToDate(i, 0)}}
+            </div>
+            <div *ngIf="getWeekList(i, 0) != -1" class="weekendSquare col-sm-1">
+              {{convertToDate(i, 0)}}
+            </div>
+            <div *ngIf="getWeekList(i, 1) === -1" class="weekendSquare col-sm-2">
+              {{convertToDate(i, 1)}}
+            </div>
+            <div *ngIf="getWeekList(i, 1) != -1" class="weekdaySquare col-sm-2">
+              {{convertToDate(i, 1)}}
+              <div>
+                <div style="width: 50%; margin: 0 auto; text-align: left"
+                     (click)="setGetAbsence(i, 1)" class="btn btn-outline-info">{{setGetAbsence(i, 1)}}
+                </div>
+              </div>
+            </div>
+            <div *ngIf="getWeekList(i, 2) === -1" class="weekendSquare col-sm-2">
+              {{convertToDate(i, 2)}}
+            </div>
+            <div *ngIf="getWeekList(i, 2) != -1" class="weekdaySquare col-sm-2">
+              {{convertToDate(i, 2)}}
+              <div>
+                <div style="width: 50%; margin: 0 auto; text-align: left"
+                     (click)="bTest()" class="btn btn-outline-info">{{test.Status}}
+                </div>
+              </div>
+            </div>
+            <div *ngIf="getWeekList(i, 3) === -1" class="weekendSquare col-sm-2">
+              {{convertToDate(i, 3)}}
+            </div>
+            <div *ngIf="getWeekList(i, 3) != -1" class="weekdaySquare col-sm-2" style="text-align: center">
+              {{convertToDate(i, 3)}}
+              <div>
+                <div style="width: 50%; margin: 0 auto; text-align: left"
+                     (click)="setGetAbsence(i,3)" class="btn btn-outline-info">{{setGetAbsence(i, 3)}}
+                </div>
+              </div>
+            </div>
+            <div *ngIf="getWeekList(i, 4) === -1" class="weekendSquare col-sm-2">
+              {{convertToDate(i, 4)}}
+            </div>
+            <div *ngIf="getWeekList(i, 4) != -1" class="weekdaySquare col-sm-2">
+              {{convertToDate(i, 4)}}
+              <div>
+                <div style="width: 50%; margin: 0 auto; text-align: left"
+                     (click)="setGetAbsence(i,4)" class="btn btn-outline-info">{{getAbsenceValue(i, 4)}}
+                </div>
+              </div>
+            </div>
+            <div *ngIf="getWeekList(i, 5) === -1" class="weekendSquare col-sm-2">
+              {{convertToDate(i, 5)}}
+            </div>
+            <div *ngIf="getWeekList(i, 5) != -1" class="weekdaySquare col-sm-2">
+              {{convertToDate(i, 5)}}
+              <div>
+                <div style="width: 50%; margin: 0 auto; text-align: left"
+                     (click)="setGetAbsence(i,5)" class="btn btn-outline-info">{{setGetAbsence(i, 5)}}
+                </div>
+              </div>
+            </div>
+            <div *ngIf="getWeekList(i, 6) === -1" class="weekendSquare col-sm-1">
+              {{convertToDate(i, 6)}}
+            </div>
+            <div *ngIf="getWeekList(i, 6) != -1" class="weekendSquare col-sm-1">
+              {{convertToDate(i, 6)}}
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="absenceTypes col-sm-2">
+      <h1>Fraværskoder:</h1>
+      <hr>
+      <div *ngFor="let status of statusses; let i = index">
+        <input type="radio" name="absenceType" checked="checked" onload="setStatusCode(i)" (click)="setStatusCode(i)">{{status.toString()}}
+      </div>
+      <hr>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+

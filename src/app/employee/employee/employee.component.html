@@ -1,0 +1,31 @@
+ <div class="card" style="width: 20rem; margin: 5px;">
+
+      <div class="card-body">
+        <h4 class="card-title">{{employee.FirstName}} {{employee.LastName}}</h4>
+        <p class="card-text"><b>Beskrivelse:</b></p>
+        <ul class="list-group list-group-">
+          <li class="list-group-item"><b>Email:</b> {{employee.Email}}</li>
+          <li class="list-group-item"><b>Brugernavn:</b> {{employee.UserName}}</li>
+          <li class="list-group-item"><b>Rolle:</b> {{getRole(employee.EmployeeRole)}}</li>
+          <li class="list-group-item"><b>Afdeling:</b> {{employee.Department.Name}}</li>
+        </ul>
+        <div *ngIf="!employeeToDelete || employeeToDelete.Id != employee.Id" class="pull-right">
+          <button class="btn btn-outline-danger" (click)="delete(employee, $event)">
+            <i class="fa fa-trash-o" aria-hidden="true"></i>
+          </button>
+          <button class="btn btn-outline-warning">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div *ngIf="employeeToDelete && employeeToDelete.Id == employee.Id" class="pull-right">
+          <button class="btn btn-outline-danger" (click)="deleteAccepted(employee.Id)">
+            <i class="fa fa-trash-o" aria-hidden="true"></i> Bekræft sletning?
+          </button>
+          <button class="btn btn-outline-info" (click)="cancelDeletion($event)">
+            <i class="fa fa-pencil" aria-hidden="true"></i> Afbryd
+          </button>
+        </div>
+      </div>
+ </div>
+
+

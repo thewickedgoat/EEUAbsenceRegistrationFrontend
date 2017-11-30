@@ -1,0 +1,17 @@
+<div class="container">
+  <hr>
+    <h1 style="align-content: center">Medarbejdere</h1>
+  <hr>
+  <div>
+    <button type="button" class="btn btn-success" (click)="createEmployee()">Opret ny medarbejder</button>
+  </div>
+  <div class="row">
+    <div *ngFor="let employee of employees">
+      <app-employee
+        [employee]="employee"
+        (emitter)="deleteEmployeeFromList($event)"
+      ></app-employee>
+    </div>
+  </div>
+</div>
+

@@ -1,5 +1,6 @@
-import {User} from './user';
+import {Employee} from './employee';
 export class Department {
-  name: string;
-  employees: User[];
+  Id: Number;
+  Name: string;
+  Employees: Employee[];
 }
