@@ -27,6 +27,10 @@ export class EmployeeService {
     return this.http.post<Employee>(url, employee, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.jwt())});
   }
 
+  put(employee: Employee): Observable<Employee> {
+    return this.http.put<Employee>(url + '/' + employee.Id, employee);
+  }
+
   getById(id: number): Observable<Employee>{
     return this.http.get<Employee>(url + '/' + id);
   }
@@ -45,6 +49,8 @@ export class EmployeeService {
 
   logoutEmployee(){
     sessionStorage.setItem('token', null);
+    sessionStorage.setItem('currentEmployee', null);
+
   }
 
   loginEmployee(employee: Employee): Observable<string>{

@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <hr>
+      <button type="button" class="btn btn-success" (click)="back()">Tilbage</button>
+      <hr>
+      <h4>Opret Afdeling:</h4>
+    </div>
+    <div class="col-md-12">
+      <form [formGroup]="departmentGroup" (ngSubmit)="createDepartment()" novalidate>
+        <div class="form-group">
+          <label class="center-block col-md-12">Navn:
+            <input class="form-control"
+                   placeholder="Afdelingens navn:"
+                   [ngClass]="{'is-invalid': nameIsInvalid('name'), 'is-valid': nameIsValid('name')}"
+                   formControlName="name">
+            <div *ngIf="nameIsInvalid('name')" class="invalid-feedback">
+              <div *ngIf="departmentGroup.controls['name'].errors.required">
+                Du skal angive et navn:
+              </div>
+            </div>
+          </label>
+
+          <button [disabled]="departmentGroup.invalid" type="submit" class="btn btn-info">
+            <i class="fa fa-floppy-o" aria-hidden="true">Opret</i>
+          </button>
+        </div>
+      </form>
+
+      <ngb-alert *ngIf="departmentCreated" (close)="close()" type="success">Afdeling blev oprettet</ngb-alert>
+    </div>
+  </div>
+</div>

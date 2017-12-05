@@ -23,5 +23,7 @@ export class AbsenceService {
     return this.http.delete<any>(url + '/' + id);
   }
 
-
+  put(absence: Absence): Observable<Absence> {
+    return this.http.put<Absence>(url + '/' + absence.Id, absence);
+  }
 }

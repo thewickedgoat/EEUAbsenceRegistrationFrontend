@@ -15,13 +15,17 @@ import {AbsenceService} from './services/absence.service';
 import {RegistrationService} from './services/registration.service';
 import {AuthguardGuard} from './Authorization/authguard.guard';
 import { LoginComponent } from './Login/login/login.component';
+import { EmployeeEditComponent } from './employee/employee-edit/employee-edit.component';
+import { DepartmentCreateComponent } from './department/department-create/department-create.component';
 
 
 const routes: Routes = [
   {path: 'employee/:id', component: EmployeeComponent},
   {path: 'employees', canActivate: [AuthguardGuard], component: EmployeeListComponent},
-  {path: 'employees/create', component: EmployeeCreateComponent},
-  {path: 'calendar', component: CalendarComponent},
+  {path: 'employees/create', canActivate: [AuthguardGuard], component: EmployeeCreateComponent},
+  {path: 'employees/edit/:id', canActivate: [AuthguardGuard], component: EmployeeEditComponent},
+  {path: 'departments/create', canActivate: [AuthguardGuard], component: DepartmentCreateComponent},
+  {path: 'calendar/:id', component: CalendarComponent},
   {path: 'login', component: LoginComponent},
   {path: ' ', redirectTo: 'employees'}
 ];
@@ -34,7 +38,9 @@ const routes: Routes = [
     EmployeeListComponent,
     EmployeeCreateComponent,
     CalendarComponent,
-    LoginComponent
+    LoginComponent,
+    EmployeeEditComponent,
+    DepartmentCreateComponent
   ],
   imports: [
     BrowserModule,

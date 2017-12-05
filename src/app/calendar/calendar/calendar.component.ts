@@ -1,12 +1,13 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {Employee} from '../../entities/employee';
-import {FormBuilder, FormGroup} from '@angular/forms';
 import {EmployeeService} from '../../services/employee.service';
 import {EmployeeRole} from '../../entities/employeeRole.enum';
 import {Absence} from '../../entities/absence';
 import {AbsenceService} from '../../services/absence.service';
 import DateTimeFormat = Intl.DateTimeFormat;
 import {Status} from '../../entities/status.enum';
+import {ActivatedRoute, Router} from '@angular/router';
+import 'rxjs/add/operator/switchMap';
 
 @Component({
   selector: 'app-calendar',
@@ -17,10 +18,9 @@ import {Status} from '../../entities/status.enum';
 export class CalendarComponent implements OnInit {
 
   employee: Employee;
-  absenceDatesInEmployee: Date[];
+
   absencesInEmployee: Absence[];
   statusCode: Status;
-  test: Absence;
 
   statusses: string[];
   employees: Employee[];
@@ -41,14 +41,12 @@ export class CalendarComponent implements OnInit {
   fourthWeekDates: number[];
   fifthWeekDates: number[];
   sixthWeekDates: number[];
+  statusList: Status[];
 
-  constructor(private formBuilder: FormBuilder, private employeeService: EmployeeService, private absenceService: AbsenceService) {
+  constructor(private router: Router,private employeeService: EmployeeService, private absenceService: AbsenceService, private route: ActivatedRoute) {
+    this.getDates();
     this.initData();
-    this.getAllDatesInMonth();
-    this.employeeService.getById(9).subscribe(employee => {this.employee = employee,
-      this.absencesInEmployee = this.employee.Absences, this.convertDatetimesToDate(),this.getAbsencesFor();});
-
-
+    this.refreshCalendar();
   }
 
   ngOnInit() {
@@ -57,7 +55,14 @@ export class CalendarComponent implements OnInit {
   initData(){
     this.initArrays();
     this.populateCalendar();
-    this.aTest();
+    this.bTest();
+  }
+
+  refreshCalendar()
+  {
+    this.route.paramMap.switchMap(params => this.employeeService.getById(+params.get('id')))
+      .subscribe(employee => {this.employee = employee;
+        this.convertDatetimesToDate(); this.getAllDatesInMonth()});
   }
 
   getRole(id: number)
@@ -65,67 +70,72 @@ export class CalendarComponent implements OnInit {
     return EmployeeRole[id];
   }
 
+  back(){
+    this.router.navigateByUrl('employees')
+  }
+
   populateCalendar(){ //test Method
-    this.getDates();
     this.daysInMonth();
     const firstDayOfMonth = this.daysInCurrentMonth[0].getDay();
     this.getWeeksInMonth(firstDayOfMonth);
   }
 
-
-  getAbsencesFor(){
-    const dateToAdd = this.absenceDatesInEmployee.find(abs => abs.getDate() === 30 &&
-    abs.getMonth() === this.currentMonth.getMonth() && abs.getFullYear() === this.currentMonth.getFullYear());
-    const indexOfDate = this.absenceDatesInEmployee.findIndex(x => x.getDate() === dateToAdd.getDate() &&
-    x.getMonth() === this.currentMonth.getMonth() && x.getFullYear() === this.currentMonth.getFullYear());
-  }
-
-  setGetAbsence(week: number, index: number){
-    const absence = this.getAbsenceValue(week, index);
-    if(absence === 0){
-      return '+';
+  getStatusForDate(week: number, day: number)
+  {
+    let currentDate = this.convertToDate(week, day);
+    let absence = this.absencesInEmployee.find(x => x.Date.toDateString() === currentDate.toDateString());
+    if(absence != null)
+    {
+      return Status[this.statusList[absence.Status]];
     }
-    if(absence === '+'){
-      console.log('aaaaay');
-      return 4;
+    else {
+      return "+";
     }
   }
+
+
+  changeAbsence(week: number, day: number){
+    let currentDate = this.convertToDate(week, day);
+    if(currentDate != null)
+    {
+      let currentAbsence = this.absencesInEmployee.find(x => x.Date.toDateString() === currentDate.toDateString());
+      if(currentAbsence != null)
+      {
+        currentAbsence.Status = this.statusCode;
+        this.absenceService.put(currentAbsence).subscribe(() => this.refreshCalendar());
+      }
+      else{
+        currentAbsence = ({Date: currentDate, Employee: this.employee, Status: this.statusCode});
+        //this.absencesInEmployee.push(currentAbsence);
+        this.absenceService.post(currentAbsence).subscribe(() => this.refreshCalendar());
+      }
+    }
+  }
+
 
   bTest(){
-    this.test.Status = Status.A;
+    this.statusList = [
+      Status.S,
+      Status.HS,
+      Status.F,
+      Status.HF,
+      Status.FF,
+      Status.HFF,
+      Status.K,
+      Status.B,
+      Status.BS,
+      Status.AF,
+      Status.A,
+      Status.HA,
+      Status.SN
+    ]
   }
 
-  aTest(){
-    const status = Status.SN;
-    const date = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth(), 10);
-    const employee = this.employee;
-    const absence = new Absence();
-    absence.Date = date;
-    absence.Employee = employee;
-    absence.Status = status;
-    this.test = absence;
-  }
-
-  getAbsenceValue(week: number, index: number){
-    const absenceDate = this.convertToDate(week, index);
-    if(absenceDate === null){
-      return;
-    }
-    else
-    {
-      const dateToAdd = this.absenceDatesInEmployee.find(abs => abs.getDate() === absenceDate &&
-      abs.getMonth() === this.currentMonth.getMonth() && abs.getFullYear() === this.currentMonth.getFullYear());
-      if(dateToAdd != null){
-        const indexOfAbsence = this.absenceDatesInEmployee.findIndex(x => x === dateToAdd);
-        const dateInAbsence = this.absencesInEmployee[indexOfAbsence].Status;
-        return this.getStatusCode(dateInAbsence);
-      }
-      else return 0;
-    }
-  }
 
   getStatusCode(id: number){
       switch(id){
+        case 0:
+          return Status[0];
         case 1:
           return Status[1];
         case 2:
@@ -150,57 +160,26 @@ export class CalendarComponent implements OnInit {
           return Status[11];
         case 12:
           return Status[12];
-        case 13:
-          return Status[13];
       }
   }
 
-  setStatusCode(id: number){
-    switch(id){
-      case 0:
-        return;
-      case 1:
-        this.statusCode = Status.S;
-      case 2:
-        this.statusCode = Status.HS;
-      case 3:
-        this.statusCode = Status.F;
-      case 4:
-        this.statusCode = Status.HF;
-      case 5:
-        this.statusCode = Status.FF;
-      case 6:
-        this.statusCode = Status.HFF;
-      case 7:
-        this.statusCode = Status.K;
-      case 8:
-        this.statusCode = Status.B;
-      case 9:
-        this.statusCode = Status.BS;
-      case 10:
-        this.statusCode = Status.AF;
-      case 11:
-        this.statusCode = Status.A;
-      case 12:
-        this.statusCode = Status.HA;
-      case 13:
-        this.statusCode = Status.SN;
-    }
-  }
-
-  setAbsence($event){
-    $event.stopPropagation();
-    return "test";
-
+  setStatusCode(status: Status){
+    this.statusCode = status;
   }
 
   convertDatetimesToDate(){
-    const employeeAbsences = this.employee.Absences;
-    for(let absence of employeeAbsences){
-      const absenceToAdd = absence.Date.toString();
-      const date = new Date(Date.parse(absenceToAdd));
-      this.absenceDatesInEmployee.push(date);
+    if(this.employee.Absences != null){
+      this.absencesInEmployee = this.employee.Absences;
+      for(let absence of this.employee.Absences){
+        const absenceToAdd = absence.Date.toString();
+        const date = new Date(Date.parse(absenceToAdd));
+        absence.Date = date;
+      }
+      console.log(this.employee);
+      console.log(this.employee.Absences);
+      console.log(this.absencesInEmployee);
     }
+
   }
 
   saveAbsence(){
@@ -210,16 +189,22 @@ export class CalendarComponent implements OnInit {
   nextMonth($event){
     $event.stopPropagation();
     this.currentMonth.setMonth(this.currentMonth.getMonth()+1);
+    this.initData();
+    this.refreshCalendar();
   }
 
   previousMonth($event){
     $event.stopPropagation();
     this.currentMonth.setMonth(this.currentMonth.getMonth()-1);
+    this.initData();
+
+    this.refreshCalendar();
   }
 
   convertToDate(week: number, index: number,){
-    const date = this.getDateNumbersForCalendar(week, index);
-    if(date === -1)
+    const day = this.getDateNumbersForCalendar(week, index);
+    let date = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth(), day);
+    if(day === -1)
     {
       return null;
     }
@@ -228,18 +213,29 @@ export class CalendarComponent implements OnInit {
   getDateNumbersForCalendar(week: number, index: number,){
     switch(week){
       case 0:
-        return this.firstWeekDates[index].valueOf();
+        if(this.firstWeekDates != null){
+          console.log(this.firstWeekDates[index].valueOf());
+          return this.firstWeekDates[index].valueOf();
+        }
       case 1:
-        return this.secondWeekDates[index].valueOf();
+        if(this.secondWeekDates != null){
+          return this.secondWeekDates[index].valueOf();
+        }
       case 2:
-        return this.thirdWeekDates[index].valueOf();
+        if(this.thirdWeekDates != null){
+          return this.thirdWeekDates[index].valueOf();
+        }
       case 3:
-        return this.fourthWeekDates[index].valueOf();
+        if(this.fourthWeekDates != null){
+          return this.fourthWeekDates[index].valueOf();
+        }
       case 4:
-        return this.fifthWeekDates[index].valueOf();
+        if(this.fifthWeekDates !=null){
+          return this.fifthWeekDates[index].valueOf();
+        }
       case 5:
         if(this.sixthWeekDates.length > 0){
-          return this.sixthWeekDates[index];
+          return this.sixthWeekDates[index].valueOf();
         }
     }
   }
@@ -321,6 +317,7 @@ export class CalendarComponent implements OnInit {
     }
     if(this.sixthWeek.length > 0)
     {
+
       for(let day of this.sixthWeek)
       {
         if(day != -1)
@@ -378,7 +375,7 @@ export class CalendarComponent implements OnInit {
       const fifthWholeWeekIndex = week + fourthWholeWeekIndex +1;
       const lastWholeFiveWeekIndex = this.daysInCurrentMonth.length - fourthWholeWeekIndex;
       //if there is 6 whole weeks in the current month
-      if (this.daysInCurrentMonth.length > 30 && index > 3 || this.daysInCurrentMonth.length > 29 && index > 4)
+      if (this.daysInCurrentMonth.length > 30 && index > 4 || this.daysInCurrentMonth.length > 29 && index > 5)
       {
         const sixthWeekIndex = this.daysInCurrentMonth[fifthWholeWeekIndex].getDay();
         const lastWholeSixWeekIndex = this.daysInCurrentMonth.length - fifthWholeWeekIndex;
@@ -481,26 +478,9 @@ export class CalendarComponent implements OnInit {
 
   }
 
-  isAdmin(){
-      if (this.employee.EmployeeRole === EmployeeRole.Administrator)
-      {
-        return true;
-      }
-  }
-
-  isDepartmentChief(){
-    if (this.employee.EmployeeRole === EmployeeRole.Afdelingschef){
-      return true;
-    }
-
-  }
-
-
-
   initArrays(){
     this.statusses = new Array();
     this.absencesInEmployee = new Array<Absence>();
-    this.absenceDatesInEmployee = new Array<Date>();
     this.daysInCurrentMonth = new Array<Date>();
     this.weeksInCurrentMonth = new Array<number>();
     this.weekendDays = new Array<number>();
@@ -517,8 +497,8 @@ export class CalendarComponent implements OnInit {
     this.fourthWeekDates = new Array<number>();
     this.fifthWeekDates = new Array<number>();
     this.sixthWeekDates = new Array<number>();
+    this.statusList = new Array<Status>();
     this.statusses =[
-      'Slet',
       'S - Syg',
       'HS - ½sygedag',
       'F - Ferie',
@@ -531,7 +511,8 @@ export class CalendarComponent implements OnInit {
       'AF - Andet fravær',
       'A - Afspadsering',
       'HA - ½afspadsering',
-      'SN - Seniordag'];
+      'SN - Seniordag',
+      'Slet'];
   }
 
   getDates(){
@@ -548,11 +529,11 @@ export class CalendarComponent implements OnInit {
   }
 
   daysInMonth(){
-    var year = this.currentMonth.getFullYear();
-    var month = this.currentMonth.getMonth();
-    var numOfDays = new Date(year, month, this.getDaysInMonth(year, month)).getDate();
-    var days = new Array();
-    for(var i=0;i<=numOfDays;i++)
+    let year = this.currentMonth.getFullYear();
+    let month = this.currentMonth.getMonth();
+    let numOfDays = new Date(year, month, this.getDaysInMonth(year, month)).getDate();
+    let days = new Array();
+    for(let i=0;i<=numOfDays;i++)
     {
       days[i] = new Date(year, month,i+1).getDay();
       this.daysInCurrentMonth.push(new Date(year, month,i+1));
@@ -567,38 +548,9 @@ export class CalendarComponent implements OnInit {
   }
 
   getDaysInMonth(year: number, month: number){
-    switch(month){
-      case 0:
-        return 0;
-      case 1:
-        if(year === 2000 || 2004 || 2008 || 2012 || 2016 || 2020 || 2024 || 2028 || 2032 || 2036 || 2040 || 2044 || 2048 || 2052 || 2056 || 2060 || 2064 || 2068){
-          return -4;
-        }
-        else {
-          return -5;
-        }
-      case 2:
-        return 0;
-      case 3:
-        return -2;
-      case 4:
-        return 0;
-      case 5:
-        return -2;
-      case 6:
-        return 0;
-      case 7:
-        return 0;
-      case 8:
-        return -2;
-      case 9:
-        return 0;
-      case 10:
-        return -2;
-      case 11:
-        return 0;
-
-    }
+    let date = new Date(year, month +1, 0);
+    date.setDate(date.getDate() - 1);
+    return date.getDate();
   }
 
   getWeekday(id: number) {

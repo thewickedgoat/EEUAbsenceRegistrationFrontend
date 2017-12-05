@@ -20,7 +20,7 @@ export class EmployeeComponent implements OnInit {
   @Output()
   emitter = new EventEmitter();
 
-  constructor(private employeeService: EmployeeService, private router: Router, private activeRoute: ActivatedRoute) {
+  constructor(private router: Router) {
 
   }
 
@@ -30,6 +30,10 @@ export class EmployeeComponent implements OnInit {
     this.employeeToDelete = employee;
     $event.stopPropagation();
   }
+  edit(){
+    this.router
+      .navigateByUrl('employees/edit/' + this.employee.Id);
+  }
 
   cancelDeletion($event) {
     this.employeeToDelete = null;
@@ -38,6 +42,11 @@ export class EmployeeComponent implements OnInit {
 
   deleteAccepted(id: number) {
     this.emitter.emit(id);
+  }
+
+  goToCalendar(){
+    this.router
+      .navigateByUrl('calendar/' + this.employee.Id);
   }
 
   getRole(role: string)

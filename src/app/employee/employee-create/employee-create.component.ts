@@ -22,7 +22,7 @@ export class EmployeeCreateComponent implements OnInit {
   employeeCreated = false;
 
   constructor(private departmentService: DepartmentService, private employeeService: EmployeeService,
-              private registrationService: RegistrationService, private router: Router, private formBuilder: FormBuilder) {
+              private router: Router, private formBuilder: FormBuilder) {
     this.initData();
     this.employeeGroup = this.formBuilder.group({
       firstName: ['', Validators.required],

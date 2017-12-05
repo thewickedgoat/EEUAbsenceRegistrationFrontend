@@ -4,6 +4,8 @@
   <hr>
   <div>
     <button type="button" class="btn btn-success" (click)="createEmployee()">Opret ny medarbejder</button>
+    <button type="button" class="btn btn-success" (click)="createDepartment()">Opret ny afdeling</button>
+    <button type="button" class="btn btn-info" (click)="logout()">Log ud</button>
   </div>
   <div class="row">
     <div *ngFor="let employee of employees">

@@ -1,19 +1,20 @@
-<div class="container">
+<div class="container" *ngIf="employee != null">
   <div class="row">
     <div class="col-md-12">
       <hr>
-      <button type="button" class="btn btn-success" (click)="back()">Tilbage</button>
+      <button type="button" class="btn btn-info" (click)="back()">Tilbage</button>
       <hr>
-      <h4>Opret Medarbejder:</h4>
+      <h4>Rediger Medarbejder:</h4>
     </div>
     <div class="col-md-12">
-      <form [formGroup]="employeeGroup" (ngSubmit)="createEmployee()" novalidate>
+      <form [formGroup]="employeeGroup" (ngSubmit)="updateEmployee()" novalidate>
         <div class="form-group">
           <label class="center-block col-md-12">Fornavn:
             <input class="form-control"
                    placeholder="Fornavn her"
                    [ngClass]="{'is-invalid': nameIsInvalid('firstName'), 'is-valid': nameIsValid('firstName')}"
-                   formControlName="firstName">
+                   formControlName="firstName"
+                    [(ngModel)]="employee.FirstName">
             <div *ngIf="nameIsInvalid('firstName')" class="invalid-feedback">
               <div *ngIf="employeeGroup.controls['firstName'].errors.required">
                 Du skal angive et fornavn.
@@ -25,18 +26,20 @@
             <input class="form-control"
                    placeholder="Efternavn her"
                    [ngClass]="{'is-invalid': nameIsInvalid('lastName'), 'is-valid': nameIsValid('lastName')}"
-                   formControlName="lastName">
+                   formControlName="lastName"
+                   [(ngModel)]="employee.LastName">
             <div *ngIf="nameIsInvalid('lastName')" class="invalid-feedback">
-                <div *ngIf="employeeGroup.controls['lastName'].errors.required">
-                  Du skal angive et efternavn.
-                </div>
+              <div *ngIf="employeeGroup.controls['lastName'].errors.required">
+                Du skal angive et efternavn.
+              </div>
             </div>
           </label>
           <label class="center-block col-md-12">Brugernavn:
             <input class="form-control"
-            placeholder="Brugernavn her"
-            [ngClass]="{'is-invalid': nameIsInvalid('userName'), 'is-valid': nameIsValid('userName')}"
-            formControlName="userName">
+                   placeholder="Brugernavn her"
+                   [ngClass]="{'is-invalid': nameIsInvalid('userName'), 'is-valid': nameIsValid('userName')}"
+                   formControlName="userName"
+                   [(ngModel)]="employee.UserName">
             <div *ngIf="nameIsInvalid('userName')" class="invalid-feedback">
               <div *ngIf="employeeGroup.controls['userName'].errors.required">
                 Du skal angive et brugernavn.
@@ -47,7 +50,8 @@
             <input class="form-control"
                    placeholder="Email her"
                    [ngClass]="{'is-invalid': nameIsInvalid('email'), 'is-valid': nameIsValid('email')}"
-                   formControlName="email">
+                   formControlName="email"
+                   [(ngModel)]="employee.Email">
             <div *ngIf="nameIsInvalid('email')" class="invalid-feedback">
               <div *ngIf="employeeGroup.controls['email'].errors.required">
                 Du skal angive en email.
@@ -59,8 +63,8 @@
                    type="password"
                    id="password"
                    placeholder="Adgangskode her"
-                   [ngClass]="{'is-invalid': nameIsInvalid('password'), 'is-valid': nameIsValid('password')}"
-                   formControlName="password">
+                   formControlName="password"
+                   [(ngModel)]="employee.Password">
             <div *ngIf="nameIsInvalid('password')" class="invalid-feedback">
               <div *ngIf="employeeGroup.controls['password'].errors.required">
                 Du skal angive en adgangskode.
@@ -70,7 +74,8 @@
           <label class="center-block col-md-12">Vælg en rolle:
             <select class="form-control"
                     [ngClass]="{'is-invalid': nameIsInvalid('employeeRole'), 'is-valid': nameIsValid('employeeRole')}"
-                    formControlName="employeeRole">
+                    formControlName="employeeRole"
+                    [(ngModel)]="employee.EmployeeRole">
               <option>Medarbejder</option>
               <option>Afdelingsleder</option>
               <option>Administrator</option>
@@ -85,13 +90,14 @@
             <select class="form-control"
                     placeholder="Vælg afdeling"
                     [ngClass]="{'is-invalid': nameIsInvalid('department'), 'is-valid': nameIsValid('department')}"
-                    formControlName="department">
-              <option *ngFor="let department of departments; let i = index">{{department.Name}}</option>
+                    formControlName="department"
+                    [(ngModel)]="employee.Department">
+              <option *ngFor="let department of departments" [selected]="department === employee.Department" [ngValue]="department">{{department.Name}}</option>
             </select>
 
           </label>
           <button [disabled]="employeeGroup.invalid" type="submit" class="btn btn-info">
-            <i class="fa fa-floppy-o" aria-hidden="true">Opret</i>
+            <i class="fa fa-floppy-o" aria-hidden="true">Gem</i>
           </button>
         </div>
       </form>

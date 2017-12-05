@@ -29,12 +29,22 @@ export class EmployeeListComponent implements OnInit {
 
   initData(){
     this.employeeService.getAll().subscribe(employees => {this.employees = employees, console.log(this.employees);});
+    console.log(sessionStorage.getItem("token"));
 
   }
 
   createEmployee() {
     this.router
       .navigateByUrl('employees/create');
+  }
+
+  createDepartment(){
+    this.router.navigateByUrl('departments/create');
+  }
+
+  logout(){
+    this.employeeService.logoutEmployee();
+    this.router.navigateByUrl('login');
   }
 
 }

@@ -3,7 +3,7 @@ import {Status} from './status.enum';
 
 
 export class Absence {
-  Id: Number;
+  Id?: Number;
   Employee: Employee;
   Date: Date;
   Status: Status;

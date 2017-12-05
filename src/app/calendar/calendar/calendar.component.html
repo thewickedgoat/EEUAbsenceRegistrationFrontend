@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="absencesInEmployee != null">
   <div class="row">
     <div class="col-md-12">
       <h2 style="text-align: center">Fraværsregistrering</h2>
@@ -28,12 +28,12 @@
             <b>Rolle:</b> {{getRole(employee.EmployeeRole)}}
           </div>
           <hr>
-          <div *ngIf="isAdmin()">
+          <div>
             <div class="btn btn-success">
               Rediger
             </div>
           </div>
-          <div *ngIf="isAdmin()" class="btn btn-danger">
+          <div class="btn btn-danger">
             Slet
           </div>
           <div  class="btn btn-info" (click)="back()">
@@ -72,74 +72,74 @@
             <p>Lør</p>
           </div>
         </div>
-        <div>
+        <div >
           <div class="row" *ngFor="let week of weeksInCurrentMonth; let i = index">
             <div *ngIf="getWeekList(i, 0) === -1" class="weekendSquare col-sm-1">
-              {{convertToDate(i, 0)}}
+              {{getDateNumbersForCalendar(i, 0)}}
             </div>
             <div *ngIf="getWeekList(i, 0) != -1" class="weekendSquare col-sm-1">
-              {{convertToDate(i, 0)}}
+              {{getDateNumbersForCalendar(i, 0)}}
             </div>
             <div *ngIf="getWeekList(i, 1) === -1" class="weekendSquare col-sm-2">
-              {{convertToDate(i, 1)}}
+              {{getDateNumbersForCalendar(i, 1)}}
             </div>
             <div *ngIf="getWeekList(i, 1) != -1" class="weekdaySquare col-sm-2">
-              {{convertToDate(i, 1)}}
+              {{getDateNumbersForCalendar(i, 1)}}
               <div>
                 <div style="width: 50%; margin: 0 auto; text-align: left"
-                     (click)="setGetAbsence(i, 1)" class="btn btn-outline-info">{{setGetAbsence(i, 1)}}
+                     (click)="changeAbsence(i, 1)" class="btn btn-outline-info">{{getStatusForDate(i, 1)}}
                 </div>
               </div>
             </div>
             <div *ngIf="getWeekList(i, 2) === -1" class="weekendSquare col-sm-2">
-              {{convertToDate(i, 2)}}
+              {{getDateNumbersForCalendar(i, 2)}}
             </div>
             <div *ngIf="getWeekList(i, 2) != -1" class="weekdaySquare col-sm-2">
-              {{convertToDate(i, 2)}}
+              {{getDateNumbersForCalendar(i, 2)}}
               <div>
                 <div style="width: 50%; margin: 0 auto; text-align: left"
-                     (click)="bTest()" class="btn btn-outline-info">{{test.Status}}
+                     (click)="changeAbsence(i,2)" class="btn btn-outline-info">{{getStatusForDate(i, 2)}}
                 </div>
               </div>
             </div>
             <div *ngIf="getWeekList(i, 3) === -1" class="weekendSquare col-sm-2">
-              {{convertToDate(i, 3)}}
+              {{getDateNumbersForCalendar(i, 3)}}
             </div>
-            <div *ngIf="getWeekList(i, 3) != -1" class="weekdaySquare col-sm-2" style="text-align: center">
-              {{convertToDate(i, 3)}}
+            <div *ngIf="getWeekList(i, 3) != -1" class="weekdaySquare col-sm-2">
+              {{getDateNumbersForCalendar(i, 3)}}
               <div>
                 <div style="width: 50%; margin: 0 auto; text-align: left"
-                     (click)="setGetAbsence(i,3)" class="btn btn-outline-info">{{setGetAbsence(i, 3)}}
+                     (click)="changeAbsence(i,3)" class="btn btn-outline-info">{{getStatusForDate(i, 3)}}
                 </div>
               </div>
             </div>
             <div *ngIf="getWeekList(i, 4) === -1" class="weekendSquare col-sm-2">
-              {{convertToDate(i, 4)}}
+              {{getDateNumbersForCalendar(i, 4)}}
             </div>
             <div *ngIf="getWeekList(i, 4) != -1" class="weekdaySquare col-sm-2">
-              {{convertToDate(i, 4)}}
+              {{getDateNumbersForCalendar(i, 4)}}
               <div>
                 <div style="width: 50%; margin: 0 auto; text-align: left"
-                     (click)="setGetAbsence(i,4)" class="btn btn-outline-info">{{getAbsenceValue(i, 4)}}
+                     (click)="changeAbsence(i,4)" class="btn btn-outline-info">{{getStatusForDate(i, 4)}}
                 </div>
               </div>
             </div>
             <div *ngIf="getWeekList(i, 5) === -1" class="weekendSquare col-sm-2">
-              {{convertToDate(i, 5)}}
+              {{getDateNumbersForCalendar(i, 5)}}
             </div>
             <div *ngIf="getWeekList(i, 5) != -1" class="weekdaySquare col-sm-2">
-              {{convertToDate(i, 5)}}
+              {{getDateNumbersForCalendar(i, 5)}}
               <div>
                 <div style="width: 50%; margin: 0 auto; text-align: left"
-                     (click)="setGetAbsence(i,5)" class="btn btn-outline-info">{{setGetAbsence(i, 5)}}
+                     (click)="changeAbsence(i,5)" class="btn btn-outline-info">{{getStatusForDate(i, 5)}}
                 </div>
               </div>
             </div>
             <div *ngIf="getWeekList(i, 6) === -1" class="weekendSquare col-sm-1">
-              {{convertToDate(i, 6)}}
+              {{getDateNumbersForCalendar(i, 6)}}
             </div>
             <div *ngIf="getWeekList(i, 6) != -1" class="weekendSquare col-sm-1">
-              {{convertToDate(i, 6)}}
+              {{getDateNumbersForCalendar(i, 6)}}
             </div>
           </div>
         </div>
@@ -147,8 +147,9 @@
     <div class="absenceTypes col-sm-2">
       <h1>Fraværskoder:</h1>
       <hr>
-      <div *ngFor="let status of statusses; let i = index">
-        <input type="radio" name="absenceType" checked="checked" onload="setStatusCode(i)" (click)="setStatusCode(i)">{{status.toString()}}
+      <div *ngFor="let status of statusList">
+        <input type="radio" *ngIf="statusList.lastIndexOf(status) == 0" checked="checked" name="absenceType" (change)="setStatusCode(status)">
+        <input type="radio" *ngIf="statusList.lastIndexOf(status) > 0" name="absenceType" (change)="setStatusCode(status)">{{statusses[statusList.lastIndexOf(status)]}}
       </div>
       <hr>
     </div>
