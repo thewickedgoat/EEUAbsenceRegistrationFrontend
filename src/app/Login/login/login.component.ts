@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit {
       userName: ['', Validators.required],
       password: ['', Validators.required]
     });
+    console.log(this.employeeService.getToken());
   }
 
   ngOnInit() {
@@ -32,7 +33,7 @@ export class LoginComponent implements OnInit {
 
   loginEmployee($event){
     this.employeeToLogin = this.employees.find(emp => emp.UserName === this.loginGroup.controls['userName'].value);
-    this.employeeService.loginEmployee(this.employeeToLogin).subscribe(x => {this.validateLogin($event, x); this.router.navigate(['/employees'])});
+    this.employeeService.loginEmployee(this.employeeToLogin).subscribe(x => {this.validateLogin($event, x); this.router.navigate(['employees'])});
 
   }
 
@@ -44,7 +45,6 @@ export class LoginComponent implements OnInit {
     {
       sessionStorage.setItem('employee', JSON.stringify(this.employeeToLogin));
       sessionStorage.setItem('token', JSON.stringify(bearerToken));
-      console.log(bearerToken);
     }
   }
 

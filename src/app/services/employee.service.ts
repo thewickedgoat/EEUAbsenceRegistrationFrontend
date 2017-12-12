@@ -43,13 +43,14 @@ export class EmployeeService {
     return this.http.delete<any>(url + '/' + id);
   }
 
-  getEmployeeLoggedIn(){
-    return !!sessionStorage.getItem('token');
+  getToken(){
+    return sessionStorage.getItem('token');
   }
 
   logoutEmployee(){
-    sessionStorage.setItem('token', null);
-    sessionStorage.setItem('currentEmployee', null);
+    sessionStorage.setItem('token', '');
+    sessionStorage.setItem('currentEmployee', '');
+    console.log(this.getToken());
 
   }
 

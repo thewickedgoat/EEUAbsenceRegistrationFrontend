@@ -17,17 +17,20 @@ import {AuthguardGuard} from './Authorization/authguard.guard';
 import { LoginComponent } from './Login/login/login.component';
 import { EmployeeEditComponent } from './employee/employee-edit/employee-edit.component';
 import { DepartmentCreateComponent } from './department/department-create/department-create.component';
+import { ToolbarComponent } from './toolbar/toolbar.component';
+import { AbsenceOverviewComponent } from './absence-overview/absence-overview.component';
+import { SidebarModule } from 'ng-sidebar';
 
 
 const routes: Routes = [
-  {path: 'employee/:id', component: EmployeeComponent},
+  {path: 'employee/:id', canActivate: [AuthguardGuard], component: EmployeeComponent},
   {path: 'employees', canActivate: [AuthguardGuard], component: EmployeeListComponent},
   {path: 'employees/create', canActivate: [AuthguardGuard], component: EmployeeCreateComponent},
   {path: 'employees/edit/:id', canActivate: [AuthguardGuard], component: EmployeeEditComponent},
   {path: 'departments/create', canActivate: [AuthguardGuard], component: DepartmentCreateComponent},
-  {path: 'calendar/:id', component: CalendarComponent},
+  {path: 'calendar/:id', canActivate: [AuthguardGuard], component: CalendarComponent},
   {path: 'login', component: LoginComponent},
-  {path: ' ', redirectTo: 'employees'}
+  {path: ' ', redirectTo: 'login'}
 ];
 
 
@@ -40,14 +43,17 @@ const routes: Routes = [
     CalendarComponent,
     LoginComponent,
     EmployeeEditComponent,
-    DepartmentCreateComponent
+    DepartmentCreateComponent,
+    ToolbarComponent,
+    AbsenceOverviewComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
     RouterModule.forRoot(routes),
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    SidebarModule.forRoot()
   ],
   providers: [EmployeeService, DepartmentService, AbsenceService, RegistrationService, AuthguardGuard],
   bootstrap: [AppComponent]

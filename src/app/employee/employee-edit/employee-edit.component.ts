@@ -18,7 +18,8 @@ export class EmployeeEditComponent implements OnInit {
 
   employee: Employee;
   departments: Department[];
-  employeeGroup: FormGroup
+  employeeGroup: FormGroup;
+  employeeRole = EmployeeRole;
   constructor(private router: Router, private formBuilder: FormBuilder, private departmentService: DepartmentService,
               private employeeService: EmployeeService, private route: ActivatedRoute) {
     this.employeeGroup = this.formBuilder.group({
@@ -60,6 +61,7 @@ export class EmployeeEditComponent implements OnInit {
   test(){
     console.log(this.employee);
   }
+
 
 
 

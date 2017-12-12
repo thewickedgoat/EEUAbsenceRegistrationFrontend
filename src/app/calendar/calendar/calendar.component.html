@@ -1,4 +1,4 @@
-<div class="container" *ngIf="absencesInEmployee != null">
+<div class="container" *ngIf="employee != null">
   <div class="row">
     <div class="col-md-12">
       <h2 style="text-align: center">Fraværsregistrering</h2>
@@ -7,7 +7,7 @@
   <div class="row">
       <div class="col-sm-3">
         <h1>Brugerinfo:</h1>
-        <div *ngIf="employee != null">
+        <div>
           <hr>
           <div class="col-sm-3">
             <b>Fornavn:</b> {{employee.FirstName}}
@@ -150,6 +150,9 @@
       <div *ngFor="let status of statusList">
         <input type="radio" *ngIf="statusList.lastIndexOf(status) == 0" checked="checked" name="absenceType" (change)="setStatusCode(status)">
         <input type="radio" *ngIf="statusList.lastIndexOf(status) > 0" name="absenceType" (change)="setStatusCode(status)">{{statusses[statusList.lastIndexOf(status)]}}
+      </div>
+      <div>
+        <input type="radio" name="absenceType" (change)="setStatusCode('slet')">Slet
       </div>
       <hr>
     </div>

@@ -76,9 +76,10 @@
                     [ngClass]="{'is-invalid': nameIsInvalid('employeeRole'), 'is-valid': nameIsValid('employeeRole')}"
                     formControlName="employeeRole"
                     [(ngModel)]="employee.EmployeeRole">
-              <option>Medarbejder</option>
-              <option>Afdelingsleder</option>
-              <option>Administrator</option>
+              <option [selected]="employee.EmployeeRole === employeeRole.Medarbejder">Medarbejder</option>
+              <option [selected]="employee.EmployeeRole === employeeRole.Afdelingschef">Afdelingschef</option>
+              <option [selected]="employee.EmployeeRole === employeeRole.Administrator">Administrator</option>
+
             </select>
             <div *ngIf="nameIsInvalid('employeeRole')" class="invalid-feedback">
               <div *ngIf="employeeGroup.controls['employeeRole'].errors.required">
@@ -92,7 +93,7 @@
                     [ngClass]="{'is-invalid': nameIsInvalid('department'), 'is-valid': nameIsValid('department')}"
                     formControlName="department"
                     [(ngModel)]="employee.Department">
-              <option *ngFor="let department of departments" [selected]="department === employee.Department" [ngValue]="department">{{department.Name}}</option>
+              <option *ngFor="let department of departments" [selected]="department.Id == employee.Department.Id">{{department.Name}}</option>
             </select>
 
           </label>

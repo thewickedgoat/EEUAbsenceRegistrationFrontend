@@ -14,10 +14,18 @@ export class AuthguardGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
 
-    let isLoggedIn = this.employeeService.getEmployeeLoggedIn();
-    console.log(isLoggedIn);
-    if(isLoggedIn === null)
-      this.router.navigate(['/login'], {queryParams: {returnUrl: state.url}})
-    return true;
+    let isLoggedInWithToken = this.employeeService.getToken();
+
+    console.log('isLoggedInWithToken ' + isLoggedInWithToken);
+    if(isLoggedInWithToken.length === 0){
+      this.router.navigate(['/login'], {queryParams: {returnUrl: state.url}});
+      console.log('sdfgdsfgdfg ');
+      return false;
+
+    }
+    else {
+      console.log('2222222222 ');
+      return true;
+    }
   }
 }

@@ -43,8 +43,8 @@ export class EmployeeListComponent implements OnInit {
   }
 
   logout(){
-    this.employeeService.logoutEmployee();
     this.router.navigateByUrl('login');
+    this.employeeService.logoutEmployee();
   }
 
 }

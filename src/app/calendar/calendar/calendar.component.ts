@@ -46,24 +46,28 @@ export class CalendarComponent implements OnInit {
   constructor(private router: Router,private employeeService: EmployeeService, private absenceService: AbsenceService, private route: ActivatedRoute) {
     this.getDates();
     this.initData();
-    this.refreshCalendar();
   }
 
   ngOnInit() {
-
   }
   initData(){
     this.initArrays();
     this.populateCalendar();
-    this.bTest();
-  }
-
-  refreshCalendar()
-  {
+    this.initStatusList();
     this.route.paramMap.switchMap(params => this.employeeService.getById(+params.get('id')))
       .subscribe(employee => {this.employee = employee;
         this.convertDatetimesToDate(); this.getAllDatesInMonth()});
   }
+
+  refreshCalendar()
+  {
+    console.log("Refreashing");
+    this.employeeService.getById(this.employee.Id)
+      .subscribe(employee => {console.log(employee), this.employee = employee;
+        this.convertDatetimesToDate(); this.getAllDatesInMonth();});
+  }
+
+
 
   getRole(id: number)
   {
@@ -99,21 +103,32 @@ export class CalendarComponent implements OnInit {
     if(currentDate != null)
     {
       let currentAbsence = this.absencesInEmployee.find(x => x.Date.toDateString() === currentDate.toDateString());
-      if(currentAbsence != null)
-      {
-        currentAbsence.Status = this.statusCode;
-        this.absenceService.put(currentAbsence).subscribe(() => this.refreshCalendar());
+      if(this.statusCode != null){
+
+        if(currentAbsence != null)
+        {
+          currentAbsence.Status = this.statusCode;
+          this.absenceService.put(currentAbsence).subscribe(() => this.refreshCalendar());
+        }
+        else{
+          currentAbsence = ({Date: currentDate, Employee: this.employee, Status: this.statusCode});
+          //this.absencesInEmployee.push(currentAbsence);
+          this.absenceService.post(currentAbsence).subscribe(() => this.refreshCalendar());
+        }
       }
-      else{
-        currentAbsence = ({Date: currentDate, Employee: this.employee, Status: this.statusCode});
-        //this.absencesInEmployee.push(currentAbsence);
-        this.absenceService.post(currentAbsence).subscribe(() => this.refreshCalendar());
+      else {
+        if(currentAbsence != null){
+          console.log('ITSA ME, WATERMELOONE ' );
+          this.absenceService.delete(currentAbsence.Id).subscribe(() => this.refreshCalendar())
+        }
+
       }
     }
+
   }
 
 
-  bTest(){
+  initStatusList(){
     this.statusList = [
       Status.S,
       Status.HS,
@@ -163,8 +178,14 @@ export class CalendarComponent implements OnInit {
       }
   }
 
-  setStatusCode(status: Status){
-    this.statusCode = status;
+  setStatusCode(status: any){
+    if(status === 'slet'){
+      this.statusCode = null;
+    }
+    else
+    {
+        this.statusCode = status;
+    }
   }
 
   convertDatetimesToDate(){
@@ -176,8 +197,6 @@ export class CalendarComponent implements OnInit {
         absence.Date = date;
       }
       console.log(this.employee);
-      console.log(this.employee.Absences);
-      console.log(this.absencesInEmployee);
     }
 
   }
@@ -211,26 +230,27 @@ export class CalendarComponent implements OnInit {
     else return date;
   }
   getDateNumbersForCalendar(week: number, index: number,){
+
     switch(week){
       case 0:
-        if(this.firstWeekDates != null){
+        if(this.firstWeekDates.length > 0){
           console.log(this.firstWeekDates[index].valueOf());
           return this.firstWeekDates[index].valueOf();
         }
       case 1:
-        if(this.secondWeekDates != null){
+        if(this.secondWeekDates.length > 0){
           return this.secondWeekDates[index].valueOf();
         }
       case 2:
-        if(this.thirdWeekDates != null){
+        if(this.thirdWeekDates.length > 0){
           return this.thirdWeekDates[index].valueOf();
         }
       case 3:
-        if(this.fourthWeekDates != null){
+        if(this.fourthWeekDates.length > 0){
           return this.fourthWeekDates[index].valueOf();
         }
       case 4:
-        if(this.fifthWeekDates !=null){
+        if(this.fifthWeekDates.length > 0){
           return this.fifthWeekDates[index].valueOf();
         }
       case 5:
@@ -362,7 +382,7 @@ export class CalendarComponent implements OnInit {
 
 
     getWeeksInMonth(index: number){
-      const week = 6; //A week consist of 7 days, representing Sunday - Saturday with the values of 0 - 6
+      const week = 6; //A week consists of 7 days, representing Sunday - Saturday with the values of 0 - 6
       const firstWeekIndex = this.daysInCurrentMonth[0].getDay()
       const wholeWeekIndex = week - firstWeekIndex + 1;
       const secondWeekIndex = this.daysInCurrentMonth[wholeWeekIndex].getDay();
@@ -525,6 +545,7 @@ export class CalendarComponent implements OnInit {
   getCurrentMonth(){
     const monthNames = ["Januar", "Februar", "Marts", "April", "Maj", "Juni", "Juli", "August", "September", "Oktober", "November", "December"];
     const currentMonth = this.currentMonth.getMonth();
+    console.log('this is first run ');
     return monthNames[currentMonth];
   }
 

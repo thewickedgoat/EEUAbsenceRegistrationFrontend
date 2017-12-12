@@ -3,8 +3,11 @@ import {Status} from './status.enum';
 
 
 export class Absence {
-  Id?: Number;
+  Id?: number;
   Employee: Employee;
   Date: Date;
   Status: Status;
+  IsLockedByEmployee?: boolean;
+  IsLockedByChief?: boolean;
+  IsLockedByAdmin?: boolean;
 }
