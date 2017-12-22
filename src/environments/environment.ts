@@ -5,5 +5,11 @@
 
   export const environment = {
     production: false,
-    apiEndPoint: 'http://localhost:51017/api/'
+    apiEndPoint: 'http://localhost:51017/api/',
+    jwt () {
+        const token = sessionStorage.getItem('token');
+        if(token.length > 0) {
+          return token.slice(1, -1);
+      }
+    }
   };

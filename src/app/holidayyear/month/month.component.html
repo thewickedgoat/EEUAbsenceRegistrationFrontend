@@ -1,0 +1,24 @@
+<app-toolbar></app-toolbar>
+<div class="container" *ngIf="departments && employees">
+  <hr>
+  <div style="text-align: center">
+    <h2>Godkendelsesoversigt for {{monthNames[currentMonth.getMonth()]}} {{currentMonth.getFullYear()}}</h2>
+  </div>
+  <hr>
+  <div *ngFor="let department of departments" class="row" style="border: 3px; border-style: solid; margin: 5px;">
+    <div class="col-md-12">
+      <div style="text-align: center">
+        <h3>{{department.Name}}</h3>
+      </div>
+      <div *ngFor="let employee of employees; let i = index" >
+        <app-month-view *ngIf="employee.Department.Id === department.Id"
+                        (emitter)="goToCurrentMonth($event)"
+                         [employee]="employee"
+                         [absencesForApprovalByEmployee]="absencesForApprovalByEmployee[i]"
+                         [absencesForApprovalByChief]="absencesForApprovalByChief[i]"
+                         [absencesForApprovalByAdmin]="absencesForApprovalByAdmin[i]"
+        ></app-month-view>
+      </div>
+    </div>
+  </div>
+</div>

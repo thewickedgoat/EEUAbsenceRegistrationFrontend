@@ -1,0 +1,69 @@
+<div class="container" *ngIf="employee">
+  <div class="row">
+    <div *ngIf="employee.Id === loggedInUser.Id && loggedInUser.EmployeeRole != 2" class="col-md-12 text-center">
+      <hr>
+      <h2>Din Ferieårsoversigt</h2>
+      <hr>
+    </div>
+  </div>
+  <div class="row">
+    <div *ngIf="employee.Id === loggedInUser.Id && loggedInUser.EmployeeRole === 2" class="col-md-12 text-center">
+      <hr>
+      <h2>Ferieårsoversigt</h2>
+      <hr>
+    </div>
+  </div>
+  <div  class="row">
+    <div *ngIf="employee.Id != loggedInUser.Id" class="col-md-12 text-center">
+      <hr>
+      <h2>Ferieårsoversigt for {{employee.FirstName}} {{employee.LastName}}</h2>
+      <hr>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8" style="text-align: center">
+      <div class="btn btn-info" type="button" (click)="previousHolidayYear()">
+        Forrige
+      </div>
+        <b><strong>For ferieåret {{holidayYearStart.getFullYear()}} - {{holidayYearEnd.getFullYear()}}</strong></b>
+      <div class="btn btn-info" type="button" (click)="nextHolidayYear()">
+        Næste
+      </div>
+    </div>
+    <div class="col-sm-2"></div>
+  </div>
+
+  <div class="row" style="width: 100%; display: inline-block; margin: 1px; text-align: center">
+    <h3>{{holidayYearStart.getFullYear()}}</h3>
+  </div>
+  <div class="row">
+    <div *ngFor="let month of monthsInHolidayYear" class="col-sm-3" align="center">
+      <div *ngIf="month.getFullYear() === holidayYearStart.getFullYear()" class="card" style="width: 100%; margin: 10px;">
+        <div class="card" style="width: 95%; margin: 5px; text-align: center;">
+          <div class="card-block">
+            <h4 class="card-title">{{monthNames[[month.getMonth()]]}}</h4>
+            <a class="btn btn-outline-info" style="margin: 5px;" (click)="goToCalendar(month.getFullYear(), month.getMonth())">Til Måned</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="width: 100%; display: inline-block; margin: 1px; text-align: center">
+    <h3 >{{holidayYearEnd.getFullYear()}}</h3>
+  </div>
+  <div class="row">
+    <div *ngFor="let month of monthsInHolidayYear" class="col-sm-3" align="center">
+      <div *ngIf="month.getFullYear() === holidayYearEnd.getFullYear()" class="card" style="width: 100%; margin: 10px;">
+        <div class="card" style="width: 95%; margin: 5px; text-align: center;">
+          <div class="card-block">
+            <h4 class="card-title">{{monthNames[[month.getMonth()]]}}</h4>
+            <a class="btn btn-outline-info" style="margin: 5px;" (click)="goToCalendar(month.getFullYear(), month.getMonth())">Til Måned</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

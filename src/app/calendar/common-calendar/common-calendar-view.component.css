@@ -1,0 +1,103 @@
+.name{
+  background: #D3D3D3;
+  border: 2px;
+  border-style: solid;
+  border-color: #020203;
+  font-size: small;
+  cursor: pointer;
+}
+
+.nameOfTwo {
+  background: #98FB98;
+  border: 2px;
+  border-style: solid;
+  border-color: #020203;
+  font-size: small;
+  cursor: pointer;
+}
+
+.name .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  top: -5px;
+  right: 105%;
+
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+.nameOfTwo .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  top: -5px;
+  right: 105%;
+
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+.name:hover .tooltiptext {
+  visibility: visible;
+}
+
+.nameOfTwo:hover .tooltiptext {
+  visibility: visible;
+}
+
+.weekDayBox{
+  text-align: center;
+  background: #D3D3D3;
+  border: 2px;
+  border-style: solid;
+  border-color: #020203;
+  width: 28px;
+  height:28px;
+  cursor: pointer;
+}
+.weekEndBox{
+  text-align: center;
+  background: #A9A9A9;
+  border: 2px;
+  border-style: solid;
+  border-color: #020203;
+  width:28px;
+  height:28px;
+  cursor: pointer;
+}
+
+.weekDayBoxOfTwo{
+  text-align: center;
+  background: #98FB98;
+  border: 2px;
+  border-style: solid;
+  border-color: #020203;
+  width: 28px;
+  height:28px;
+  cursor: pointer;
+}
+
+
+.monthDay{
+  background: #4687ff;
+  text-align: center;
+  border: 2px;
+  border-style: solid;
+  border-color: #020203;
+  width:28px;
+  height:36px;
+}
+
+
+

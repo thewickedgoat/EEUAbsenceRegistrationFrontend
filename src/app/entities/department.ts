@@ -1,4 +1,4 @@
-import {Employee} from './employee';
+import {Employee} from './Employee';
 export class Department {
   Id?: number;
   Name: string;

@@ -1,0 +1,73 @@
+<div>
+  <h3>Godkendendelse:</h3>
+  <div>
+    <h4><b>Godkendt af:</b></h4>
+  </div>
+  <div *ngIf="isEmployee">
+    <div>
+      <button *ngIf="!isMonthApprovedByEmployee" class="btn btn-info" (click)="approveMonth()">Godkend som medarbejder</button>
+    </div>
+    <div *ngIf="isMonthApprovedByEmployee">
+      Medarbejder: <input type="checkbox" [disabled]="true" checked="checked">
+    </div>
+    <div *ngIf="!isMonthApprovedByChief">
+      Afdelingsleder: <input type="checkbox" [disabled]="true">
+    </div>
+    <div *ngIf="isMonthApprovedByChief">
+      Afdelingsleder: <input type="checkbox" [disabled]="true" checked="checked">
+    </div>
+    <div *ngIf="isMonthApprovedByAdmin">
+      Admin: <input type="checkbox" [disabled]="true" checked="checked">
+    </div>
+    <div *ngIf="!isMonthApprovedByAdmin">
+      Admin: <input type="checkbox" [disabled]="true">
+    </div>
+  </div>
+  <div *ngIf="isDepartmentChief">
+    <div *ngIf="isMonthApprovedByEmployee">
+      Medarbejder: <input type="checkbox" [disabled]="true" checked="checked">
+    </div>
+    <div *ngIf="!isMonthApprovedByEmployee">
+      Medarbejder: <input type="checkbox" [disabled]="true">
+    </div>
+    <div *ngIf="!isMonthApprovedByChief">
+      <button class="btn btn-info" (click)="approveMonth()">Godkend som Afdelingsleder</button>
+    </div>
+    <div *ngIf="isMonthApprovedByChief">
+      Afdelingsleder: <input type="checkbox" [disabled]="true" checked="checked">
+    </div>
+    <div *ngIf="isMonthApprovedByAdmin">
+      Admin: <input type="checkbox" [disabled]="true" checked="checked">
+    </div>
+    <div *ngIf="!isMonthApprovedByAdmin">
+      Admin: <input type="checkbox" [disabled]="true">
+    </div>
+  </div>
+
+  <div *ngIf="isAdmin">
+    <div *ngIf="isMonthApprovedByEmployee">
+      Medarbejder: <input type="checkbox" [disabled]="true" checked="checked">
+    </div>
+    <div *ngIf="!isMonthApprovedByEmployee">
+      Medarbejder: <input type="checkbox" [disabled]="true">
+    </div>
+    <div *ngIf="isMonthApprovedByChief">
+      Afdelingsleder: <input type="checkbox" [disabled]="true" checked="checked">
+    </div>
+    <div *ngIf="!isMonthApprovedByChief">
+      Afdelingsleder: <input type="checkbox" [disabled]="true">
+    </div>
+    <div>
+      <button *ngIf="!isMonthApprovedByAdmin" class="btn btn-info" (click)="approveMonth()">Godkend som Admin</button>
+    </div>
+    <div *ngIf="isMonthApprovedByAdmin">
+      Admin: <input type="checkbox" [disabled]="true" checked="checked">
+    </div>
+    <div>
+      <button *ngIf="isMonthApprovedByAdmin
+      && isMonthApprovedByChief
+      && isMonthApprovedByEmployee" class="btn btn-info" (click)="reopenMonth()">Genåben måned</button>
+    </div>
+  </div>
+</div>
+

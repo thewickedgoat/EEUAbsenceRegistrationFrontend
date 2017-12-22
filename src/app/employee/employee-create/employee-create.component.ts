@@ -6,7 +6,7 @@ import {Employee} from '../../entities/employee';
 import {EmployeeRole} from '../../entities/employeeRole.enum';
 import {Department} from '../../entities/department';
 import {DepartmentService} from '../../services/department.service';
-import {RegistrationService} from '../../services/registration.service';
+import {AuthenticationService} from "../../services/authentication.service";
 
 @Component({
   selector: 'app-employee-create',
@@ -21,7 +21,7 @@ export class EmployeeCreateComponent implements OnInit {
   employeeRole: EmployeeRole;
   employeeCreated = false;
 
-  constructor(private departmentService: DepartmentService, private employeeService: EmployeeService,
+  constructor(private authenticationService: AuthenticationService, private departmentService: DepartmentService, private employeeService: EmployeeService,
               private router: Router, private formBuilder: FormBuilder) {
     this.initData();
     this.employeeGroup = this.formBuilder.group({
@@ -46,54 +46,74 @@ export class EmployeeCreateComponent implements OnInit {
 
   }
 
+  /**
+   * creates the employee based on the input values.
+   * Registers the employee for authentication afterwards.
+   * Resets the formGroup
+   */
   createEmployee() {
     const values = this.employeeGroup.value;
-    const departmentIndex = this.getDepartment();
-    const department = this.departments.find(dep => dep.Id === departmentIndex);
+    console.log(this.employeeGroup.controls['department'].value)
+    const department = this.getDepartment(this.employeeGroup.controls['department'].value);
     const employee: Employee = {FirstName: values.firstName, LastName: values.lastName,
       UserName: values.userName, Email: values.email, Password: values.password,
       EmployeeRole: values.employeeRole, Department: department};
-    console.log(employee);
-     this.employeeService.post(employee).subscribe(emp => {
+    this.employeeService.post(employee).subscribe(emp => {
+      console.log(emp);
+      this.authenticationService.register(emp).subscribe(() => {
+        this.employeeCreated = true;
+        setTimeout(()=> {
+          this.employeeCreated = false;
+        }, 3000);
+      });
       this.employeeGroup.reset();
-      this.employeeCreated = true;
-      setTimeout(()=> {
-        this.employeeCreated = false;
-      }, 3000);
     });
   }
 
-  getDepartment(){
-    switch(this.employeeGroup.controls['department'].value){
-      case 'Utildelte Medarbejdere':
-        console.log('works');
-        return 0;
-      case 'Fælles':
-        console.log('works');
-        return 1;
-      case 'Erhverv':
-        console.log('works');
-        return 2;
-      case 'Marketing':
-        console.log('works');
-        return 3;
+  /**
+   * Gets the department value for the formGroup
+   * @param departmentName
+   * @returns {Department}
+   */
+  getDepartment(departmentName: string){
+    if(departmentName === ''){
+      //by default the selector has its value set as the first department it runs in the loop,
+      // but if nothing is selected it will be an empty string
+      // the first department Id will always be 1, so therefore its defaulted here.
+      const department = this.departments.find(dep => dep.Id === 1);
+      console.log(department);
+      return department;
     }
+    else{
+      const department = this.departments.find(dep => dep.Name === departmentName);
+      console.log(department);
+      return department;
+    }
+
   }
 
-  test(){
-    console.log(this.employeeGroup.controls['department'].value);
-    this.getDepartment();
-  }
-
+  /**
+   * 1 + 1 = 2
+   */
   close() {
     this.employeeCreated = false;
   }
 
+  /**
+   * Checks if the name is invalid
+   * @param controlName
+   * @returns {boolean}
+   */
   nameIsInvalid(controlName: string) {
     const control = this.employeeGroup.controls[controlName];
     return control.invalid && (control.dirty || control.touched);
   }
 
+  /**
+   * Checks if the name is valid
+   * @param controlName
+   * @returns {boolean}
+   */
   nameIsValid(controlName: string) {
     const control = this.employeeGroup.controls[controlName];
     return !control.invalid && (control.dirty || control.touched);

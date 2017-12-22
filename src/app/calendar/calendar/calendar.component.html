@@ -1,51 +1,51 @@
-<div class="container" *ngIf="employee != null">
+<app-toolbar></app-toolbar>
+<div class="container" *ngIf="employee">
   <div class="row">
     <div class="col-md-12">
       <h2 style="text-align: center">Fraværsregistrering</h2>
     </div>
   </div>
   <div class="row">
-      <div class="col-sm-3">
-        <h1>Brugerinfo:</h1>
+      <div class="col-sm-3" *ngIf="loggedInUser">
+        <h3>Brugerinfo:</h3>
         <div>
-          <hr>
-          <div class="col-sm-3">
-            <b>Fornavn:</b> {{employee.FirstName}}
-          </div>
-          <div class="col-sm-3">
-            <b>Efternavn:</b> {{employee.LastName}}
-          </div>
-          <div class="col-sm-3">
-            <b>Brugernavn:</b> {{employee.UserName}}
-          </div>
-          <div class="col-sm-3">
-            <b>Email:</b> {{employee.Email}}
-          </div>
-          <div class="col-sm-3">
-            <b>Afdeling:</b> {{employee.Department.Name}}
-          </div>
-          <div class="col-sm-3">
-            <b>Rolle:</b> {{getRole(employee.EmployeeRole)}}
-          </div>
-          <hr>
-          <div>
-            <div class="btn btn-success">
-              Rediger
+            <hr>
+            <div>
+              <b>Fornavn: </b> {{employee.FirstName}}
             </div>
-          </div>
-          <div class="btn btn-danger">
-            Slet
-          </div>
-          <div  class="btn btn-info" (click)="back()">
-            Tilbage
-          </div>
+            <div>
+              <b>Efternavn: </b> {{employee.LastName}}
+            </div>
+            <div>
+              <b>Brugernavn: </b> {{employee.UserName}}
+            </div>
+            <div>
+              <b>Email: </b> {{employee.Email}}
+            </div>
+            <div>
+              <b>Afdeling: </b> {{employee.Department.Name}}
+            </div>
+            <div>
+              <b>Rolle: </b> {{getRole(employee.EmployeeRole)}}
+            </div>
+            <hr>
+        </div>
+        <div *ngIf="isAdmin() || isChief() && loggedInUser.Department.Name === employee.Department.Name || loggedInUser.Id === employee.Id">
+          <h3>Feriesoversigt:</h3>
+          <app-absence-overview-controller
+            [employee]="getEmployee()"
+          [holidayYearEnd]="holidayYearEnd"
+          [holidayYearStart]="holidayYearStart"></app-absence-overview-controller>
+        </div>
+        <div  class="btn btn-success" (click)="back()">
+          Tilbage
         </div>
       </div>
-      <div class="col-sm-7" style="text-align: center">
+      <div class="col-sm-7" style="text-align: center" *ngIf="weeksInCurrentMonth">
         <div class="btn btn-info" type="button" (click)="previousMonth($event)">
           Forrige
         </div>
-        <b>{{getCurrentMonth()}} {{currentMonth.getFullYear()}}</b>
+        <b>{{monthNames[currentMonth.getMonth()]}} {{currentMonth.getFullYear()}}</b>
         <div class="btn btn-info" type="button" (click)="nextMonth($event)">
           Næste
         </div>
@@ -72,7 +72,9 @@
             <p>Lør</p>
           </div>
         </div>
-        <div >
+
+        <!-- this div is run if the currcurrentMonthonth is open for approval -->
+        <div *ngIf="isMonthLocked() === false">
           <div class="row" *ngFor="let week of weeksInCurrentMonth; let i = index">
             <div *ngIf="getWeekList(i, 0) === -1" class="weekendSquare col-sm-1">
               {{getDateNumbersForCalendar(i, 0)}}
@@ -143,9 +145,82 @@
             </div>
           </div>
         </div>
+
+        <!-- this div runs if the currcurrentMonthonth is locked for approval -->
+        <div *ngIf="isMonthLocked()">
+          <div class="row" *ngFor="let week of weeksInCurrentMonth; let i = index">
+            <div *ngIf="getWeekList(i, 0) === -1" class="weekendSquare col-sm-1">
+              {{getDateNumbersForCalendar(i, 0)}}
+            </div>
+            <div *ngIf="getWeekList(i, 0) != -1" class="weekendSquare col-sm-1">
+              {{getDateNumbersForCalendar(i, 0)}}
+            </div>
+            <div *ngIf="getWeekList(i, 1) === -1" class="weekendSquare col-sm-2">
+              {{getDateNumbersForCalendar(i, 1)}}
+            </div>
+            <div *ngIf="getWeekList(i, 1) != -1" class="lockedSquare col-sm-2">
+              {{getDateNumbersForCalendar(i, 1)}}
+              <div>
+                <div *ngIf="getStatusForDate(i, 1) != '+'" style="width: 50%; margin: 0 auto; text-align: left"
+                     class="btn btn-info disabled">{{getStatusForDate(i, 1)}}
+                </div>
+              </div>
+            </div>
+            <div *ngIf="getWeekList(i, 2) === -1" class="weekendSquare col-sm-2">
+              {{getDateNumbersForCalendar(i, 2)}}
+            </div>
+            <div *ngIf="getWeekList(i, 2) != -1" class="lockedSquare col-sm-2">
+              {{getDateNumbersForCalendar(i, 2)}}
+              <div>
+                <div *ngIf="getStatusForDate(i, 2) != '+'" style="width: 50%; margin: 0 auto; text-align: left"
+                     class="btn btn-info disabled">{{getStatusForDate(i, 2)}}
+                </div>
+              </div>
+            </div>
+            <div *ngIf="getWeekList(i, 3) === -1" class="weekendSquare col-sm-2">
+              {{getDateNumbersForCalendar(i, 3)}}
+            </div>
+            <div *ngIf="getWeekList(i, 3) != -1" class="lockedSquare col-sm-2">
+              {{getDateNumbersForCalendar(i, 3)}}
+              <div>
+                <div *ngIf="getStatusForDate(i, 3) != '+'" style="width: 50%; margin: 0 auto; text-align: left"
+                     class="btn btn-info disabled">{{getStatusForDate(i, 3)}}
+                </div>
+              </div>
+            </div>
+            <div *ngIf="getWeekList(i, 4) === -1" class="weekendSquare col-sm-2">
+              {{getDateNumbersForCalendar(i, 4)}}
+            </div>
+            <div *ngIf="getWeekList(i, 4) != -1" class="lockedSquare col-sm-2">
+              {{getDateNumbersForCalendar(i, 4)}}
+              <div>
+                <div *ngIf="getStatusForDate(i, 4) != '+'" style="width: 50%; margin: 0 auto; text-align: left"
+                     class="btn btn-info disabled">{{getStatusForDate(i, 4)}}
+                </div>
+              </div>
+            </div>
+            <div *ngIf="getWeekList(i, 5) === -1" class="weekendSquare col-sm-2">
+              {{getDateNumbersForCalendar(i, 5)}}
+            </div>
+            <div *ngIf="getWeekList(i, 5) != -1" class="lockedSquare col-sm-2">
+              {{getDateNumbersForCalendar(i, 5)}}
+              <div>
+                <div *ngIf="getStatusForDate(i, 5) != '+'" style="width: 50%; margin: 0 auto; text-align: left"
+                     class="btn btn-info disabled">{{getStatusForDate(i, 5)}}
+                </div>
+              </div>
+            </div>
+            <div *ngIf="getWeekList(i, 6) === -1" class="weekendSquare col-sm-1">
+              {{getDateNumbersForCalendar(i, 6)}}
+            </div>
+            <div *ngIf="getWeekList(i, 6) != -1" class="weekendSquare col-sm-1">
+              {{getDateNumbersForCalendar(i, 6)}}
+            </div>
+          </div>
+        </div>
       </div>
-    <div class="absenceTypes col-sm-2">
-      <h1>Fraværskoder:</h1>
+    <div class="absenceTypes col-sm-2" *ngIf="isAdmin() || isChief() && loggedInUser.Department.Name === employee.Department.Name || loggedInUser.Id === employee.Id">
+      <h3>Fraværskoder:</h3>
       <hr>
       <div *ngFor="let status of statusList">
         <input type="radio" *ngIf="statusList.lastIndexOf(status) == 0" checked="checked" name="absenceType" (change)="setStatusCode(status)">
@@ -155,6 +230,24 @@
         <input type="radio" name="absenceType" (change)="setStatusCode('slet')">Slet
       </div>
       <hr>
+      <div *ngIf="isAdmin() || isChief() && loggedInUser.Department.Name === employee.Department.Name || loggedInUser.Id === employee.Id">
+        <app-absence-confirmation
+          (emitter)="approveAbsencesInMonth($event)"
+          (emitterToReopen)="reopenMonth()"
+          [loggedInUser]="loggedInUser"
+          [employee]="getEmployee()"
+          [holidayYearEnd]="holidayYearEnd"
+          [holidayYearStart]="holidayYearStart"
+          [currentMonth]="currentMonth"
+          [isAdmin]="isAdmin()"
+          [isDepartmentChief]="isChief()"
+          [isEmployee]="isEmployee()"
+          [absencesToApprove]="absencesToApprove"
+          [isMonthApprovedByEmployee]="isMonthApprovedByEmployee"
+          [isMonthApprovedByChief]="isMonthApprovedByChief"
+          [isMonthApprovedByAdmin]="isMonthApprovedByAdmin"
+        ></app-absence-confirmation>
+      </div>
     </div>
   </div>
 </div>

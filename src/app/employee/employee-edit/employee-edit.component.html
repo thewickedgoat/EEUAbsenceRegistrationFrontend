@@ -1,10 +1,18 @@
+<app-toolbar></app-toolbar>
 <div class="container" *ngIf="employee != null">
   <div class="row">
     <div class="col-md-12">
       <hr>
       <button type="button" class="btn btn-info" (click)="back()">Tilbage</button>
       <hr>
-      <h4>Rediger Medarbejder:</h4>
+      <div *ngIf="isAdmin() && loggedInUser.Id != employee.Id">
+        <h2 *ngIf="isNotEditable">Medarbejderinfo</h2>
+        <h2 *ngIf="!isNotEditable">Rediger Medarbejder</h2>
+      </div>
+      <div *ngIf="loggedInUser.Id === employee.Id">
+        <h2 *ngIf="isNotEditable">Profil</h2>
+        <h2 *ngIf="!isNotEditable">Rediger Profi</h2>
+      </div>
     </div>
     <div class="col-md-12">
       <form [formGroup]="employeeGroup" (ngSubmit)="updateEmployee()" novalidate>
@@ -52,19 +60,28 @@
                    [ngClass]="{'is-invalid': nameIsInvalid('email'), 'is-valid': nameIsValid('email')}"
                    formControlName="email"
                    [(ngModel)]="employee.Email">
-            <div *ngIf="nameIsInvalid('email')" class="invalid-feedback">
+            <div *ngIf="nameIsInvalid('email') " class="invalid-feedback">
               <div *ngIf="employeeGroup.controls['email'].errors.required">
                 Du skal angive en email.
               </div>
             </div>
           </label>
           <label class="center-block col-md-12">Adgangskode:
-            <input class="form-control"
-                   type="password"
-                   id="password"
-                   placeholder="Adgangskode her"
-                   formControlName="password"
-                   [(ngModel)]="employee.Password">
+            <div *ngIf="showPassword === false">
+              <input class="form-control"
+                     type="password"
+                     placeholder="Adgangskode her"
+                     formControlName="password"
+                     [(ngModel)]="employee.Password">
+              <a *ngIf="isAdmin() || employee.Id === loggedInUser.Id" class="btn btn-outline-info" (click)="hideShowPassword()">Vis adgangskode</a>
+            </div>
+            <div *ngIf="showPassword === true">
+              <input class="form-control"
+                     placeholder="Adgangskode her"
+                     formControlName="password"
+                     [(ngModel)]="employee.Password">
+              <a class="btn btn-info" (click)="hideShowPassword()">skjul adgangskode</a>
+            </div>
             <div *ngIf="nameIsInvalid('password')" class="invalid-feedback">
               <div *ngIf="employeeGroup.controls['password'].errors.required">
                 Du skal angive en adgangskode.
@@ -77,7 +94,7 @@
                     formControlName="employeeRole"
                     [(ngModel)]="employee.EmployeeRole">
               <option [selected]="employee.EmployeeRole === employeeRole.Medarbejder">Medarbejder</option>
-              <option [selected]="employee.EmployeeRole === employeeRole.Afdelingschef">Afdelingschef</option>
+              <option [selected]="employee.EmployeeRole === employeeRole.Afdelingsleder">Afdelingschef</option>
               <option [selected]="employee.EmployeeRole === employeeRole.Administrator">Administrator</option>
 
             </select>
@@ -97,13 +114,17 @@
             </select>
 
           </label>
-          <button [disabled]="employeeGroup.invalid" type="submit" class="btn btn-info">
+          <button class="btn btn-warning" [disabled]="!isNotEditable" (click)="edit()">
+            <i class="fa fa-pencil-square-o">Rediger</i>
+          </button>
+          <button [disabled]="employeeGroup.invalid || isNotEditable" type="submit" (click)="stopEdit()" class="btn btn-info">
             <i class="fa fa-floppy-o" aria-hidden="true">Gem</i>
           </button>
+
         </div>
       </form>
 
-      <ngb-alert *ngIf="employeeCreated" (close)="close()" type="success">Medarbejder blev oprettet</ngb-alert>
+      <ngb-alert *ngIf="employeeUpdated" (close)="close()" type="success">Ændringer gemt</ngb-alert>
     </div>
   </div>
 </div>

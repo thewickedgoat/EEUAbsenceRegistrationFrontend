@@ -1,11 +1,37 @@
-<ng-sidebar-container style="height: 10vh;">
-  <!-- A sidebar -->
-  <ng-sidebar #sidebar [mode]="'push'" [(opened)]="opened">
-    <p>Sidebar contents</p>
-    <button (click)="sidebar.close()"></button>
-  </ng-sidebar>
-  <!-- Page content -->
-  <div ng-sidebar-content>
-    <button (click)="sidebar.open()">Toggle sidebar</button>
+<div class="nav-side-menu">
+  <img src="http://nextstepchallenge.com/wp-content/uploads/2014/04/Esbjerg-Erhvervsudvikling.png" class="brand" style="width:200px;">
+  <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+  <div class="menu-list">
+
+    <ul id="menu-content" class="menu-content collapse out">
+      <li (click)="toCommonCalendar()">
+        <a><i class="fa fa-home fa-lg"></i> Månedsoversigt</a>
+      </li>
+      <li *ngIf="!isAdmin()" (click)="toEmployeeProfile()">
+        <a><i class="fa fa-id-card-o" aria-hidden="true"></i> Min Profil</a>
+      </li>
+      <li *ngIf="isAdmin()" (click)="toEmployeeProfile()">
+        <a><i class="fa fa-id-card-o" aria-hidden="true"></i> Admin Profil</a>
+      </li>
+      <li *ngIf="!isAdmin()" (click)="toCalendar()">
+        <a><i class="fa fa-calendar fa-lg"></i> Kalender</a>
+      </li>
+      <li *ngIf="isAdmin()" (click)="toOverview()">
+        <a><i class="fa fa-list-alt fa-lg"></i> Ferieårsoversigt</a>
+      </li>
+      <li *ngIf="!isAdmin()" (click)="toOverview()">
+        <a><i class="fa fa-list-alt fa-lg"></i> Mit Ferieår</a>
+      </li>
+      <li *ngIf="isAdmin()" (click)="toEmployees()">
+        <a ><i class="fa fa-users fa-lg"></i> Medarbejdere </a>
+      </li>
+      <li *ngIf="!isAdmin()" (click)="toEmployees()">
+        <a ><i class="fa fa-users fa-lg"></i> Kollegaer </a>
+      </li>
+      <li (click)="logOut()">
+        <a><i class="fa fa-sign-out fa-lg"></i> Logud</a>
+      </li>
+    </ul>
   </div>
-</ng-sidebar-container>
+
+</div>

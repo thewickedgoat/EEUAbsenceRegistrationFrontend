@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {DepartmentService} from '../../services/department.service';
 import {Department} from '../../entities/department';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-department-create',
@@ -14,7 +15,7 @@ export class DepartmentCreateComponent implements OnInit {
   departmentCreated = false;
   department: Department;
   departmentGroup: FormGroup;
-  constructor(private router: Router, private departmentService: DepartmentService, private formBuilder: FormBuilder) {
+  constructor(private location: Location, private departmentService: DepartmentService, private formBuilder: FormBuilder) {
     this.departmentGroup = this.formBuilder.group({
       name: ['', Validators.required],
 
@@ -29,7 +30,7 @@ export class DepartmentCreateComponent implements OnInit {
   }
 
   back(){
-    this.router.navigateByUrl('employees');
+    this.location.back();
   }
 
   createDepartment(){

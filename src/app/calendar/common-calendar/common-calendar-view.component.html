@@ -1,0 +1,35 @@
+<div (click)="goToCalendar()">
+  <div class="row">
+    <div *ngIf="isPowerOfTwo()" class="col-md-2 nameOfTwo">
+      <div><b>  {{employee.FirstName}} {{employee.LastName}}</b></div>
+      <span class="tooltiptext"><i class="fa fa-calendar" aria-hidden="true"></i> Gå til {{employee.FirstName}}'s kalender</span>
+    </div>
+    <div *ngIf="!isPowerOfTwo()" class="col-md-2 name">
+      <div><b>  {{employee.FirstName}} {{employee.LastName}}</b></div>
+      <span class="tooltiptext"><i class="fa fa-calendar" aria-hidden="true"></i> Gå til {{employee.FirstName}}'s kalender</span>
+    </div>
+    <div class="col-md-10" >
+      <div class="row">
+        <div *ngFor="let day of daysInCurrentMonth">
+          <div *ngIf="day.getDay() != 0 && day.getDay() !=6 && isPowerOfTwo()" class="weekDayBoxOfTwo" >
+            {{getAbsenceCode(day.getFullYear(), day.getMonth(), day.getDate())}}
+          </div>
+          <div *ngIf="day.getDay() === 0 || day.getDay() === 6" class="weekEndBox">
+            {{getAbsenceCode(day.getFullYear(), day.getMonth(), day.getDate())}}
+          </div>
+          <div *ngIf="day.getDay() != 0 && day.getDay() !=6 && !isPowerOfTwo()" class="weekDayBox" >
+            <b>{{getAbsenceCode(day.getFullYear(), day.getMonth(), day.getDate())}}</b>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!--<div *ngIf="day.getDay() != 0 && day.getDay() !=6" class="weekDayBox" >
+        {{getAbsenceCode(day.getFullYear(), day.getMonth(), day.getDate())}}
+      </div>
+      <div *ngIf="day.getDay() === 0 || day.getDay() === 6" class="weekEndBox">
+        {{getAbsenceCode(day.getFullYear(), day.getMonth(), day.getDate())}}
+      </div>-->
+
