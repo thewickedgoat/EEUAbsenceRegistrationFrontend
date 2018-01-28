@@ -223,11 +223,11 @@
       <h3>Fraværskoder:</h3>
       <hr>
       <div *ngFor="let status of statusList">
-        <input type="radio" *ngIf="statusList.lastIndexOf(status) == 0" checked="checked" name="absenceType" (change)="setStatusCode(status)">
+        <input type="radio" *ngIf="statusList.lastIndexOf(status) == 0" name="absenceType" (change)="setStatusCode(status)">
         <input type="radio" *ngIf="statusList.lastIndexOf(status) > 0" name="absenceType" (change)="setStatusCode(status)">{{statusses[statusList.lastIndexOf(status)]}}
       </div>
       <div>
-        <input type="radio" name="absenceType" (change)="setStatusCode('slet')">Slet
+        <input type="radio" name="absenceType" checked="checked" (change)="setStatusCode('slet')">Slet
       </div>
       <hr>
       <div *ngIf="isAdmin() || isChief() && loggedInUser.Department.Name === employee.Department.Name || loggedInUser.Id === employee.Id">

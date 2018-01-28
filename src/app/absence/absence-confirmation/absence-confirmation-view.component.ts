@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {Employee} from '../../entities/Employee';
-import {EmployeeRole} from '../../entities/employeeRole.enum';
 
 @Component({
   selector: 'app-absence-confirmation-view',

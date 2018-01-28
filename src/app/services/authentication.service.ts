@@ -27,7 +27,6 @@ export class AuthenticationService {
     const requestString = "grant_type=password&username=" + employee.UserName + " &password=" + employee.Password;
     sessionStorage.setItem('currentEmployee', JSON.stringify(employee));
     console.log(sessionStorage.getItem('token'));
-    console.log('duuuuuh');
     return this.http.post<string>('http://localhost:51017/token', requestString);
 
   }

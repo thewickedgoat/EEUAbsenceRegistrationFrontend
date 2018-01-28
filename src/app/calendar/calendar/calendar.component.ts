@@ -57,7 +57,11 @@ export class CalendarComponent implements OnInit {
   sixthWeekDates: number[];
   statusList: Status[];
 
-  constructor(private router: Router, private location: Location, private employeeService: EmployeeService, private absenceService: AbsenceService, private route: ActivatedRoute) {
+  constructor(private router: Router,
+              private location: Location,
+              private employeeService: EmployeeService,
+              private absenceService: AbsenceService,
+              private route: ActivatedRoute) {
 
   }
 
@@ -270,7 +274,7 @@ export class CalendarComponent implements OnInit {
     else{
       setTimeout(() => {
         this.refreshCalendar();
-      }, 500);
+      }, 1250);
 
     }
   }

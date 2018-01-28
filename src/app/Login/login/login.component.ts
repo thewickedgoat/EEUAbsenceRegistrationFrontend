@@ -42,9 +42,7 @@ export class LoginComponent implements OnInit {
     if(this.employeeToLogin.EmployeeRole === EmployeeRole.Administrator){
       this.authenticationService.login(this.employeeToLogin).subscribe(x => {
         this.validateLogin($event, x);
-        setTimeout(() => {
-          this.router.navigate(['employees'])
-        }, 3000);
+          this.router.navigate(['employees']);
       });
     }
     else {
@@ -52,9 +50,7 @@ export class LoginComponent implements OnInit {
       let year = date.getFullYear();
       let month = date.getMonth();
       this.authenticationService.login(this.employeeToLogin).subscribe(x => {this.validateLogin($event, x);
-      setTimeout(() => {
         this.router.navigate(['common-calendar/' + year + '/' + month]);
-      }, 3000);
       });
     }
 

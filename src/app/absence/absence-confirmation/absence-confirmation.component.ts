@@ -62,7 +62,6 @@ export class AbsenceConfirmationComponent implements OnInit {
    */
   approveAbsencePeriode(){
     console.log(this.loggedInUser);
-    console.log('whaddup1');
     const loggedInEmployee = this.loggedInUser;
     if(loggedInEmployee.Id === this.employee.Id && !this.isDepartmentChief){
       for(let absence of this.absencesToApprove){
