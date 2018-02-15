@@ -1,6 +1,6 @@
-import {Absence} from './absence';
 import {EmployeeRole} from './employeeRole.enum';
 import {Department} from './department';
+import {HolidayYear} from './HolidayYear';
 export class Employee {
   Id?: number;
   FirstName: string;
@@ -8,9 +8,9 @@ export class Employee {
   UserName: string;
   Email: string;
   Password: string;
-  Absences?: Absence[];
-  Department?: Department;
-  EmployeeRole?: EmployeeRole;
+  HolidayYears?: HolidayYear[];
+  Department: Department;
+  EmployeeRole: EmployeeRole;
 }
 
 

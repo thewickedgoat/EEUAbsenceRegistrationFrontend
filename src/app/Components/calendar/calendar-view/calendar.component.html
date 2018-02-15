@@ -1,0 +1,109 @@
+<app-toolbar></app-toolbar>
+<div class="container" *ngIf="employee">
+  <div class="row">
+    <div class="col-md-12">
+      <h2 style="text-align: center">Fraværsregistrering</h2>
+    </div>
+  </div>
+  <div class="row">
+      <div class="col-sm-3" *ngIf="loggedInUser">
+        <h3>Brugerinfo:</h3>
+        <!--<div>
+            <hr>
+            <div>
+              <b>Fornavn: </b> {{employee.FirstName}}
+            </div>
+            <div>
+              <b>Efternavn: </b> {{employee.LastName}}
+            </div>
+            <div>
+              <b>Brugernavn: </b> {{employee.UserName}}
+            </div>
+            <div>
+              <b>Email: </b> {{employee.Email}}
+            </div>
+            <div>
+              <b>Afdeling: </b> {{employee.Department.Name}}
+            </div>
+            <div>
+              <b>Rolle: </b> {{getRole(employee.EmployeeRole)}}
+            </div>
+            <hr>
+        </div>
+        <div *ngIf="isAdmin() || isChief() && loggedInUser.Department.Name === employee.Department.Name || loggedInUser.Id === employee.Id">
+          <h3>Feriesoversigt:</h3>
+          <app-absence-overview-controller
+            [employee]="getEmployee()"
+          [holidayYearEnd]="holidayYearEnd"
+          [holidayYearStart]="holidayYearStart"></app-absence-overview-controller>
+        </div>-->
+        <div  class="btn btn-success" (click)="back()">
+          Tilbage
+        </div>
+      </div>
+      <div class="col-sm-7" style="text-align: center" *ngIf="amountOfWeeksInCurrentMonth">
+        <div *ngIf="!firstMonthInHolidayYear" class="btn btn-info" type="button" (click)="previousMonth()">
+          Forrige
+        </div>
+        <b>{{monthNames[currentMonth.MonthDate.getMonth()]}} {{currentMonth.MonthDate.getFullYear()}}</b>
+        <div *ngIf="!lastMonthInHolidayYear" class="btn btn-info" type="button" (click)="nextMonth()">
+          Næste
+        </div>
+        <div class="row">
+          <div class="WeekEndDay col-sm-1">
+            <p>Søn</p>
+          </div>
+          <div class="WeekDay col-sm-2">
+            <p>Man</p>
+          </div>
+          <div class="WeekDay col-sm-2">
+            <p>Tir</p>
+          </div>
+          <div class="WeekDay col-sm-2">
+            <p>Ons</p>
+          </div>
+          <div class="WeekDay col-sm-2">
+            <p>Tor</p>
+          </div>
+          <div class="WeekDay col-sm-2">
+            <p>Fre</p>
+          </div>
+          <div class="WeekEndDay col-sm-1">
+            <p>Lør</p>
+          </div>
+        </div>
+
+        <!-- this div is run if the currentMonthonth is open for approval -->
+      <app-calendar-view
+      [currentMonth]="currentMonth"
+      [weeks]="weeks"
+      [datesInWeeks]="datesInWeeks"
+      [amountOfWeeksInCurrentMonth]="amountOfWeeksInCurrentMonth"
+      [isMonthLocked]="isMonthLocked"
+      [status]="status"
+      (emitter)="updateHolidayAndMonth()"></app-calendar-view>
+      </div>
+    <div class="absenceTypes col-sm-2"> <!--*ngIf="isAdmin() || isChief() && loggedInUser.Department.Name === employee.Department.Name || loggedInUser.Id === employee.Id"-->
+      <app-status-controller (emitter)="setStatus($event)"></app-status-controller>
+      <div *ngIf="currentMonth">
+        <app-absence-confirmation
+          [loggedInEmployee]="loggedInUser"
+          [employee]="employee"
+          [currentMonth]="currentMonth"
+          [isEmployee]="isEmployee"
+          [isDepartmentChief]="isDepartmentChief"
+          [isCEO]="isCEO"
+          [isAdmin]="isAdmin"
+          (emitterToReopen)="refreshCalendar()"
+          (emitter)="refreshCalendar()"
+        ></app-absence-confirmation>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+

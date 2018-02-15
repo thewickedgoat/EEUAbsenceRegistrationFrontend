@@ -1,0 +1,9 @@
+<h3>Fraværskoder:</h3>
+<hr>
+<div *ngFor="let status of statusList">
+   <input type="radio" name="absenceType" (change)="setStatus(status)">{{status.StatusCode + ' - ' + status.StatusName}}
+</div>
+<div>
+  <input type="radio" name="absenceType" checked="checked" >Slet
+</div>
+<hr>

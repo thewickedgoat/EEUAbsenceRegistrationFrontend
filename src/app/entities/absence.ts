@@ -1,13 +1,10 @@
-import {Employee} from './employee';
-import {Status} from './status.enum';
+import {Status} from './status';
+import {Month} from './month';
 
 
 export class Absence {
   Id?: number;
-  Employee: Employee;
   Date: Date;
-  Status: Status;
-  IsLockedByEmployee?: boolean;
-  IsLockedByChief?: boolean;
-  IsLockedByAdmin?: boolean;
+  Status: Status
+  Month?: Month;
 }

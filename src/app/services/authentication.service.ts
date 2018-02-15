@@ -17,8 +17,8 @@ export class AuthenticationService {
   }
 
   logout(){
-    sessionStorage.setItem('token', '');
-    sessionStorage.setItem('currentEmployee', '');
+    sessionStorage.setItem('token', null);
+    sessionStorage.setItem('currentEmployee', null);
     console.log(this.getToken());
 
   }
