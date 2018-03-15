@@ -1,4 +1,4 @@
-<div (click)="goToCalendar()">
+<div *ngIf="absencesInCurrentMonth != null" (click)="goToCalendar()">
   <div class="row">
     <div *ngIf="isPowerOfTwo()" class="col-md-2 nameOfTwo">
       <div><b>  {{employee.FirstName}} {{employee.LastName}}</b></div>

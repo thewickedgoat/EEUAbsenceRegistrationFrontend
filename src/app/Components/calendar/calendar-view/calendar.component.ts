@@ -17,7 +17,6 @@ import {MonthService} from '../../../services/month.service';
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.css'],
   encapsulation: ViewEncapsulation.None
 })
 export class CalendarComponent implements OnInit {
@@ -27,6 +26,8 @@ export class CalendarComponent implements OnInit {
 
   employee: Employee;
   loggedInUser: Employee;
+  vacationLimitReached: boolean = false;
+  vacationLimitReachedError: boolean = false;
 
   status: Status;
 
@@ -41,9 +42,6 @@ export class CalendarComponent implements OnInit {
 
   currentHolidayYear: HolidayYear;
 
-  absencesInCurrentMonth: Absence[];
-
-  employees: Employee[];
   currentMonth: Month;
   daysInCurrentMonth: Date[];
   amountOfWeeksInCurrentMonth: number[];
@@ -51,6 +49,7 @@ export class CalendarComponent implements OnInit {
   daysBeforeIndex: number[];
   weeks: any[];
   datesInWeeks: any[];
+  absencesInCurrentMonth: Absence[] = [];
 
   constructor(private router: Router,
               private location: Location,
@@ -58,9 +57,7 @@ export class CalendarComponent implements OnInit {
               private monthService: MonthService,
               private employeeService: EmployeeService,
               private absenceService: AbsenceService,
-              private route: ActivatedRoute,
-              private zone: NgZone) {
-
+              private route: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -69,7 +66,6 @@ export class CalendarComponent implements OnInit {
           this.employeeService.getById(+params.get('id')).subscribe( employee => {
             this.employee = employee;
             this.getHolidayYear(+params.get('year'), +params.get('month'));
-            console.log('i mean...what? ' + this.currentMonth);
           });
 
     });
@@ -80,21 +76,19 @@ export class CalendarComponent implements OnInit {
     this.initArrays();
     this.populateCalendar();
     this.getAllDatesInMonth();
+    this.formatAbsencesInCurrentMonth()
     this.validateApprovalPermissions();
-    this.checkForLockedMonth();
+    this.checkForApprovalPermission();
     this.withinHolidayYearInterval();
   }
-
+  //skal flyttes til controlleren for alle componenterne i kalender-viewet
   setStatus(status){
     this.status = status;
   }
 
+  //skal flyttes til controlleren for alle componenterne i kalender-viewet
   getHolidayYear(year: number, month: number){
-    let holidayYears = new Array();
-    let holidayYearsInEmployee = new Array();
-    this.holidayYearService.getAll().subscribe(holidays => {
-      holidayYears = holidays;
-      holidayYearsInEmployee = holidayYears.filter(x => x.Employee.Id === this.employee.Id);
+      let holidayYearsInEmployee = this.employee.HolidayYears;
       if(holidayYearsInEmployee != null){
         for(let holidayYear of holidayYearsInEmployee){
           const startDateToParse = holidayYear.StartDate.toString();
@@ -108,18 +102,17 @@ export class CalendarComponent implements OnInit {
       const april = 3;
       const may = 4;
       if(month >= may){
-        this.currentHolidayYear = holidayYears.find(x => x.EndDate.getFullYear() === year+1
+        this.currentHolidayYear = holidayYearsInEmployee.find(x => x.EndDate.getFullYear() === year+1
           && x.StartDate.getFullYear() === year);
       }
       else if(month <= april){
-        this.currentHolidayYear = holidayYears.find(x => x.StartDate.getFullYear() === year-1
+        this.currentHolidayYear = holidayYearsInEmployee.find(x => x.StartDate.getFullYear() === year-1
           && x.EndDate.getFullYear() === year);
       }
       this.getCurrentMonth(month);
       this.initData();
-    });
   }
-
+  //skal flyttes til controlleren for alle componenterne i kalender-viewet
   getCurrentMonth(month: number){
     let months = this.currentHolidayYear.Months;
     if(months != null){
@@ -132,13 +125,13 @@ export class CalendarComponent implements OnInit {
     //Ugly cheat - need to re-reference some Employee include relations upon loading
     let currentMonth = months.find(x => x.MonthDate.getMonth() === month);
     this.currentMonth = currentMonth;
-    console.log(this.currentMonth);
   }
 
   /**
    * Navigates to the next month
    * @param $event
    */
+  //skal flyttes til controlleren for alle componenterne i kalender-viewet
   nextMonth($event){
     let december = 11;
     const currentMonth = this.currentMonth.MonthDate.getMonth();
@@ -159,6 +152,7 @@ export class CalendarComponent implements OnInit {
    * Navigates to the previous month
    * @param $event
    */
+  //skal flyttes til controlleren for alle componenterne i kalender-viewet
   previousMonth($event){
     let january = 0;
     const currentMonth = this.currentMonth.MonthDate.getMonth();
@@ -176,35 +170,26 @@ export class CalendarComponent implements OnInit {
 
   refreshCalendar()
   {
-    console.log("Refreshing");
-    /**this.holidayYearService.getById(this.currentHolidayYear.Id).subscribe(holiday => {
-      this.currentHolidayYear = holiday;
-      this.getCurrentMonth(this.currentMonth.MonthDate.getMonth());
-      this.initData();
-    });*/
     this.initData();
-    console.log('Refreshed');
   }
 
-  checkForLockedMonth(){
-    if(this.isAdmin && this.currentMonth.IsLockedByAdmin === true){
+  //skal flyttes til controlleren for alle componenterne i kalender-viewet
+  checkForApprovalPermission(){
+    if(this.isEmployee && this.currentMonth.IsLockedByEmployee === true
+      || this.isCEO && this.currentMonth.IsLockedByCEO === true
+      || this.isDepartmentChief && this.currentMonth.IsLockedByChief === true
+      || this.isAdmin && this.currentMonth.IsLockedByAdmin === true){
       this.isMonthLocked = true;
     }
-    else if(this.isDepartmentChief && this.currentMonth.IsLockedByChief === true){
-      this.isMonthLocked = true;
-    }
-    else if(this.isCEO && this.currentMonth.IsLockedByCEO === true){
-      this.isMonthLocked = true;
-    }
-    else if(this.isEmployee && this.currentMonth.IsLockedByEmployee === true){
+    else if(!this.isDepartmentChief && !this.isCEO && !this.isEmployee && !this.isAdmin){
       this.isMonthLocked = true;
     }
     else{
       this.isMonthLocked = false;
     }
   }
-
-  updateHolidayAndMonth(){
+  //skal flyttes til controlleren for alle componenterne i kalender-viewet
+  reloadHolidayYearAndMonth(){
     this.holidayYearService.getById(this.currentHolidayYear.Id).subscribe(holiday => {
       if(holiday != null){
           const startDateToParse = holiday.StartDate.toString();
@@ -223,17 +208,112 @@ export class CalendarComponent implements OnInit {
             this.currentMonth = currentMonth;
           }
       }
-      console.log(this.currentMonth);
       this.initData();
     });
   }
 
+  //skal flyttes til controlleren
+  //nærmest identisk med delete - refaktor senere
+  updateHoliday(absence: Absence){
+    let holidayYear = this.currentHolidayYear;
+    const absenceStatus = absence.Status.StatusCode;
+    const statusCode = this.status.StatusCode;
+    const holidaysUsed = holidayYear.HolidaysUsed;
+    const holidayFreedaysUsed = holidayYear.HolidayFreedaysUsed;
+    if(this.isHolidayFreedaysAboutToHitLimit(statusCode, absenceStatus, holidayFreedaysUsed) ||
+      this.isHolidayAboutToHitLimit(statusCode, absenceStatus, holidaysUsed)){
+      this.error();
+      return;
+
+    }
+    else{
+      this.deleteHoliday(absence);
+      absence.Status = this.status;
+      this.addHoliday(absence);
+    }
+  }
+
+  //skal flyttes til controlleren
+  addHoliday(absence: Absence){
+    let holidayYear = this.currentHolidayYear;
+    const status = absence.Status.StatusCode;
+    const holidayUsed = holidayYear.HolidaysUsed;
+    const holidayFreedaysUsed = holidayYear.HolidayFreedaysUsed;
+    const halfDay = 0.5;
+    const wholeDay = 1;
+    let holidaySpent;
+    let holidayFreedaysSpent;
+    if(status === 'F'){
+      holidaySpent = holidayUsed+wholeDay;
+      if(this.vacationLimitHit(holidaySpent, null)){
+        this.error();
+        return;
+      }
+      holidayYear.HolidaysUsed = holidaySpent;
+    }
+    if(status === 'FF'){
+      holidayFreedaysSpent = holidayFreedaysUsed+wholeDay;
+      if(this.vacationLimitHit(null, holidayFreedaysSpent)){
+        this.error();
+        return;
+      }
+      holidayYear.HolidayFreedaysUsed = holidayFreedaysSpent;
+    }
+    if(status === 'HF'){
+      let holidaySpent = holidayUsed+halfDay;
+      if(this.vacationLimitHit(holidaySpent, null)){
+        this.error();
+        return;
+      }
+      holidayYear.HolidaysUsed = holidaySpent;
+    }
+    if(status === 'HFF'){
+      let holidayFreedaysSpent = holidayFreedaysUsed+halfDay;
+      if(this.vacationLimitHit(null, holidayFreedaysSpent)){
+      this.error();
+        return;
+      }
+      holidayYear.HolidayFreedaysUsed = holidayFreedaysSpent;
+    }
+    this.vacationLimitReached = false;
+    this.holidayYearService.put(holidayYear).subscribe(() => {});
+  }
+
+  //skal flyttes til controlleren
+  deleteHoliday(absence: Absence){
+    let holidayYear = this.currentHolidayYear;
+    const status = absence.Status.StatusCode;
+    const vacationDaysUsed = holidayYear.HolidaysUsed;
+    const vacationfreedays = holidayYear.HolidayFreedaysUsed;
+    const halfDay = 0.5;
+    const wholeDay = 1;
+    if(status === 'F'){
+      holidayYear.HolidaysUsed = vacationDaysUsed-wholeDay;
+    }
+    if(status === 'FF'){
+      holidayYear.HolidayFreedaysUsed = vacationfreedays-wholeDay;
+    }
+    if(status === 'HF'){
+      holidayYear.HolidaysUsed = vacationDaysUsed-halfDay;
+    }
+    if(status === 'HFF'){
+      holidayYear.HolidayFreedaysUsed = vacationfreedays-halfDay;
+    }
+    this.holidayYearService.put(holidayYear).subscribe(() => {});
+  }
+
+  getEmployeeRole(employeeRole: number){
+    return EmployeeRole[employeeRole];
+  }
+  //skal flyttes til controlleren for alle componenterne i kalender-viewet
   withinHolidayYearInterval(){
-    if(this.currentMonth.MonthDate.getMonth() === 3){
+    const april = 3;
+    const may = 4;
+    if(this.currentMonth.MonthDate.getMonth() === april){
       this.lastMonthInHolidayYear = true;
       this.firstMonthInHolidayYear = false;
     }
-    else if(this.currentMonth.MonthDate.getMonth() === 4){
+    else if(this.currentMonth.MonthDate.getMonth() === may){
       this.lastMonthInHolidayYear = false;
       this.firstMonthInHolidayYear = true;
     }
@@ -246,6 +326,7 @@ export class CalendarComponent implements OnInit {
   /**
    * Goes back to the last page you visited
    */
+  //skal flyttes til controlleren for alle componenterne i kalender-viewet
   back(){
     this.router.navigateByUrl('overview/' + this.employee.Id);
   }
@@ -259,13 +340,15 @@ export class CalendarComponent implements OnInit {
     this.getWeeksInMonth(firstDayOfMonth);
   }
 
+  //skal flyttes til kalender controller - når den engang bliver lavet....
   validateApprovalPermissions(){
     this.isAdmin = false;
     this.isCEO = false;
     this.isDepartmentChief = false;
     this.isEmployee = false;
     const loggedInEmployee = this.loggedInUser;
-    if(loggedInEmployee.Id === this.employee.Id && loggedInEmployee.EmployeeRole != EmployeeRole.Afdelingsleder){
+    if(loggedInEmployee.Id === this.employee.Id && loggedInEmployee.EmployeeRole != EmployeeRole.Afdelingsleder
+      || loggedInEmployee.Id === this.employee.Id && loggedInEmployee.EmployeeRole != EmployeeRole.Direktør){
       this.isEmployee = true;
     }
     if(loggedInEmployee.Id === this.employee.Id && loggedInEmployee.EmployeeRole === EmployeeRole.Afdelingsleder){
@@ -457,7 +540,6 @@ export class CalendarComponent implements OnInit {
    * Inits all arrays
    */
   initArrays(){
-    this.absencesInCurrentMonth = new Array<Absence>();
     this.daysInCurrentMonth = new Array<Date>();
     this.weekendDays = new Array<number>();
     this.daysBeforeIndex = new Array<number>();
@@ -498,5 +580,84 @@ export class CalendarComponent implements OnInit {
     let date = new Date(year, month +1, 0);
     date.setDate(date.getDate() - 1);
     return date.getDate();
+  }
+
+  /**
+   * The Date() object in typescript does not play well with the restAPI's date format.
+   * Converts the absence dates in the current employee one by one.
+   */
+  formatAbsencesInCurrentMonth(){
+    if(this.currentMonth.AbsencesInMonth != null){
+      this.absencesInCurrentMonth = this.currentMonth.AbsencesInMonth;
+      for(let absence of this.absencesInCurrentMonth){
+        const absenceToAdd = absence.Date.toString();
+        const date = new Date(Date.parse(absenceToAdd));
+        absence.Date = date;
+      }
+    }
+  }
+
+  vacationLimitHit(holidayUsed?: number, holidayFreedaysUsed?: number){
+    const holidayYear = this.currentHolidayYear;
+    let holidayLeft = holidayYear.HolidayAvailable;
+    let holidayFreedaysLeft = holidayYear.HolidayFreedayAvailable;
+    if(holidayLeft != null && holidayLeft < holidayUsed){
+      return true;
+    }
+    if(holidayFreedaysLeft != null && holidayFreedaysLeft < holidayFreedaysUsed){
+      return true;
+    }
+    else return false;
+  }
+
+  isHolidayAboutToHitLimit(statusCode: string, absenceStatus: string, holidayUsed: number){
+    const holidayYear = this.currentHolidayYear;
+    let remainingHoliday = holidayYear.HolidayAvailable-holidayUsed;
+    if(absenceStatus === 'F' && statusCode === 'HF'){
+      return false;
+    }
+    else if(absenceStatus != 'F' && statusCode ==='HF' && remainingHoliday < 0.5){
+      return true;
+    }
+    else if(absenceStatus === 'HF' && statusCode === 'F' && remainingHoliday < 0.5){
+      return true;
+    }
+    else if(absenceStatus != 'HF' && statusCode ==='F' && remainingHoliday < 1){
+      return true;
+    }
+    else return false;
+  }
+
+  isHolidayFreedaysAboutToHitLimit(statusCode: string, absenceStatus: string, holidayFreedaysUsed: number){
+    const holidayYear = this.currentHolidayYear;
+    let remainingHoliday = holidayYear.HolidayFreedayAvailable-holidayFreedaysUsed;
+    if(absenceStatus === 'FF' && statusCode === 'HFF'){
+      return false;
+    }
+    else if(absenceStatus != 'FF' && statusCode ==='HFF' && remainingHoliday < 0.5){
+      return true;
+    }
+    else if(absenceStatus === 'HFF' && statusCode === 'FF' && remainingHoliday < 0.5){
+      return true;
+    }
+    else if(absenceStatus != 'HFF' && statusCode ==='FF' && remainingHoliday < 1){
+      return true;
+    }
+    else return false;
+  }
+
+  resetVacationLimit(){
+    this.vacationLimitReached = false;
+  }
+  close(){
+    this.vacationLimitReachedError = false;
+  }
+
+  error(){
+    this.vacationLimitReached = true;
+    this.vacationLimitReachedError = true;
+    setTimeout(()=> {
+      this.vacationLimitReachedError = false;
+    }, 3000);
   }
 }

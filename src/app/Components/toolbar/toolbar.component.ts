@@ -43,7 +43,7 @@ export class ToolbarComponent implements OnInit {
    * Page navigation
    */
   logOut(){
-    this.authenticationService.logout();
+    this.authenticationService.logout(JSON.parse(sessionStorage.getItem('currentEmployee')));
     this.router.navigateByUrl('login');
   }
   /**

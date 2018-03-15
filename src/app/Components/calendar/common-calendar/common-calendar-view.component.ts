@@ -1,5 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {Employee} from '../../../entities/Employee';
+import {Month} from '../../../entities/month';
+import {Absence} from '../../../entities/absence';
 
 @Component({
   selector: 'app-common-calendar-view',
@@ -13,6 +15,12 @@ export class CommonCalendarViewComponent implements OnInit {
   employee: Employee;
 
   @Input()
+  holidayYearStartDate: Date;
+  @Input()
+  holidayYearEndDate: Date;
+  @Input()
+  absencesInCurrentMonth: Absence[];
+  @Input()
   daysInCurrentMonth: Date[];
 
   @Input()
@@ -24,8 +32,9 @@ export class CommonCalendarViewComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    //this.getAbsencesInCurrentMonth();
   }
+
+
 
   /**
    * Gets the absence code to put in the calendar when fetched from the given absence
@@ -33,36 +42,23 @@ export class CommonCalendarViewComponent implements OnInit {
    * @param month
    * @param date
    * @returns {any}
-   *
+   */
   getAbsenceCode(year: number, month: number, date: number){
-    if(this.employee.Absences.length > 0) {
-      const absence = this.employee.Absences.find(
+    const absenceInMonth = this.absencesInCurrentMonth;
+    if(absenceInMonth.length > 0) {
+      const absence = absenceInMonth.find(
         abs => abs.Date.getFullYear() === year
       && abs.Date.getMonth() === month
       && abs.Date.getDate() === date);
       if(absence != null){
-        return Status[this.statusList[absence.Status]];
+        return absence.Status.StatusCode;
       }
       else return ''
     }
     else return ''
-  }*/
+  }
 
-  /**
-   * Helper method for parsing dates from a different format from the rest-API. "hack"
-   *
-  getAbsencesInCurrentMonth(){
-    if(this.employee.Absences != null){
-      for(let absence of this.employee.Absences){
-        const absenceToAdd = absence.Date.toString();
-        const date = new Date(Date.parse(absenceToAdd));
-        absence.Date = date;
-      }
-    }
-
-  }*/
-
-  /**
+   /**
    * Styling method, every line that goes up into the power of 2 will be green instead of grey
    * @returns {boolean}
    */

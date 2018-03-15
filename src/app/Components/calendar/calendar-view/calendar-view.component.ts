@@ -4,6 +4,8 @@ import {Month} from '../../../entities/month';
 import {AbsenceService} from '../../../services/absence.service';
 import {Status} from '../../../entities/status';
 import {MonthService} from '../../../services/month.service';
+import {HolidayyearService} from '../../../services/holidayyear.service';
+import {HolidayYear} from '../../../entities/HolidayYear';
 
 @Component({
   selector: 'app-calendar-view',
@@ -12,7 +14,6 @@ import {MonthService} from '../../../services/month.service';
   encapsulation: ViewEncapsulation.None
 })
 export class CalendarViewComponent implements OnInit {
-
   @Input()
   weeks: any[];
   @Input()
@@ -25,16 +26,28 @@ export class CalendarViewComponent implements OnInit {
   isMonthLocked: boolean;
   @Input()
   status: Status;
-
-  absencesInCurrentMonth: Absence[] = [];
+  @Input()
+  absencesInCurrentMonth: Absence[];
+  @Input()
+  vacationLimitReached: boolean;
 
   @Output()
   emitter = new EventEmitter();
+  @Output()
+  addHoliday = new EventEmitter();
+  @Output()
+  vacationLimitCheck = new EventEmitter();
+  @Output()
+  deleteHoliday = new EventEmitter();
+  @Output()
+  updateHoliday = new EventEmitter();
 
   constructor(private absenceService: AbsenceService, private monthService: MonthService) { }
 
   ngOnInit() {
-    this.getAbsencesInCurrentMonth();
+  }
+
+  ngOnChanges(){
   }
   /**
    * based on the day of the week it wii return the weekList in the current week the calendar is building
@@ -47,11 +60,6 @@ export class CalendarViewComponent implements OnInit {
 
     return this.getDayInWeek(currentWeek, day);
 
-  }
-
-  ngOnChanges(){
-
-    this.getAbsencesInCurrentMonth();
   }
 
   /**
@@ -74,14 +82,10 @@ export class CalendarViewComponent implements OnInit {
   {
     let currentDate = this.convertToDate(week, day);
     let absence = this.absencesInCurrentMonth.find(x => x.Date.toDateString() === currentDate.toDateString());
+
     if(absence != null)
     {
-      if(absence.Status.StatusName === "GRAY" ){
-        return '+';
-      }
-      else{
-        return absence.Status.StatusCode;
-      }
+      return absence.Status.StatusCode;
     }
     else {
       return '+';
@@ -121,21 +125,6 @@ export class CalendarViewComponent implements OnInit {
   }
 
   /**
-   * The Date() object in typescript does not play well with the restAPI's date format.
-   * Converts the absence dates in the current employee one by one.
-   */
-  getAbsencesInCurrentMonth(){
-    if(this.currentMonth.AbsencesInMonth != null){
-      this.absencesInCurrentMonth = this.currentMonth.AbsencesInMonth;
-      for(let absence of this.absencesInCurrentMonth){
-        const absenceToAdd = absence.Date.toString();
-        const date = new Date(Date.parse(absenceToAdd));
-        absence.Date = date;
-      }
-    }
-  }
-
-  /**
    * Creates, edits or deletes an absences depending on the requirement.
    * If there is already and absence it will be updated with the new selected value.
    * If there is no absence a new absence will be created on that date.
@@ -144,30 +133,111 @@ export class CalendarViewComponent implements OnInit {
    * @param day
     */
    changeAbsence(week: number, day: number){
-     let absencesInCurrentMonth = this.currentMonth.AbsencesInMonth;
-    let currentDate = this.convertToDate(week, day);
-    if(currentDate != null)
-    {
-      let currentAbsence = absencesInCurrentMonth.find(x => x.Date.toDateString() === currentDate.toDateString());
-      if(this.status != null){
-        if(currentAbsence != null)
-        {
-          currentAbsence.Status = this.status;
-          this.monthService.getById(this.currentMonth.Id).subscribe(month=> {
-            currentAbsence.Month = month;
-            this.absenceService.put(currentAbsence).subscribe(() => {});
-          });
+      let absencesInCurrentMonth = this.currentMonth.AbsencesInMonth;
+      let currentDate = this.convertToDate(week, day);
+      if(currentDate != null)
+      {
+        let currentAbsence = absencesInCurrentMonth.find(x => x.Date.toDateString() === currentDate.toDateString());
+        if(this.status != null){
+          let statusCode = this.status.StatusCode;
+          if(currentAbsence != null)
+          {
+            this.resetVacationLimit();
+            this.updateRemainingVacation(currentAbsence, false, statusCode);
+            setTimeout(() => {
+              if(this.vacationLimit(statusCode)){
+                return;
+              }
+              else{
+                this.updateAbsence(currentAbsence);
+              }
+            }, 100);
+          }
+          else{
+            this.resetVacationLimit();
+            let absenceToCreate = ({Date: currentDate, Status: this.status, Month: this.currentMonth});
+            this.updateRemainingVacation(absenceToCreate, true, statusCode);
+            setTimeout(() => {
+              if(this.vacationLimit(statusCode)){
+                return;
+              }
+              else{
+                this.createAbsence(absenceToCreate);
+              }
+            }, 100);
+          }
         }
-        else{
-          let absenceToCreate = ({Date: currentDate, Status: this.status, Month: this.currentMonth});
-          this.absenceService.post(absenceToCreate).subscribe(() => this.refreshCalendar());
+        else {
+          let absenceStatusCode = currentAbsence.Status.StatusCode;
+          if(this.isStatusVacationRelated(absenceStatusCode)){
+            this.updateRemainingVacation(currentAbsence, false,null);
+            this.deleteAbsence(currentAbsence);
+          }
+          else{
+            this.deleteAbsence(currentAbsence);
+          }
         }
       }
-      else {
-        if(currentAbsence != null){
-          this.absenceService.delete(currentAbsence.Id).subscribe(() => {
-            this.refreshCalendar();
-          });
+  }
+
+  deleteAbsence(absence: Absence){
+    if(absence != null){
+      this.absenceService.delete(absence.Id).subscribe(() => {
+        this.refreshCalendar();
+      });
+    }
+  }
+
+  createAbsence(absence: Absence){
+    this.absenceService.post(absence).subscribe(() => {
+      this.refreshCalendar();
+    });
+  }
+
+  updateAbsence(absence: Absence){
+    absence.Status = this.status;
+    this.monthService.getById(this.currentMonth.Id).subscribe(month=> {
+      absence.Month = month;
+      this.absenceService.put(absence).subscribe(() => {
+        this.refreshCalendar();
+      });
+    });
+  }
+
+  vacationLimit(statusCode: string){
+     if(this.vacationLimitReached === true && statusCode === 'F' ||
+       this.vacationLimitReached === true && statusCode === 'FF' ||
+       this.vacationLimitReached === true && statusCode === 'HF' ||
+       this.vacationLimitReached === true && statusCode === 'HFF'){
+       return true;
+     }
+     else return false;
+  }
+
+  updateRemainingVacation(absence: Absence, newAbsence: boolean, statusCode?: string){
+    if(absence != null){
+      let status = absence.Status.StatusCode;
+      //Deletes
+      if(this.isStatusVacationRelated(status) && statusCode === null){
+        this.deleteHoliday.emit(absence);
+      }
+      else if(this.isStatusVacationRelated(status) && !this.isStatusVacationRelated(statusCode)){
+        this.deleteHoliday.emit(absence);
+      }
+      //Creates
+      else if(this.isStatusVacationRelated(status) && statusCode != null  && newAbsence && this.isStatusVacationRelated(statusCode)){
+        this.addHoliday.emit(absence);
+      }
+      //Updates
+      else if(!this.isStatusVacationRelated(status) && statusCode != null && this.isStatusVacationRelated(statusCode)){
+        this.updateHoliday.emit(absence);
+      }
+      else if(this.isStatusVacationRelated(status) && this.isStatusVacationRelated(statusCode)){
+        if(status === statusCode){
+          return;
+        }
+        else{
+          this.updateHoliday.emit(absence);
         }
       }
     }
@@ -175,5 +245,16 @@ export class CalendarViewComponent implements OnInit {
 
   refreshCalendar(){
      this.emitter.emit();
+  }
+
+  resetVacationLimit(){
+     this.vacationLimitCheck.emit();
+  }
+
+  isStatusVacationRelated(statusCode: string){
+    if(statusCode === 'F' || statusCode === 'FF' || statusCode === 'HF' || statusCode === 'HFF'){
+      return true;
+    }
+    else return false;
   }
 }

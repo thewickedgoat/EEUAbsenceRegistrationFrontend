@@ -1,8 +1,8 @@
 <app-toolbar></app-toolbar>
-<app-overview-view [employee]="employee"
-                   [loggedInUser]="loggedInUser"
-                   [monthsInHolidayYear]="monthsInHolidayYear"
-                   [holidayYearEnd]="holidayYearEnd"
-                   [holidayYearStart]="holidayYearStart"
-                   (emitter)="refreshData($event)"
-></app-overview-view>
+<app-month [employee]="employee"
+           [loggedInUser]="loggedInUser"
+           [monthsInHolidayYear]="monthsInHolidayYear"
+           [holidayYear]="holidayYear"
+           [statuses]="statuses"
+           (emitter)="goToCalendar($event)"
+></app-month>

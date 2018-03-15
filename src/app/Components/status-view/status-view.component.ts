@@ -12,6 +12,8 @@ export class StatusViewComponent implements OnInit {
   status: Status;
   @Input()
   statusList: Status[];
+  @Input()
+  isLockedForEdit: boolean;
 
   @Output()
   emitter = new EventEmitter();
@@ -23,6 +25,10 @@ export class StatusViewComponent implements OnInit {
 
   setStatus(status){
     this.emitter.emit(status)
+  }
+
+  setStatusDelete(){
+    this.emitter.emit(null);
   }
 
 }

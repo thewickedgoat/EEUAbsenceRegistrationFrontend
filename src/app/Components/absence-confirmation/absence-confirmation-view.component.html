@@ -3,7 +3,8 @@
   <div>
     <h4><b>Godkendt af:</b></h4>
   </div>
-  <div *ngIf="isEmployee && !isCEO || isEmployee && !isDepartmentChief">
+  <!--Godkend dig selv som medarbejder-->
+  <div *ngIf="isEmployee &&!isDepartmentChief && !isCEO">
     <div>
       <button *ngIf="!isMonthApprovedByEmployee" class="btn btn-info" (click)="approveMonth()">Godkend dit fravær</button>
     </div>
@@ -23,6 +24,7 @@
       Admin: <input type="checkbox" [disabled]="true">
     </div>
   </div>
+  <!--Godkend for dig selv som Afdelingsleder-->
   <div *ngIf="isEmployee && isDepartmentChief">
     <div>
       <button *ngIf="!isMonthApprovedByEmployee" class="btn btn-info" (click)="approveMonth()">Godkend dit fravær</button>
@@ -43,6 +45,7 @@
       Admin: <input type="checkbox" [disabled]="true">
     </div>
   </div>
+  <!--Godkend for dig selv som Direktør-->
   <div *ngIf="isEmployee && isCEO">
     <div>
       <button *ngIf="!isMonthApprovedByEmployee" class="btn btn-info" (click)="approveMonth()">Godkend dit fravær</button>
@@ -57,6 +60,8 @@
       Admin: <input type="checkbox" [disabled]="true">
     </div>
   </div>
+
+  <!--Godkend som Afdelingleder-->
   <div *ngIf="isDepartmentChief && !isEmployee">
     <div *ngIf="isMonthApprovedByEmployee">
       Medarbejder: <input type="checkbox" [disabled]="true" checked="checked">
@@ -77,12 +82,14 @@
       Admin: <input type="checkbox" [disabled]="true">
     </div>
   </div>
+
+  <!--Godkend som Direktør-->
   <div *ngIf="isCEO && !isEmployee">
     <div *ngIf="isMonthApprovedByEmployee">
-      Medarbejder: <input type="checkbox" [disabled]="true" checked="checked">
+      Afdelingsleder: <input type="checkbox" [disabled]="true" checked="checked">
     </div>
     <div *ngIf="!isMonthApprovedByEmployee">
-      Medarbejder: <input type="checkbox" [disabled]="true">
+      Afdelingsleder: <input type="checkbox" [disabled]="true">
     </div>
     <div *ngIf="!isMonthApprovedByChief">
       <button class="btn btn-info" (click)="approveMonth()">Godkend som Direktør</button>
@@ -98,7 +105,8 @@
     </div>
   </div>
 
-  <!--Admin section-->
+  <!--Godkend som Admin-->
+  <!--Godkend medarbejder-->
   <div *ngIf="isAdmin && employee.EmployeeRole === 0">
     <div *ngIf="isMonthApprovedByEmployee">
       Medarbejder: <input type="checkbox" [disabled]="true" checked="checked">
@@ -124,12 +132,13 @@
       && isMonthApprovedByEmployee" class="btn btn-info" (click)="reopenMonth()">Genåben måned</button>
     </div>
   </div>
+  <!--Godkend afdelingsledere-->
   <div *ngIf="isAdmin && employee.EmployeeRole === 1">
     <div *ngIf="isMonthApprovedByEmployee">
-      Medarbejder: <input type="checkbox" [disabled]="true" checked="checked">
+      Afdelingsleder: <input type="checkbox" [disabled]="true" checked="checked">
     </div>
     <div *ngIf="!isMonthApprovedByEmployee">
-      Medarbejder: <input type="checkbox" [disabled]="true">
+      Afdelingsleder: <input type="checkbox" [disabled]="true">
     </div>
     <div *ngIf="isMonthApprovedByCEO">
       Direktør: <input type="checkbox" [disabled]="true" checked="checked">
@@ -149,12 +158,13 @@
       && isMonthApprovedByEmployee" class="btn btn-info" (click)="reopenMonth()">Genåben måned</button>
     </div>
   </div>
+  <!--Godkend Direktør-->
   <div *ngIf="isAdmin && employee.EmployeeRole === 4">
     <div *ngIf="isMonthApprovedByEmployee">
-      Medarbejder: <input type="checkbox" [disabled]="true" checked="checked">
+      Direktør: <input type="checkbox" [disabled]="true" checked="checked">
     </div>
     <div *ngIf="!isMonthApprovedByEmployee">
-      Medarbejder: <input type="checkbox" [disabled]="true">
+      Direktør: <input type="checkbox" [disabled]="true">
     </div>
         <div>
       <button *ngIf="!isMonthApprovedByAdmin" class="btn btn-info" (click)="approveMonth()">Godkend som Admin</button>

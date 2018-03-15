@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {Status} from '../../entities/status';
 import {StatusService} from '../../services/status.service';
 
@@ -11,6 +11,8 @@ export class StatusControllerComponent implements OnInit {
 
   statusList: Status[];
 
+  @Input()
+  isLockedForEdit: boolean;
   @Output()
   emitter = new EventEmitter();
 
@@ -25,7 +27,12 @@ export class StatusControllerComponent implements OnInit {
   }
 
   setStatus(status){
-    console.log(status);
-    this.emitter.emit(status);
+    if(status != null){
+      this.emitter.emit(status);
+    }
+    else  {
+      this.emitter.emit(null);
+    }
+
   }
 }

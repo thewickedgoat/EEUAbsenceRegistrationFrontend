@@ -8,7 +8,7 @@
   <div class="row">
       <div class="col-sm-3" *ngIf="loggedInUser">
         <h3>Brugerinfo:</h3>
-        <!--<div>
+        <div>
             <hr>
             <div>
               <b>Fornavn: </b> {{employee.FirstName}}
@@ -26,17 +26,19 @@
               <b>Afdeling: </b> {{employee.Department.Name}}
             </div>
             <div>
-              <b>Rolle: </b> {{getRole(employee.EmployeeRole)}}
+              <b>Rolle: {{getEmployeeRole(employee.EmployeeRole)}}</b>
             </div>
             <hr>
         </div>
-        <div *ngIf="isAdmin() || isChief() && loggedInUser.Department.Name === employee.Department.Name || loggedInUser.Id === employee.Id">
-          <h3>Feriesoversigt:</h3>
+        <div *ngIf="isAdmin || isDepartmentChief && loggedInUser.Department.Name === employee.Department.Name || loggedInUser.Id === employee.Id">
+          <h3>Fraværsoversigt:</h3>
           <app-absence-overview-controller
-            [employee]="getEmployee()"
-          [holidayYearEnd]="holidayYearEnd"
-          [holidayYearStart]="holidayYearStart"></app-absence-overview-controller>
-        </div>-->
+            [employee]="employee"
+            [holidayYear]="currentHolidayYear"
+            [absencesInCurrentMonth]="currentMonth.AbsencesInMonth"
+          [holidayYearEnd]="currentHolidayYear.EndDate"
+          [holidayYearStart]="currentHolidayYear.StartDate"></app-absence-overview-controller>
+        </div>
         <div  class="btn btn-success" (click)="back()">
           Tilbage
         </div>
@@ -72,8 +74,6 @@
             <p>Lør</p>
           </div>
         </div>
-
-        <!-- this div is run if the currentMonthonth is open for approval -->
       <app-calendar-view
       [currentMonth]="currentMonth"
       [weeks]="weeks"
@@ -81,12 +81,20 @@
       [amountOfWeeksInCurrentMonth]="amountOfWeeksInCurrentMonth"
       [isMonthLocked]="isMonthLocked"
       [status]="status"
-      (emitter)="updateHolidayAndMonth()"></app-calendar-view>
+      [absencesInCurrentMonth]="absencesInCurrentMonth"
+      [vacationLimitReached]="vacationLimitReached"
+      (deleteHoliday)="deleteHoliday($event)"
+      (updateHoliday)="updateHoliday($event)"
+      (emitter)="reloadHolidayYearAndMonth()"
+      (vacationLimitCheck)="resetVacationLimit()"
+      (addHoliday)="addHoliday($event)"></app-calendar-view>
+        <ngb-alert *ngIf="vacationLimitReachedError" (close)="close()" type="danger">Du har ikke nok resterende ferie/feriefridage til at kunne gøre dette</ngb-alert>
       </div>
-    <div class="absenceTypes col-sm-2"> <!--*ngIf="isAdmin() || isChief() && loggedInUser.Department.Name === employee.Department.Name || loggedInUser.Id === employee.Id"-->
-      <app-status-controller (emitter)="setStatus($event)"></app-status-controller>
+    <div class="absenceTypes col-sm-2">
+      <app-status-controller (emitter)="setStatus($event)"
+      [isLockedForEdit]="isMonthLocked"></app-status-controller>
       <div *ngIf="currentMonth">
-        <app-absence-confirmation
+        <app-absence-confirmation *ngIf="isAdmin || isDepartmentChief || isCEO || isEmployee"
           [loggedInEmployee]="loggedInUser"
           [employee]="employee"
           [currentMonth]="currentMonth"

@@ -117,7 +117,7 @@
           <button class="btn btn-warning" [disabled]="!isNotEditable" (click)="edit()">
             <i class="fa fa-pencil-square-o">Rediger</i>
           </button>
-          <button [disabled]="employeeGroup.invalid || isNotEditable" type="submit" (click)="stopEdit()" class="btn btn-info">
+          <button class="btn btn-info" [disabled]="employeeGroup.invalid || isNotEditable" type="submit" (click)="stopEdit()">
             <i class="fa fa-floppy-o" aria-hidden="true">Gem</i>
           </button>
 

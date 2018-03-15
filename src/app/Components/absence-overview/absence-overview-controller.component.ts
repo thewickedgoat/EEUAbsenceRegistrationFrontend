@@ -2,6 +2,9 @@ import {Component, Input, OnInit, ViewChild, ViewEncapsulation} from '@angular/c
 import {Employee} from '../../entities/Employee';
 import {Absence} from '../../entities/absence';
 import {AbsenceOverviewComponent} from './absence-overview.component';
+import {Status} from '../../entities/status';
+import {StatusService} from '../../services/status.service';
+import {HolidayYear} from '../../entities/HolidayYear';
 
 @Component({
   selector: 'app-absence-overview-controller',
@@ -14,136 +17,90 @@ export class AbsenceOverviewControllerComponent implements OnInit {
 
   @Input()
   employee: Employee;
-
-  absences: Absence[];
-
+  @Input()
+  absencesInCurrentMonth: Absence[];
   @Input()
   holidayYearStart: Date;
   @Input()
   holidayYearEnd: Date;
+  @Input()
+  holidayYear: HolidayYear;
 
-  vacationdays: Absence[];
-  halfVacationdays: Absence[];
-  vacationdaysUsed: number;
-  vacationdaysLeft: number;
+  statuses: Status[];
 
-  vacationfreedays: Absence[];
-  halfVacationfreedays: Absence[];
-  vacationfreedaysUsed: number;
-  vacationfreedaysLeft: number;
+  absenceStatusGroup: any[] = [];
 
-  constructor() {
+  constructor(private statusService: StatusService) {
+
   }
 
   ngOnInit() {
-    //this.initData();
+    this.initData();
+  }
+
+
+  ngOnChanges(){
+    this.initData();
   }
 
   /**
    * inits the view
-
+   */
   initData(){
-    this.initArrays();
-    this.absences = this.employee.Absences;
-    this.getVacationdays();
-    this.calculateVacationdaysUsed();
-    this.calculateVacationfreedaysUsed();
-  }*/
+    this.statusService.getAll().subscribe(statuses => {
+      this.statuses = statuses;
+      this.getAllAbsencesInStatusGroup();
+    });
+  }
 
-  /**
-   * refreshes the view
-   * @param employee
-   * @param holidayYearStart
-   * @param holidayYearEnd
-
-  refresh(employee: Employee, holidayYearStart: Date, holidayYearEnd: Date){
-    this.employee = employee;
-    this.holidayYearStart = holidayYearStart;
-    this.holidayYearEnd = holidayYearEnd;
-    //this.absences = this.employee.Absences;
-    this.getVacationdays();
-    this.calculateVacationdaysUsed();
-    this.calculateVacationfreedaysUsed();
-  }*/
-
-  /**
-   * calculates what the specific dates for the start and end of the holidayYear is
-
-  getVacationdays() {
-    this.vacationdays = [];
-    this.halfVacationdays = [];
-    this.vacationfreedays = [];
-    this.halfVacationfreedays = [];
-    const may = 4;
-    const april = 3;
-    for(let absence of this.absences)
-    {
-      if(absence.Status === Status.F)
-      {
-        if(absence.Date.getFullYear() === this.holidayYearStart.getFullYear() && absence.Date.getMonth() > may
-          || absence.Date.getFullYear() === this.holidayYearEnd.getFullYear() && absence.Date.getMonth() < april)
-        {
-          this.vacationdays.push(absence);
+  getAllAbsencesInStatusGroup(){
+    this.absenceStatusGroup = [];
+    const absences = this.absencesInCurrentMonth;
+    for(let status of this.statuses){
+      let absencesInStatusGroup = new Array<Absence>();
+      if(status.StatusCode === 'F'){
+        for(let absence of absences){
+          if(absence.Status.StatusCode === 'F' || absence.Status.StatusCode === 'HF'){
+            absencesInStatusGroup.push(absence)
+          }
         }
       }
-      if(absence.Status === Status.FF)
-      {
-        if(absence.Date.getFullYear() === this.holidayYearStart.getFullYear() && absence.Date.getMonth() > may
-          || absence.Date.getFullYear() === this.holidayYearEnd.getFullYear() && absence.Date.getMonth() < april)
-        {
-          this.vacationfreedays.push(absence);
+      else if(status.StatusCode === 'FF'){
+        for(let absence of absences){
+          if(absence.Status.StatusCode === 'FF' || absence.Status.StatusCode === 'HFF'){
+            absencesInStatusGroup.push(absence)
+          }
         }
       }
-      if(absence.Status === Status.HF)
-      {
-        if(absence.Date.getFullYear() === this.holidayYearStart.getFullYear() && absence.Date.getMonth() > may
-          || absence.Date.getFullYear() === this.holidayYearEnd.getFullYear() && absence.Date.getMonth() < april)
-        {
-          this.halfVacationdays.push(absence);
+      else {
+        for(let absence of absences){
+          if(absence.Status.Id === status.Id){
+            absencesInStatusGroup.push(absence)
+          }
         }
       }
-      if(absence.Status === Status.HFF)
-      {
-        if(absence.Date.getFullYear() === this.holidayYearStart.getFullYear() && absence.Date.getMonth() > may
-          || absence.Date.getFullYear() === this.holidayYearEnd.getFullYear() && absence.Date.getMonth() < april)
-        {
-          this.halfVacationfreedays.push(absence);
-        }
-      }
+      this.absenceStatusGroup.push(absencesInStatusGroup);
     }
-  }*/
+   }
 
-  /**
-   * Calculation of vacationdays
-   */
-  calculateVacationdaysUsed() {
-    const vacationdaysForThisYear = 25;
-    const vacationDays = this.vacationdays.length;
-    const halfVacationdays = this.halfVacationdays.length/2;
-    const vacationdaysUsed = vacationDays + halfVacationdays;
-    this.vacationdaysUsed = vacationdaysUsed;
-    this.vacationdaysLeft = vacationdaysForThisYear - vacationdaysUsed;
+  getAbsenceWithStatus(index: number){
+    let absencesWithStatus = this.absenceStatusGroup[index];
+    return absencesWithStatus;
+
   }
 
-  /**
-   * calculation of vacationfreedays
-   */
-  calculateVacationfreedaysUsed() {
-    const vacationfreedaysForThisYear = 5;
-    const vacationfreeDays = this.vacationfreedays.length;
-    const halfVacationfreedays = this.halfVacationfreedays.length/2;
-    const vacationfreedaysUsed = vacationfreeDays + halfVacationfreedays;
-    this.vacationfreedaysUsed = vacationfreedaysUsed;
-    this.vacationfreedaysLeft = vacationfreedaysForThisYear - vacationfreedaysUsed;
+  vacationSpent(){
+    const vacationAvailable = this.holidayYear.HolidayAvailable;
+    const vacationSpent = this.holidayYear.HolidaysUsed;
+    let remainingVacation = vacationAvailable-vacationSpent;
+    return remainingVacation;
   }
 
-  /**
-   * Init arrays
-   */
-  initArrays(){
-    this.vacationdays = new Array<Absence>();
-    this.halfVacationdays = new Array<Absence>();
-    this.vacationfreedays = new Array<Absence>();
-    this.halfVacationfreedays = new Array<Absence>();
+  vacationfreedaysSpent(){
+    const vacationAvailable = this.holidayYear.HolidayFreedayAvailable;
+    const vacationSpent = this.holidayYear.HolidayFreedaysUsed;
+    let remainingVacationFreedays = vacationAvailable-vacationSpent;
+    return remainingVacationFreedays;
   }
+
 }

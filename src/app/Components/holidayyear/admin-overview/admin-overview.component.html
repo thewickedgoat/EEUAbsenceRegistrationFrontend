@@ -1,4 +1,9 @@
 <app-toolbar></app-toolbar>
-<p>
-  admin-overview works!
-</p>
+<div class="container">
+  <div>
+    <app-employee-statistics-controller
+      [departments]="departments"
+    [holidayYearStart]="holidayYearStart">
+    </app-employee-statistics-controller>
+  </div>
+</div>

@@ -8,6 +8,7 @@ import {Department} from '../../../entities/department';
 import {EmployeeService} from '../../../services/employee.service';
 import {Employee} from '../../../entities/Employee';
 import {EmployeeRole} from '../../../entities/employeeRole.enum';
+import {AuthenticationService} from '../../../services/authentication.service';
 
 @Component({
   selector: 'app-employee-edit',
@@ -25,7 +26,7 @@ export class EmployeeEditComponent implements OnInit {
   showPassword: boolean;
   loggedInUser: Employee;
   constructor(private location: Location, private formBuilder: FormBuilder, private departmentService: DepartmentService,
-              private employeeService: EmployeeService, private route: ActivatedRoute) {
+              private employeeService: EmployeeService, private authenticationService: AuthenticationService, private route: ActivatedRoute) {
     this.showPassword = false;
     this.employeeUpdated = false;
     this.isNotEditable = true;
@@ -66,7 +67,11 @@ export class EmployeeEditComponent implements OnInit {
    * Updates the employee
    */
   updateEmployee(){
-    this.employeeService.put(this.employee).subscribe(() => console.log(this.employee))
+    console.log('wut');
+    this.employeeService.put(this.employee).subscribe(() => {
+      //this.authenticationService.update(this.employee);
+      console.log('kek');
+    });
   }
 
   /**
@@ -132,7 +137,9 @@ export class EmployeeEditComponent implements OnInit {
       this.employeeGroup.controls['employeeRole'].disable();
       this.employeeGroup.controls['department'].disable();
     }
-    this.isNotEditable = true;
+    setTimeout(() =>{
+      this.isNotEditable = true;
+    }, 100);
     this.employeeUpdated = true;
     setTimeout(()=> {
       this.employeeUpdated = false;

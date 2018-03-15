@@ -37,4 +37,5 @@
       </form>
     </div>
   </div>
+  <ngb-alert *ngIf="loginError" (close)="close()" type="danger">Forkert adgangskode eller password</ngb-alert>
 </div>

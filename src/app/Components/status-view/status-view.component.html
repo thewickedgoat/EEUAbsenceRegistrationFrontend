@@ -1,9 +1,9 @@
 <h3>Fraværskoder:</h3>
 <hr>
 <div *ngFor="let status of statusList">
-   <input type="radio" name="absenceType" (change)="setStatus(status)">{{status.StatusCode + ' - ' + status.StatusName}}
+   <input [disabled]="isLockedForEdit" type="radio" name="absenceType" (change)="setStatus(status)">{{status.StatusCode + ' - ' + status.StatusName}}
 </div>
 <div>
-  <input type="radio" name="absenceType" checked="checked" >Slet
+  <input [disabled]="isLockedForEdit" type="radio" name="absenceType" checked="checked" (change)="setStatusDelete()">Slet
 </div>
 <hr>

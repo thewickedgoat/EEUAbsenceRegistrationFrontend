@@ -1,6 +1,7 @@
 import {EmployeeRole} from './employeeRole.enum';
 import {Department} from './department';
 import {HolidayYear} from './HolidayYear';
+import {WorkfreeDay} from './workfreeDay';
 export class Employee {
   Id?: number;
   FirstName: string;
@@ -11,6 +12,7 @@ export class Employee {
   HolidayYears?: HolidayYear[];
   Department: Department;
   EmployeeRole: EmployeeRole;
+  WorkfreeDays?: WorkfreeDay[];
 }
 
 

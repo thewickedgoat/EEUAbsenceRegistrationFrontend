@@ -1,19 +1,24 @@
-<div class="card" (click)="goToCalendar()" style="width: 100%; margin: 5px;">
-  <div class="row" style="margin: 5px;">
-    <div class="col-sm-3">
-      <p><b>{{employee.FirstName}} {{employee.LastName}}</b></p>
+<div class="card" style="width: 100%; margin: 10px;">
+  <div class="card" style="width: 95%; margin: 5px; text-align: center;">
+    <div class="card-block">
+      <h4 class="card-title">{{monthNames[month.MonthDate.getMonth()]}}</h4>
+      <a class="btn btn-outline-info" style="margin: 5px;" (click)="goToCalendar(month.MonthDate.getMonth())">Til Måned</a>
     </div>
-    <div class="col-sm-3">
-      <div *ngIf="absencesForApprovalByEmployee === 0" ><b>Medarbejder:</b><i> Afventer </i><i class="fa fa-spinner fa-pulse"></i></div>
-      <div *ngIf="absencesForApprovalByEmployee === 1" ><b>Medarbejder: <u>Godkendt </u></b><i class="fa fa-check" aria-hidden="true"></i></div>
+
+    <div *ngIf="!noAbsences">
+      <div>
+        <b><strong>Fravær i denne måned:</strong></b>
+      </div>
+      <div *ngFor="let status of statuses">
+        <div *ngIf="getAmountOfStatuses(status.StatusName) != 0">
+          <b>{{status.StatusName}}:</b> {{getAmountOfStatuses(status.StatusName)}}
+        </div>
+      </div>
     </div>
-    <div class="col-sm-3">
-      <div *ngIf="absencesForApprovalByChief === 0" ><b>Afdelingsleder: </b><i> Afventer </i><i class="fa fa-spinner fa-pulse"></i></div>
-      <div *ngIf="absencesForApprovalByChief === 1" ><b>Afdelingsleder: <u>Godkendt </u></b><i class="fa fa-check" aria-hidden="true"></i></div>
+    <div *ngIf="noAbsences">
+      <b>Intet fravær i denne måned</b>
     </div>
-    <div class="col-sm-3">
-      <div *ngIf="absencesForApprovalByAdmin === 0" ><b>Administrator: </b><i> Afventer </i><i class="fa fa-spinner fa-pulse"></i></div>
-      <div *ngIf="absencesForApprovalByAdmin === 1" ><b>Administrator: <u>Godkendt </u></b><i class="fa fa-check" aria-hidden="true"></i></div>
-    </div>
+
   </div>
 </div>
+

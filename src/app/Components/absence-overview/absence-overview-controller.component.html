@@ -1,12 +1,33 @@
-<app-absence-overview
-  [vacationdays]="vacationdays"
-  [halfVacationdays]="halfVacationdays"
-  [vacationdaysUsed]="vacationdaysUsed"
-  [vacationdaysLeft]="vacationdaysLeft"
-  [vacationfreedays]="vacationfreedays"
-  [halfVacationfreedays]="halfVacationfreedays"
-  [vacationfreedaysUsed]="vacationfreedaysUsed"
-  [vacationfreedaysLeft]="vacationfreedaysLeft"
-  [holidayyearEnd]="holidayYearEnd"
-  [holidayyearStart]="holidayYearStart"
-></app-absence-overview>
+<div class="container">
+  <div class="row">
+    <h4>
+      <b>Ferieåret: </b> {{holidayYearStart.getFullYear()}} - {{holidayYearEnd.getFullYear()}}
+    </h4>
+  </div>
+  <div>
+    <div class="row">
+      <strong>Resterende ferie: </strong>
+    </div>
+    <div class="row">
+      Feriedage: {{vacationSpent()}}
+    </div>
+    <div class="row">
+      Feriefridage: {{vacationfreedaysSpent()}}
+    </div>
+  </div>
+  <div class="row">
+  <strong>Fravær i denne måned:</strong>
+  </div>
+  <div class="row" *ngFor="let status of statuses; let i = index">
+    <div class="col-sm-12" style="align-items: left"
+         *ngIf="absenceStatusGroup[i].length > 0 && status.StatusCode != 'HFF' && status.StatusCode != 'HF'">
+        <app-absence-overview
+          [absencesWithStatus]="getAbsenceWithStatus(i)"
+          [status]="status"
+          [holidayYear]="holidayYear"
+        ></app-absence-overview>
+    </div>
+  </div>
+</div>
+
+

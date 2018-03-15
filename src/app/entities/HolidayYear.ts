@@ -11,6 +11,7 @@ export class HolidayYear{
   IsClosed: boolean;
   HolidayAvailable: number;
   HolidayFreedayAvailable: number;
-  RemainingHoliday: number;
-  RemainingHolidayFreedays: number;
+  HolidaysUsed: number;
+  HolidayFreedaysUsed: number;
+  HolidayTransfered: number;
 }

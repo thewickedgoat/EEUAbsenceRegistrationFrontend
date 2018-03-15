@@ -28,7 +28,6 @@ import { CommonCalendarViewComponent } from './Components/calendar/common-calend
 import {AuthenticationService} from './services/authentication.service';
 
 import { OverviewComponent } from './Components/holidayyear/overview/overview.component';
-import { OverviewViewComponent } from './Components/holidayyear/overview/overview-view.component';
 import { MonthComponent } from './Components/holidayyear/month/month.component';
 import { MonthViewComponent } from './Components/holidayyear/month/month-view.component';
 import { AdminOverviewComponent } from './Components/holidayyear/admin-overview/admin-overview.component';
@@ -39,6 +38,9 @@ import {HolidayyearService} from './services/holidayyear.service';
 import { StatusViewComponent } from './Components/status-view/status-view.component';
 import { StatusControllerComponent } from './Components/status-view/status-controller.component';
 import {StatusService} from './services/status.service';
+import { EmployeeStatisticsControllerComponent } from './Components/employee/employee-statistics/employee-statistics-controller.component';
+import { EmployeeMonthStatisticsComponent } from './Components/employee/employee-statistics/employee-month-statistics/employee-month-statistics.component';
+import { EmployeeYearStatisticsComponent } from './Components/employee/employee-statistics/employee-year-statistics/employee-year-statistics.component';
 
 
 const routes: Routes = [
@@ -52,6 +54,7 @@ const routes: Routes = [
   {path: 'month/:month/:yearStart/:yearEnd', component: MonthComponent},
   {path: 'common-calendar/:year/:month', component: CommonCalendarComponent},
   {path: 'login', component: LoginComponent},
+  {path: 'test/:yearStart', component: AdminOverviewComponent},
   {path: ' ', redirectTo: 'login'}
 
 ];
@@ -76,14 +79,16 @@ const routes: Routes = [
     CommonCalendarComponent,
     CommonCalendarViewComponent,
     OverviewComponent,
-    OverviewViewComponent,
     MonthComponent,
     MonthViewComponent,
     AdminOverviewComponent,
     AdminOverviewViewComponent,
     CalendarViewComponent,
     StatusViewComponent,
-    StatusControllerComponent
+    StatusControllerComponent,
+    EmployeeStatisticsControllerComponent,
+    EmployeeMonthStatisticsComponent,
+    EmployeeYearStatisticsComponent
   ],
   imports: [
     BrowserModule,
