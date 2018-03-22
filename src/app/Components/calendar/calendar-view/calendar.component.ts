@@ -13,6 +13,8 @@ import {HolidayYear} from '../../../entities/HolidayYear';
 import {Status} from '../../../entities/status';
 import {HolidayyearService} from '../../../services/holidayyear.service';
 import {MonthService} from '../../../services/month.service';
+import {HolidayYearSpecService} from '../../../services/holidayyearspec.service';
+import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
 
 @Component({
   selector: 'app-calendar',
@@ -40,9 +42,10 @@ export class CalendarComponent implements OnInit {
   lastMonthInHolidayYear: boolean;
   firstMonthInHolidayYear: boolean;
 
+  currentHolidayYearSpec: HolidayYearSpec;
   currentHolidayYear: HolidayYear;
-
   currentMonth: Month;
+  currentDate: Date;
   daysInCurrentMonth: Date[];
   amountOfWeeksInCurrentMonth: number[];
   weekendDays: number[];
@@ -54,6 +57,7 @@ export class CalendarComponent implements OnInit {
   constructor(private router: Router,
               private location: Location,
               private holidayYearService: HolidayyearService,
+              private holidayYearSpecSerivce: HolidayYearSpecService,
               private monthService: MonthService,
               private employeeService: EmployeeService,
               private absenceService: AbsenceService,
@@ -65,9 +69,42 @@ export class CalendarComponent implements OnInit {
         this.route.paramMap.subscribe(params => {
           this.employeeService.getById(+params.get('id')).subscribe( employee => {
             this.employee = employee;
-            this.getHolidayYear(+params.get('year'), +params.get('month'));
+            this.currentDate = this.getCurrentDate(+params.get('year'), +params.get('month'));
+            this.getHolidayYear();
           });
 
+    });
+  }
+
+  getHolidayYear(){
+    let holidayYearsSpecs = [];
+    console.log('1');
+    this.holidayYearSpecSerivce.getAll().subscribe( specs => {
+      if(specs != null){
+        for(let holidayYearSpec of specs){
+          const startDateToParse = holidayYearSpec.StartDate.toString();
+          const endDateToParse = holidayYearSpec.EndDate.toString();
+          const startDate = new Date(Date.parse(startDateToParse));
+          const endDate = new Date(Date.parse(endDateToParse));
+          holidayYearSpec.StartDate = startDate;
+          holidayYearSpec.EndDate = endDate;
+        }
+      }
+      holidayYearsSpecs = specs;
+      if(holidayYearsSpecs != null){
+        const currentHolidayYearSpec = holidayYearsSpecs.find(x => x.StartDate <= this.currentDate && x.EndDate >= this.currentDate);
+        if(currentHolidayYearSpec != null){
+          this.currentHolidayYearSpec = currentHolidayYearSpec;
+          console.log('2');
+          console.log(currentHolidayYearSpec);
+          console.log(this.employee);
+          const currentHolidayYear = this.employee.HolidayYears.find(x => x.CurrentHolidayYear.Id === currentHolidayYearSpec.Id);
+          console.log(currentHolidayYear);
+          this.currentHolidayYear = currentHolidayYear;
+          this.getCurrentMonth(this.currentDate.getMonth());
+          this.initData();
+        }
+      }
     });
   }
 
@@ -81,37 +118,12 @@ export class CalendarComponent implements OnInit {
     this.checkForApprovalPermission();
     this.withinHolidayYearInterval();
   }
+
   //skal flyttes til controlleren for alle componenterne i kalender-viewet
   setStatus(status){
     this.status = status;
   }
 
-  //skal flyttes til controlleren for alle componenterne i kalender-viewet
-  getHolidayYear(year: number, month: number){
-      let holidayYearsInEmployee = this.employee.HolidayYears;
-      if(holidayYearsInEmployee != null){
-        for(let holidayYear of holidayYearsInEmployee){
-          const startDateToParse = holidayYear.StartDate.toString();
-          const endDateToParse = holidayYear.EndDate.toString();
-          const startDate = new Date(Date.parse(startDateToParse));
-          const endDate = new Date(Date.parse(endDateToParse));
-          holidayYear.StartDate = startDate;
-          holidayYear.EndDate = endDate;
-        }
-      }
-      const april = 3;
-      const may = 4;
-      if(month >= may){
-        this.currentHolidayYear = holidayYearsInEmployee.find(x => x.EndDate.getFullYear() === year+1
-          && x.StartDate.getFullYear() === year);
-      }
-      else if(month <= april){
-        this.currentHolidayYear = holidayYearsInEmployee.find(x => x.StartDate.getFullYear() === year-1
-          && x.EndDate.getFullYear() === year);
-      }
-      this.getCurrentMonth(month);
-      this.initData();
-  }
   //skal flyttes til controlleren for alle componenterne i kalender-viewet
   getCurrentMonth(month: number){
     let months = this.currentHolidayYear.Months;
@@ -125,6 +137,13 @@ export class CalendarComponent implements OnInit {
     //Ugly cheat - need to re-reference some Employee include relations upon loading
     let currentMonth = months.find(x => x.MonthDate.getMonth() === month);
     this.currentMonth = currentMonth;
+  }
+
+  getCurrentDate(year: number, month: number){
+    let currentDate = new Date();
+    currentDate.setFullYear(year);
+    currentDate.setMonth(month);
+    return currentDate;
   }
 
   /**
@@ -192,15 +211,8 @@ export class CalendarComponent implements OnInit {
   reloadHolidayYearAndMonth(){
     this.holidayYearService.getById(this.currentHolidayYear.Id).subscribe(holiday => {
       if(holiday != null){
-          const startDateToParse = holiday.StartDate.toString();
-          const endDateToParse = holiday.EndDate.toString();
-          const startDate = new Date(Date.parse(startDateToParse));
-          const endDate = new Date(Date.parse(endDateToParse));
-          holiday.StartDate = startDate;
-          holiday.EndDate = endDate;
-          this.currentHolidayYear = holiday;
-
-          let currentMonth = this.currentHolidayYear.Months.find(x => x.Id === this.currentMonth.Id);
+        this.currentHolidayYear = holiday;
+        let currentMonth = this.currentHolidayYear.Months.find(x => x.Id === this.currentMonth.Id);
           if(currentMonth != null){
             const dateToParse = currentMonth.MonthDate.toString();
             const monthDate = new Date(Date.parse(dateToParse));

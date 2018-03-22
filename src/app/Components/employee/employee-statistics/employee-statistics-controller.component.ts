@@ -48,20 +48,20 @@ export class EmployeeStatisticsControllerComponent implements OnInit {
     this.currentMonthNumber = +i;
   }
 
-  getCurrentMonthForEmployee(employee: Employee, monthNumber: number){
-    const holidayYear = this.getHolidayYearForEmployee(employee);
-    const month = holidayYear.Months.find(x => x.MonthDate.getMonth() === monthNumber);
+  /*getCurrentMonthForEmployee(employee: Employee, monthNumber: number){
+    const currentHolidayYear = this.getHolidayYearForEmployee(employee);
+    const month = currentHolidayYear.Months.find(x => x.MonthDate.getMonth() === monthNumber);
     return month;
-  }
+  }*/
 
-  getHolidayYearForEmployee(employee: Employee){
+  /*getHolidayYearForEmployee(employee: Employee){
     let holidayYears = employee.HolidayYears;
-    for(let holidayYear of holidayYears){
-      if(holidayYear.StartDate.getFullYear() === this.holidayYearStart){
-        return holidayYear;
+    for(let currentHolidayYear of holidayYears){
+      if(currentHolidayYear.StartDate.getFullYear() === this.holidayYearStart){
+        return currentHolidayYear;
       }
     }
-  }
+  }*/
 
   sortStatuses(statuses: Status[]){
     let statusArray = new Array<Status>();

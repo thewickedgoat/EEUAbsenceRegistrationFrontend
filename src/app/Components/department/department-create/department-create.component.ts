@@ -13,7 +13,8 @@ export class DepartmentCreateComponent implements OnInit {
   departmentCreated = false;
   department: Department;
   departmentGroup: FormGroup;
-  constructor(private location: Location, private departmentService: DepartmentService, private formBuilder: FormBuilder) {
+
+  constructor(private departmentService: DepartmentService, private formBuilder: FormBuilder) {
     this.departmentGroup = this.formBuilder.group({
       name: ['', Validators.required],
 
@@ -28,12 +29,11 @@ export class DepartmentCreateComponent implements OnInit {
   }
 
   back(){
-    //this.location.back();
   }
 
   createDepartment(){
     const values = this.departmentGroup.value;
-    const department: Department = {Name: values.name}
+    const department: Department = {Name: values.name};
     this.departmentService.post(department).subscribe(() => {
       this.departmentGroup.reset();
       this.departmentCreated = true;

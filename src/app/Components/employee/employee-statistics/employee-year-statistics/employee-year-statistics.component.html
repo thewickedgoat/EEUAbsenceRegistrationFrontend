@@ -1,1 +1,26 @@
+<div class="row employee">
+  <div class="col-sm-3">{{employee.FirstName}} {{employee.LastName}}</div>
+  <div class="col-md-6">
+    <div class="row">
+      <div class="col-md-1">{{holiday}}</div>
+      <div class="col-md-1">{{holidayFreedays}}</div>
+      <div class="col-md-1">{{sickness}}</div>
+      <div class="col-md-1">{{childsFirstSickness}}</div>
+      <div class="col-md-1">{{course}}</div>
+      <div class="col-md-1">{{maternity}}</div>
+      <div class="col-md-1">{{seniordays}}</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="row">
+      <div class="col-md-4">{{holidayTransfered}}</div>
+      <div class="col-md-2">{{holidayAvailable}}</div>
+      <div class="col-md-2">{{holidayFreedaysAvailable}}</div>
+      <div class="col-md-2">{{holidayLeft}}</div>
+      <div class="col-md-2">{{holidayFreedaysLeft}}</div>
+    </div>
+  </div>
+  <span *ngIf="employee.Note != null && employee.Note.length > 0" class="tooltiptext"><i class="fa fa-sticky-note-o" aria-hidden="true"></i> {{employee.Note}}</span>
+  <span *ngIf="employee.Note === null" class="tooltiptext"><i class="fa fa-sticky-note-o" aria-hidden="true"></i> *Intet notat*</span>
+</div>
 

@@ -26,7 +26,10 @@ import { DepartmentComponent } from './Components/department/department/departme
 import { CommonCalendarComponent } from './Components/calendar/common-calendar/common-calendar.component';
 import { CommonCalendarViewComponent } from './Components/calendar/common-calendar/common-calendar-view.component';
 import {AuthenticationService} from './services/authentication.service';
-
+import { MatDialogModule} from '@angular/material/';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { OverviewComponent } from './Components/holidayyear/overview/overview.component';
 import { MonthComponent } from './Components/holidayyear/month/month.component';
 import { MonthViewComponent } from './Components/holidayyear/month/month-view.component';
@@ -41,20 +44,31 @@ import {StatusService} from './services/status.service';
 import { EmployeeStatisticsControllerComponent } from './Components/employee/employee-statistics/employee-statistics-controller.component';
 import { EmployeeMonthStatisticsComponent } from './Components/employee/employee-statistics/employee-month-statistics/employee-month-statistics.component';
 import { EmployeeYearStatisticsComponent } from './Components/employee/employee-statistics/employee-year-statistics/employee-year-statistics.component';
+import { EmployeeDeleteDialogComponent } from './Components/employee/employee-delete-dialog/employee-delete-dialog.component';
+import { AdministrationComponent } from './Components/administration/administration/administration.component';
+import { WorkfreedaysCreateComponent } from './Components/workfreedays/workfreedays-create/workfreedays-create.component';
+import { WorkfreedaysCreateViewComponent } from './Components/workfreedays/workfreedays-create-view/workfreedays-create-view.component';
+import { AdministrationViewComponent } from './Components/administration/administration/administration-view.component';
+import {WorkfreedayService} from './services/workfreeday.service';
+import { WorkfreedaysComponent } from './Components/workfreedays/workfreedays/workfreedays.component';
+import { PublicHolidayComponent } from './Components/workfreedays/public-holiday/public-holiday.component';
+import { WorkfreedayComponent } from './Components/workfreedays/workfreeday/workfreeday.component';
+import {HolidayYearSpecService} from './services/holidayyearspec.service';
 
 
 const routes: Routes = [
   {path: 'employee/:id', component: EmployeeComponent},
   {path: 'employees', component: EmployeeListComponent},
+  {path: 'department/create', component: DepartmentCreateComponent},
   {path: 'employees/create', component: EmployeeCreateComponent},
   {path: 'employees/profile/:id', component: EmployeeEditComponent},
-  {path: 'departments/create', component: DepartmentCreateComponent},
   {path: 'calendar/:id/:year/:month', component: CalendarComponent},
   {path: 'overview/:id', component: OverviewComponent},
   {path: 'month/:month/:yearStart/:yearEnd', component: MonthComponent},
   {path: 'common-calendar/:year/:month', component: CommonCalendarComponent},
   {path: 'login', component: LoginComponent},
-  {path: 'test/:yearStart', component: AdminOverviewComponent},
+  {path: 'getHolidayYear/:yearStart', component: AdminOverviewComponent},
+  {path: 'work', component: AdministrationComponent},
   {path: ' ', redirectTo: 'login'}
 
 ];
@@ -63,42 +77,68 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AppComponent,
-    EmployeeComponent,
-    EmployeeListComponent,
-    EmployeeCreateComponent,
-    CalendarComponent,
-    LoginComponent,
-    EmployeeEditComponent,
-    DepartmentCreateComponent,
-    ToolbarComponent,
     AbsenceOverviewComponent,
     AbsenceOverviewControllerComponent,
     AbsenceConfirmationComponent,
     AbsenceConfirmationViewComponent,
-    DepartmentComponent,
-    CommonCalendarComponent,
-    CommonCalendarViewComponent,
-    OverviewComponent,
-    MonthComponent,
-    MonthViewComponent,
     AdminOverviewComponent,
     AdminOverviewViewComponent,
+    CalendarComponent,
     CalendarViewComponent,
-    StatusViewComponent,
-    StatusControllerComponent,
+    CommonCalendarComponent,
+    CommonCalendarViewComponent,
+    DepartmentComponent,
+    DepartmentCreateComponent,
+    EmployeeComponent,
+    EmployeeCreateComponent,
+    EmployeeEditComponent,
+    EmployeeListComponent,
     EmployeeStatisticsControllerComponent,
     EmployeeMonthStatisticsComponent,
-    EmployeeYearStatisticsComponent
+    EmployeeYearStatisticsComponent,
+    EmployeeDeleteDialogComponent,
+    LoginComponent,
+    MonthComponent,
+    MonthViewComponent,
+    OverviewComponent,
+    StatusViewComponent,
+    StatusControllerComponent,
+    ToolbarComponent,
+    AdministrationComponent,
+    WorkfreedaysCreateComponent,
+    WorkfreedaysCreateViewComponent,
+    AdministrationViewComponent,
+    WorkfreedaysComponent,
+    PublicHolidayComponent,
+    WorkfreedayComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     ReactiveFormsModule,
     RouterModule.forRoot(routes),
     NgbModule.forRoot(),
-    SidebarModule.forRoot()
+    SidebarModule.forRoot(),
+    MatDialogModule,
+    MatProgressSpinnerModule,
+    MatProgressBarModule
   ],
-  providers: [EmployeeService, DepartmentService, AbsenceService, AuthguardGuard, AuthenticationService, MonthService, HolidayyearService, StatusService],
+  entryComponents: [
+    EmployeeDeleteDialogComponent,
+    WorkfreedaysCreateViewComponent,
+  ],
+  providers: [
+    EmployeeService,
+    DepartmentService,
+    AbsenceService,
+    AuthguardGuard,
+    AuthenticationService,
+    MonthService,
+    HolidayyearService,
+    HolidayYearSpecService,
+    StatusService,
+    WorkfreedayService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

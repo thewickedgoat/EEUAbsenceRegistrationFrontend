@@ -6,6 +6,7 @@ import {Month} from '../../../entities/month';
 import {HolidayYear} from '../../../entities/HolidayYear';
 import {StatusService} from '../../../services/status.service';
 import {Status} from '../../../entities/status';
+import {HolidayYearSpecService} from '../../../services/holidayyearspec.service';
 
 @Component({
   selector: 'app-overview',
@@ -15,13 +16,17 @@ import {Status} from '../../../entities/status';
 export class OverviewComponent implements OnInit {
 
   statuses: Status[];
-  holidayYear: HolidayYear;
+  currentHolidayYear: HolidayYear;
   monthsInHolidayYear: Month[];
 
   loggedInUser: Employee;
   employee: Employee;
 
-  constructor(private router: Router, private route: ActivatedRoute, private employeeService: EmployeeService, private statusService: StatusService) {
+  constructor(private router: Router,
+              private route: ActivatedRoute,
+              private employeeService: EmployeeService,
+              private holidayYearSpecService: HolidayYearSpecService,
+              private statusService: StatusService) {
   }
 
   ngOnInit() {
@@ -35,13 +40,7 @@ export class OverviewComponent implements OnInit {
    * @param month
    */
   goToCalendar(month: number) {
-    const april = 3;
-    if(month > april){
-      this.router.navigateByUrl('calendar/' + this.employee.Id + '/' + this.holidayYear.StartDate.getFullYear() + '/' + month);
-    }
-    else if(month <= april){
-      this.router.navigateByUrl('calendar/' + this.employee.Id + '/' + this.holidayYear.EndDate.getFullYear() + '/' + month);
-    }
+    this.router.navigateByUrl('calendar/' + this.employee.Id + '/' + this.getYearOfMonth(month) + '/' + month);
   }
 
   getStatuses(){
@@ -54,14 +53,13 @@ export class OverviewComponent implements OnInit {
     this.route.paramMap.switchMap(params => this.employeeService.getById(+params.get('id')))
       .subscribe(employee => {
         this.employee = employee;
-        console.log(this.employee.HolidayYears);
-        this.convertDates();
-        console.log(this.employee.HolidayYears);
         this.getHolidayYearStartAndEnd();
+        //this.convertDates();
         this.getMonthsInHolidayYear();
 
       });
   }
+/*
 
   convertDates(){
     //for holidays
@@ -83,33 +81,49 @@ export class OverviewComponent implements OnInit {
       }
     }
   }
+*/
+
+  getYearOfMonth(month: number){
+    let months = this.currentHolidayYear.Months;
+    let currentMonth = months.find(x => x.MonthDate.getMonth() === month);
+    return currentMonth.MonthDate.getMonth();
+  }
 
   /**
    * Calculates the current holidayyear start and end dates
    */
   getHolidayYearStartAndEnd() {
-    console.log(this.employee.HolidayYears);
-    let date = new Date();
-    let april = 3;
-    let month = date.getMonth();
-    let year = date.getFullYear();
-    if(month > april){
-      const currentHolidayYear = this.employee.HolidayYears.find(x => x.StartDate.getFullYear() === year);
-      this.holidayYear = currentHolidayYear;
-      console.log(currentHolidayYear);
-    }
-    else if(month <= april){
-      const currentHolidayYear = this.employee.HolidayYears.find(x => x.EndDate.getFullYear() === year);
-      this.holidayYear = currentHolidayYear;
-      console.log(currentHolidayYear);
-    }
-
+    const currentDate = new Date();
+    let holidaySpecs = [];
+    this.holidayYearSpecService.getAll().subscribe(holidayYearsSpecs => {
+      if(holidayYearsSpecs != null){
+        for(let holidayYearSpec of holidayYearsSpecs){
+          const startDateToParse = holidayYearSpec.StartDate.toString();
+          const endDateToParse = holidayYearSpec.EndDate.toString();
+          const startDate = new Date(Date.parse(startDateToParse));
+          const endDate = new Date(Date.parse(endDateToParse));
+          holidayYearSpec.StartDate = startDate;
+          holidayYearSpec.EndDate = endDate;
+        }
+        holidaySpecs = holidayYearsSpecs;
+      }
+    });
+    const currentHolidayYearSpec = holidaySpecs.find(x => x.StartDate <= currentDate && x.EndDate >= currentDate);
+    this.currentHolidayYear = this.employee.HolidayYears.find(x => x.CurrentHolidayYear === currentHolidayYearSpec);
   }
 
   /**
-   * gets the months in the current holidayYear
+   * gets the months in the current currentHolidayYear
    */
   getMonthsInHolidayYear() {
-    this.monthsInHolidayYear = this.holidayYear.Months;
+    let months = this.currentHolidayYear.Months;
+    if(months != null) {
+      for (let month of months) {
+        const monthDateToParse = month.MonthDate.toString();
+        const monthDate = new Date(Date.parse(monthDateToParse));
+        month.MonthDate = monthDate;
+      }
+      this.monthsInHolidayYear = this.currentHolidayYear.Months;
+    }
   }
 }

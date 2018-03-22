@@ -1,3 +1,9 @@
-<p>
-  department works!
-</p>
+<div class="col-md-12">
+  <div><b><strong>{{department.Name}}</strong></b></div>
+  <div class="row" *ngFor="let employee of department.Employees">
+    <div *ngIf="employee.EmployeeRole != admin()">
+      <app-employee [employee]="employee"
+      (emitter)="delete($event)"></app-employee>
+    </div>
+  </div>
+</div>

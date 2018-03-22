@@ -4,8 +4,6 @@ import {Month} from '../../../entities/month';
 import {AbsenceService} from '../../../services/absence.service';
 import {Status} from '../../../entities/status';
 import {MonthService} from '../../../services/month.service';
-import {HolidayyearService} from '../../../services/holidayyear.service';
-import {HolidayYear} from '../../../entities/HolidayYear';
 
 @Component({
   selector: 'app-calendar-view',

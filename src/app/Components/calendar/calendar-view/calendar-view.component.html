@@ -12,8 +12,8 @@
     <div *ngIf="getWeekList(i, 1) != -1" class="weekdaySquare col-sm-2">
       {{getDateNumbersForCalendar(i, 1)}}
       <div>
-        <div style="width: 50%; margin: 0 auto; text-align: left"
-             (click)="changeAbsence(i, 1)" class="btn btn-outline-info">{{getStatusForDate(i, 1)}}
+        <div style="text-align: center"
+             (click)="changeAbsence(i, 1)" class="btn btn-outline-info btn-circle btn-xl">{{getStatusForDate(i, 1)}}
         </div>
       </div>
     </div>
@@ -23,8 +23,8 @@
     <div *ngIf="getWeekList(i, 2) != -1" class="weekdaySquare col-sm-2">
       {{getDateNumbersForCalendar(i, 2)}}
       <div>
-        <div style="width: 50%; margin: 0 auto; text-align: left"
-             (click)="changeAbsence(i,2)" class="btn btn-outline-info">{{getStatusForDate(i, 2)}}
+        <div style="text-align: center"
+             (click)="changeAbsence(i,2)" class="btn btn-outline-info btn-circle btn-xl">{{getStatusForDate(i, 2)}}
         </div>
       </div>
     </div>
@@ -34,8 +34,8 @@
     <div *ngIf="getWeekList(i, 3) != -1" class="weekdaySquare col-sm-2">
       {{getDateNumbersForCalendar(i, 3)}}
       <div>
-        <div style="width: 50%; margin: 0 auto; text-align: left"
-             (click)="changeAbsence(i,3)" class="btn btn-outline-info">{{getStatusForDate(i, 3)}}
+        <div style="text-align: center"
+             (click)="changeAbsence(i,3)" class="btn btn-outline-info btn-circle btn-xl">{{getStatusForDate(i, 3)}}
         </div>
       </div>
     </div>
@@ -45,8 +45,8 @@
     <div *ngIf="getWeekList(i, 4) != -1" class="weekdaySquare col-sm-2">
       {{getDateNumbersForCalendar(i, 4)}}
       <div>
-        <div style="width: 50%; margin: 0 auto; text-align: left"
-             (click)="changeAbsence(i,4)" class="btn btn-outline-info">{{getStatusForDate(i, 4)}}
+        <div style="text-align: center"
+             (click)="changeAbsence(i,4)" class="btn btn-outline-info btn-circle btn-xl">{{getStatusForDate(i, 4)}}
         </div>
       </div>
     </div>
@@ -56,8 +56,8 @@
     <div *ngIf="getWeekList(i, 5) != -1" class="weekdaySquare col-sm-2">
       {{getDateNumbersForCalendar(i, 5)}}
       <div>
-        <div style="width: 50%; margin: 0 auto; text-align: left"
-             (click)="changeAbsence(i,5)" class="btn btn-outline-info">{{getStatusForDate(i, 5)}}
+        <div style="text-align: center"
+             (click)="changeAbsence(i,5)" class="btn btn-outline-info btn-circle btn-xl">{{getStatusForDate(i, 5)}}
         </div>
       </div>
     </div>
@@ -85,8 +85,8 @@
     <div *ngIf="getWeekList(i, 1) != -1" class="lockedSquare col-sm-2">
       {{getDateNumbersForCalendar(i, 1)}}
       <div>
-        <div *ngIf="getStatusForDate(i, 1) != '+'" style="width: 50%; margin: 0 auto; text-align: left"
-             class="btn btn-info disabled">{{getStatusForDate(i, 1)}}
+        <div *ngIf="getStatusForDate(i, 1) != '+'" style="text-align: center"
+             class="btn btn-info btn-circle btn-xl disabled">{{getStatusForDate(i, 1)}}
         </div>
       </div>
     </div>
@@ -96,8 +96,8 @@
     <div *ngIf="getWeekList(i, 2) != -1" class="lockedSquare col-sm-2">
       {{getDateNumbersForCalendar(i, 2)}}
       <div>
-        <div *ngIf="getStatusForDate(i, 2) != '+'" style="width: 50%; margin: 0 auto; text-align: left"
-             class="btn btn-info disabled">{{getStatusForDate(i, 2)}}
+        <div *ngIf="getStatusForDate(i, 2) != '+'" style="text-align: center"
+             class="btn btn-info btn-circle btn-xl disabled">{{getStatusForDate(i, 2)}}
         </div>
       </div>
     </div>
@@ -107,8 +107,8 @@
     <div *ngIf="getWeekList(i, 3) != -1" class="lockedSquare col-sm-2">
       {{getDateNumbersForCalendar(i, 3)}}
       <div>
-        <div *ngIf="getStatusForDate(i, 3) != '+'" style="width: 50%; margin: 0 auto; text-align: left"
-             class="btn btn-info disabled">{{getStatusForDate(i, 3)}}
+        <div *ngIf="getStatusForDate(i, 3) != '+'" style="text-align: center"
+             class="btn btn-info btn-circle btn-xl disabled">{{getStatusForDate(i, 3)}}
         </div>
       </div>
     </div>
@@ -118,8 +118,8 @@
     <div *ngIf="getWeekList(i, 4) != -1" class="lockedSquare col-sm-2">
       {{getDateNumbersForCalendar(i, 4)}}
       <div>
-        <div *ngIf="getStatusForDate(i, 4) != '+'" style="width: 50%; margin: 0 auto; text-align: left"
-             class="btn btn-info disabled">{{getStatusForDate(i, 4)}}
+        <div *ngIf="getStatusForDate(i, 4) != '+'" style="text-align: center"
+             class="btn btn-info btn-circle btn-xl disabled">{{getStatusForDate(i, 4)}}
         </div>
       </div>
     </div>
@@ -129,8 +129,8 @@
     <div *ngIf="getWeekList(i, 5) != -1" class="lockedSquare col-sm-2">
       {{getDateNumbersForCalendar(i, 5)}}
       <div>
-        <div *ngIf="getStatusForDate(i, 5) != '+'" style="width: 50%; margin: 0 auto; text-align: left"
-             class="btn btn-info disabled">{{getStatusForDate(i, 5)}}
+        <div *ngIf="getStatusForDate(i, 5) != '+'" style="text-align: center"
+             class="btn btn-info btn-circle btn-xl disabled">{{getStatusForDate(i, 5)}}
         </div>
       </div>
     </div>

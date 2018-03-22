@@ -8,7 +8,7 @@
       <h4>Opret Medarbejder:</h4>
     </div>
     <div class="col-md-12">
-      <form [formGroup]="employeeGroup" (ngSubmit)="createEmployee()" novalidate>
+      <form [formGroup]="employeeGroup" novalidate>
         <div class="form-group">
           <label class="center-block col-md-12">Fornavn:
             <input class="form-control"
@@ -72,28 +72,37 @@
             <select class="form-control"
                     [ngClass]="{'is-invalid': nameIsInvalid('employeeRole'), 'is-valid': nameIsValid('employeeRole')}"
                     formControlName="employeeRole">
+              <option disabled selected value="">-- Vælg en Rolle --</option>
               <option>Medarbejder</option>
               <option>Afdelingsleder</option>
               <option>Administrator</option>
+              <option>Direktør</option>
             </select>
             <div *ngIf="nameIsInvalid('employeeRole')" class="invalid-feedback">
               <div *ngIf="employeeGroup.controls['employeeRole'].errors.required">
                 Du skal angive en rolle.
               </div>
             </div>
+
           </label>
           <label class="center-block col-md-12">Vælg en afdeling:
             <select class="form-control"
                     placeholder="Vælg afdeling"
                     [ngClass]="{'is-invalid': nameIsInvalid('department'), 'is-valid': nameIsValid('department')}"
                     formControlName="department">
+              <option selected disabled value="">-- Vælg en Afdeling --</option>
               <option *ngFor="let department of departments; let i = index">{{department.Name}}</option>
             </select>
-
+            <div *ngIf="nameIsInvalid('department')" class="invalid-feedback">
+              <div *ngIf="employeeGroup.controls['department'].errors.required">
+                Du skal angive en afdeling.
+              </div>
+            </div>
           </label>
           <button [disabled]="employeeGroup.invalid" type="submit" class="btn btn-info">
             <i class="fa fa-floppy-o" aria-hidden="true">Opret</i>
           </button>
+          <button (click)="test()"></button>
         </div>
       </form>
 

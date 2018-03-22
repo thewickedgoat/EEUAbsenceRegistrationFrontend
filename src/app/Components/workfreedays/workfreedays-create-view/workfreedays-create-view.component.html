@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="row">
+    <button *ngIf="!publicHoliday" class="btn-info" (click)="setPublicHoliday()">Helligdag</button>
+    <button *ngIf="publicHoliday" class="btn-info" (click)="setWorkfreeday()">Arbejdsfridag</button>
+  </div>
+  <div class="col-lg-6">
+    <form [formGroup]="workfreedayGroup" (ngSubmit)="createWorkfreeDay()" novalidate>
+      <label>Vælg dato:
+      <input type="date"
+      formControlName="date">
+      </label>
+    </form>
+  </div>
+</div>

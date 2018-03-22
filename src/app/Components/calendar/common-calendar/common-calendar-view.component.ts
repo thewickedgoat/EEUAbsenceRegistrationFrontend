@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {Employee} from '../../../entities/Employee';
-import {Month} from '../../../entities/month';
 import {Absence} from '../../../entities/absence';
 
 @Component({
@@ -14,10 +13,6 @@ export class CommonCalendarViewComponent implements OnInit {
   @Input()
   employee: Employee;
 
-  @Input()
-  holidayYearStartDate: Date;
-  @Input()
-  holidayYearEndDate: Date;
   @Input()
   absencesInCurrentMonth: Absence[];
   @Input()
@@ -53,9 +48,9 @@ export class CommonCalendarViewComponent implements OnInit {
       if(absence != null){
         return absence.Status.StatusCode;
       }
-      else return ''
+      else return '';
     }
-    else return ''
+    else return '';
   }
 
    /**
@@ -63,7 +58,7 @@ export class CommonCalendarViewComponent implements OnInit {
    * @returns {boolean}
    */
   isPowerOfTwo(){
-    const x = this.powerOfTwo+1
+    const x = this.powerOfTwo+1;
     for (let i = 0; i < 50;)
     {
       i = i + 2;
@@ -79,6 +74,6 @@ export class CommonCalendarViewComponent implements OnInit {
    * Page navigation
    */
   goToCalendar(){
-    this.emitter.emit(this.employee.Id)
+    this.emitter.emit(this.employee.Id);
   }
 }

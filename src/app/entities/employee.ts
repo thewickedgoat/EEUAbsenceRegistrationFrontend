@@ -13,6 +13,7 @@ export class Employee {
   Department: Department;
   EmployeeRole: EmployeeRole;
   WorkfreeDays?: WorkfreeDay[];
+  Note?: string;
 }
 
 

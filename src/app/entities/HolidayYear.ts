@@ -1,11 +1,10 @@
 import {Month} from './month';
 import {Employee} from './employee';
+import {HolidayYearSpec} from './holidayYearSpec';
 
 export class HolidayYear{
   Id: number;
-  Name: string;
-  StartDate: Date;
-  EndDate: Date;
+  CurrentHolidayYear: HolidayYearSpec;
   Months: Month[];
   Employee: Employee;
   IsClosed: boolean;

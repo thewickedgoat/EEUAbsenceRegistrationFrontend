@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {DepartmentService} from '../../../services/department.service';
 import {Department} from '../../../entities/department';
+import {HolidayYear} from '../../../entities/HolidayYear';
 
 @Component({
   selector: 'app-admin-overview',
@@ -21,7 +22,7 @@ export class AdminOverviewComponent implements OnInit {
   ngOnInit() {
     this.departmentService.getAll().subscribe(departments => {
       this.departments = departments;
-      this.formatHolidayYearStartDates();
+      //this.formatHolidayYearStartDates();
     });
     this.getHolidayYearStart();
   }
@@ -32,7 +33,7 @@ export class AdminOverviewComponent implements OnInit {
     });
   }
 
-  formatHolidayYearStartDates(){
+  /*formatHolidayYearStartDates(){
     for(let department of this.departments){
       for(let employee of department.Employees){
         for(let holidayYear of employee.HolidayYears){
@@ -47,6 +48,6 @@ export class AdminOverviewComponent implements OnInit {
         }
       }
     }
-  }
+  }*/
 
 }

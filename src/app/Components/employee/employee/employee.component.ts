@@ -30,23 +30,10 @@ export class EmployeeComponent implements OnInit {
   }
 
   /**
-   * Gets the role based on Id input
-   * @param id
-   * @returns {any}
-   */
-  getRole(id: number)
-  {
-    return EmployeeRole[id];
-  }
-
-  /**
    * Sets the employeeToDelete
-   * @param employee
-   * @param $event
    */
-  delete(employee: Employee, $event) {
-    this.employeeToDelete = employee;
-    $event.stopPropagation();
+  delete() {
+    this.emitter.emit(this.employee.Id);
   }
 
   /**

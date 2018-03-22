@@ -5,40 +5,67 @@
         {{toggleButtonText}}
       </button>
     </div>
-    <div *ngIf="buttonClicked===true">
-      <select (change)="test($event.target.value)">
-        <option *ngFor="let monthName of monthNames; let i = index" [value]="i">
-          {{monthName.valueOf()}}
-        </option>
-      </select>
-      <div class="row">
-        <div class="col-md-3"><b><strong>Afdeling/Navn</strong></b></div>
-        <div class="col-md-6"><b><strong>Total dage holdt til dato</strong></b></div>
-        <div class="col-md-1">
-          <b><strong>Overført</strong></b>
-        </div>
-        <div class="col-md-1">
-          <b><strong>Optjent</strong></b>
-        </div>
-        <div class="col-md-1">
-          <b><strong>Rest</strong></b>
-        </div>
-      </div>
-      <div class="row" *ngFor="let department of departments">
-        <div class="col-md-12">
-          {{department.Name}}
-        </div>
-        <div class="col-md-12">
-          <app-employee-month-statistics *ngFor="let employee of department.Employees"
-                                         [employee]="employee"
-                                         [currentMonth]="getCurrentMonthForEmployee(employee, currentMonthNumber)"
-                                         [statuses]="statuses"
-          ></app-employee-month-statistics>
+    <select (change)="test($event.target.value)">
+      <option *ngFor="let monthName of monthNames; let i = index" [value]="i">
+        {{monthName.valueOf()}}
+      </option>
+    </select>
+    <div class="row">
+      <div class="col-md-3"><b><strong>Afdeling/Navn</strong></b></div>
+      <div class="col-md-6"><b><strong>Total dage holdt til dato/Fraværskoder</strong></b></div>
+      <div class="col-md-3">
+        <div class="row">
+          <div class="col-md-4"><b><strong>Overført</strong></b></div>
+          <div class="col-md-4"><b><strong>Optjent</strong></b></div>
+          <div class="col-md-4"><b><strong>Rest</strong></b></div>
         </div>
       </div>
     </div>
-    <div *ngIf="buttonClicked===false">
-
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col md-6">
+        <div class="row">
+          <div class="col-md-1"><b>F</b></div>
+          <div class="col-md-1"><b>FF</b></div>
+          <div class="col-md-1"><b>S</b></div>
+          <div class="col-md-1"><b>BS</b></div>
+          <div class="col-md-1"><b>K</b></div>
+          <div class="col-md-1"><b>B</b></div>
+          <div class="col-md-1"><b>SN</b></div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="row">
+          <div class="col-md-4"><b>F</b></div>
+          <div class="col-md-2"><b>F</b></div>
+          <div class="col-md-2"><b>FF</b></div>
+          <div class="col-md-2"><b>F</b></div>
+          <div class="col-md-2"><b>FF</b></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div>
+        <div class="row" *ngFor="let department of departments">
+          <div class="col-md-12">
+            <b><strong>{{department.Name}}</strong></b>
+          </div>
+          <div *ngIf="buttonClicked===false" class="col-md-12">
+            <app-employee-year-statistics *ngFor="let employee of department.Employees"
+                                          [employee]="employee"
+                                          [currentHolidayYear]="getHolidayYearForEmployee(employee)"
+                                          [statuses]="statuses"
+            ></app-employee-year-statistics>
+          </div>
+          <div *ngIf="buttonClicked===true" class="col-md-12">
+            <app-employee-month-statistics *ngFor="let employee of department.Employees"
+                                           [employee]="employee"
+                                           [currentMonth]="getCurrentMonthForEmployee(employee, currentMonthNumber)"
+                                           [statuses]="statuses"
+            ></app-employee-month-statistics>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

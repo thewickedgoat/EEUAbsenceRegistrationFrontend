@@ -1,0 +1,14 @@
+<div>
+  <div class="row">
+    <div>Er du sikker på du vil slette<b> {{data.employee.FirstName}} {{data.employee.LastName}}</b>?</div>
+  </div>
+  <div class="row" style="justify-content: center">
+    <div class="btn btn-danger" (click)="delete()">
+      Slet
+    </div>
+    <div class="btn btn-success" (click)="cancel()">
+      Afbryd
+    </div>
+  </div>
+</div>
+
