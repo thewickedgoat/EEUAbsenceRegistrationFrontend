@@ -10,8 +10,7 @@ import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
 })
 export class AdministrationComponent implements OnInit {
 
-  holidayYearStart: Date;
-  holidayYearEnd: Date;
+  currentHolidayYearSpec: HolidayYearSpec;
 
   constructor(private holidayYearSpecService: HolidayYearSpecService) { }
 
@@ -26,8 +25,7 @@ export class AdministrationComponent implements OnInit {
       const formatedHolidayYearsSpecs = this.formatHolidayYearDates(holidayYearsSpecs);
       const currentHolidayYearSpec = formatedHolidayYearsSpecs.find(x => x.StartDate <= currentDate && x.EndDate >= currentDate);
       console.log(currentHolidayYearSpec);
-      this.holidayYearStart = currentHolidayYearSpec.StartDate;
-      this.holidayYearEnd = currentHolidayYearSpec.EndDate;
+      this.currentHolidayYearSpec = currentHolidayYearSpec;
     })
   }
 

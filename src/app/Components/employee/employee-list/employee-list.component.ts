@@ -57,6 +57,7 @@ export class EmployeeListComponent implements OnInit {
   initData(){
     this.employeeService.getAll().subscribe(employees => {
       this.employees = employees;
+      console.log(employees);
     });
     this.departmentService.getAll().subscribe(departments => {
       this.departments = departments;

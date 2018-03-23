@@ -7,6 +7,7 @@ import {WorkfreeDay} from '../../../entities/workfreeDay';
 import {EmployeeService} from '../../../services/employee.service';
 import {WorkFreedayType} from '../../../entities/workFreedayType.enum';
 import {HolidayyearService} from '../../../services/holidayyear.service';
+import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
 
 @Component({
   selector: 'app-workfreedays',
@@ -17,9 +18,11 @@ import {HolidayyearService} from '../../../services/holidayyear.service';
 export class WorkfreedaysComponent implements OnInit {
 
   @Input()
+  currentHolidayYearSpec: HolidayYearSpec;
+
   holidayYearStart: Date;
-  @Input()
   holidayYearEnd: Date;
+
 
   employees: Employee[];
   selectedEmployee: Employee;
@@ -32,7 +35,10 @@ export class WorkfreedaysComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.employeeService.getAll().subscribe(emps => this.employees = emps);
+    this.employeeService.getAll().subscribe(emps => {
+      this.employees = emps;
+      this.getHolidayYearStartEnd();
+    });
   }
 
   createWorkfreeDay(){
@@ -44,7 +50,6 @@ export class WorkfreedaysComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       workfreeDay = result;
-      console.log(workfreeDay);
     });
   }
 
@@ -52,8 +57,13 @@ export class WorkfreedaysComponent implements OnInit {
 
   }
 
-  getEmployee(){
+  getHolidayYearStartEnd(){
+    this.holidayYearStart = this.currentHolidayYearSpec.StartDate;
+    this.holidayYearEnd = this.currentHolidayYearSpec.EndDate;
+  }
 
+  getEmployee(){
+    return this.selectedEmployee;
   }
 
   selectEmployee(value: string){
@@ -63,11 +73,9 @@ export class WorkfreedaysComponent implements OnInit {
   }
 
   getWorkfreeDaysOfEmployee(employee: Employee){
-    console.log(employee);
     if(employee != null){
       if(employee.WorkfreeDays != null){
         const workfreeDays = employee.WorkfreeDays.filter(x => x.Type === WorkFreedayType.Arbejdsfridag);
-        console.log(workfreeDays);
         return workfreeDays;
       }
     }

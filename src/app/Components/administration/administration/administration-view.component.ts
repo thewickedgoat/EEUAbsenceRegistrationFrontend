@@ -1,4 +1,5 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
 
 @Component({
   selector: 'app-administration-view',
@@ -9,9 +10,7 @@ import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 export class AdministrationViewComponent implements OnInit {
 
   @Input()
-  holidayYearStart: Date;
-  @Input()
-  holidayYearEnd: Date;
+  currentHolidayYearSpec: HolidayYearSpec;
 
   constructor() { }
 

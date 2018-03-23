@@ -46,7 +46,6 @@ export class CommonCalendarComponent implements OnInit {
     this.daysInMonth();
     this.departmentService.getAll().subscribe(departments => {
       this.departments = departments;
-      this.employeeService.getById(2).subscribe(emp => this.getAbsencesInCurrentMonth(emp));
     });
   }
 
@@ -160,7 +159,7 @@ export class CommonCalendarComponent implements OnInit {
    * Helper method for parsing dates from a different format from the rest-API. "hack"
    */
   getAbsencesInCurrentMonth(employee: Employee){
-    this.employeeService.getAll().subscribe(emps => console.log(emps));
+    /*this.employeeService.getAll().subscribe(emps => console.log(emps));
     let currentEmployee;
     console.log(employee);
     this.employeeService.getById(employee.Id).subscribe(emp => {
@@ -183,9 +182,8 @@ export class CommonCalendarComponent implements OnInit {
           }
         }
       }
-    });
-
-    /*const currentHolidayYear = employee.HolidayYears.find(x => x.CurrentHolidayYear.Id === this.currentHolidayYearSpec.Id);
+    });*/
+    const currentHolidayYear = employee.HolidayYears.find(x => x.CurrentHolidayYear.Id === this.currentHolidayYearSpec.Id);
     if(currentHolidayYear != null){
       for(let month of currentHolidayYear.Months){
         month.MonthDate = this.convertDates(month);
@@ -200,7 +198,7 @@ export class CommonCalendarComponent implements OnInit {
         }
         return currentMonth.AbsencesInMonth;
       }
-    }*/
+    }
   }
 
   convertDates(month: Month){

@@ -16,7 +16,8 @@ export class WorkfreedayComponent implements OnInit {
   @Input()
   workfreeDays: WorkfreeDay[];
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }
