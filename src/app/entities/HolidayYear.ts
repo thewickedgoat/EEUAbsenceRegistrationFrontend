@@ -3,9 +3,9 @@ import {Employee} from './employee';
 import {HolidayYearSpec} from './holidayYearSpec';
 
 export class HolidayYear{
-  Id: number;
-  CurrentHolidayYear: HolidayYearSpec;
-  Months: Month[];
+  Id?: number;
+  CurrentHolidayYear?: HolidayYearSpec;
+  Months?: Month[];
   Employee: Employee;
   IsClosed: boolean;
   HolidayAvailable: number;

@@ -1,4 +1,8 @@
-<div class="container">
+<div *ngIf="employees" class="container">
   <app-workfreedays
-  [currentHolidayYearSpec]="currentHolidayYearSpec"></app-workfreedays>
+  [currentHolidayYearSpec]="currentHolidayYearSpec"
+  [employees]="employees"
+  [holidayYearStart]="holidayYearStart"
+  [holidayYearEnd]="holidayYearEnd"
+  (emitter)="updateView()"></app-workfreedays>
 </div>

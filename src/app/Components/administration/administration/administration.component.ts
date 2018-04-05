@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {HolidayYearSpecService} from '../../../services/holidayyearspec.service';
 import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
+import {EmployeeService} from '../../../services/employee.service';
+import {Employee} from '../../../entities/Employee';
 
 @Component({
   selector: 'app-administration',
@@ -11,20 +13,35 @@ import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
 export class AdministrationComponent implements OnInit {
 
   currentHolidayYearSpec: HolidayYearSpec;
+  employees: Employee[];
+  holidayYearStart: Date;
+  holidayYearEnd: Date;
 
-  constructor(private holidayYearSpecService: HolidayYearSpecService) { }
+  constructor(private holidayYearSpecService: HolidayYearSpecService,
+              private employeeService: EmployeeService) { }
 
   ngOnInit() {
-    this.getCurrentHolidayYear();
+    this.initData();
   }
 
+  initData(){
+    this.getCurrentHolidayYear();
+    this.getEmployees();
+  }
+
+  getEmployees(){
+    this.employeeService.getAll().subscribe(emps => {
+      this.employees = emps;
+      console.log(this.employees);
+      this.getHolidayYearStartEnd();
+    });
+  }
 
   getCurrentHolidayYear(){
     const currentDate = new Date();
     this.holidayYearSpecService.getAll().subscribe(holidayYearsSpecs => {
       const formatedHolidayYearsSpecs = this.formatHolidayYearDates(holidayYearsSpecs);
       const currentHolidayYearSpec = formatedHolidayYearsSpecs.find(x => x.StartDate <= currentDate && x.EndDate >= currentDate);
-      console.log(currentHolidayYearSpec);
       this.currentHolidayYearSpec = currentHolidayYearSpec;
     })
   }
@@ -41,5 +58,13 @@ export class AdministrationComponent implements OnInit {
     return holidayYearsSpecs;
   }
 
+  updateView(){
+    this.initData();
+  }
+
+  getHolidayYearStartEnd(){
+    this.holidayYearStart = this.currentHolidayYearSpec.StartDate;
+    this.holidayYearEnd = this.currentHolidayYearSpec.EndDate;
+  }
 
 }

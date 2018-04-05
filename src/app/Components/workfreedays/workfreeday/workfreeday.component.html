@@ -1,7 +1,19 @@
-<div>
-  <nav>
-    <ul *ngIf="employee" style="background-color: white; height: 100px; width: 250px; overflow-y: scroll">
-      <li *ngFor="let workfreeDay of workfreeDays"></li>
+<div class="container">
+  <div class="col-sm-12" style="text-align: center"><h3><strong>Arbejdsfridage</strong></h3></div>
+  <div>
+    <select #t (change)="selectEmployee(t.value)">
+      <option disabled selected> -- Vælg en medarbejder --</option>
+      <option *ngFor="let employee of employees" [value]="employee.Id">{{employee.FirstName}} {{employee.LastName}}</option>
+    </select>
+  </div>
+  <nav style="background-color: white; height: 400px; width: 300px; overflow-y: scroll">
+    <ul *ngIf="selectedEmployee">
+      <li *ngFor="let workfreeDay of selectedEmployee.WorkfreeDays" (click)="test()" style="margin: 5px">{{workfreeDay.Name}} - {{workfreeDay.Date | date: 'dd/MM/yyyy'}}
+      <button class="btn btn-warning btn-sm" (click)="edit(workfreeDay)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+      <button class="btn btn-danger btn-sm" (click)="delete(workfreeDay)"><i class="fa fa-trash" aria-hidden="true"></i></button></li>
     </ul>
   </nav>
+  <div>
+    <button class="btn btn-success btn-lg" (click)="createWorkfreeDay()">Opret Arbejdsfridag</button>
+  </div>
 </div>

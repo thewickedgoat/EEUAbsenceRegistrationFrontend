@@ -1,5 +1,5 @@
 export class Status{
-  Id: number;
+  Id?: number;
   StatusCode: string;
   StatusName: string;
 }

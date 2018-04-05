@@ -53,8 +53,6 @@ export class EmployeeCreateComponent implements OnInit {
    */
   createEmployee() {
     const values = this.employeeGroup.value;
-    console.log(this.employeeGroup.controls['department'].value);
-    console.log(this.employeeGroup.controls['employeeRole'].value);
     const department = this.getDepartment(this.employeeGroup.controls['department'].value);
     console.log(department);
     const employee: Employee = {FirstName: values.firstName, LastName: values.lastName,

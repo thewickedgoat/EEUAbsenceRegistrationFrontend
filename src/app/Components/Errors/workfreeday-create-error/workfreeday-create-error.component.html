@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="row" style="text-align: center"><h2><strong>Fejl i oprettelse</strong></h2></div>
+  <div class="row">
+    <div class="col-lg-12">
+      {{data.errorMessage}}
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-lg-4">
+      <b>Datoer:</b>
+    </div>
+    <div class="col-lg-8">
+      <div *ngFor="let absence of data.absences" class="col-sm-12"><b>{{absence.Date | date: 'dd/MM/yyyy'}}</b></div>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-lg-12">
+      {{data.errorHandleMessage}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <button class="btn btn-success" (click)="accepted()">
+        Ja
+      </button>
+      <button class="btn btn-danger" (click)="cancel()">
+        Afbryd
+      </button>
+    </div>
+  </div>
+</div>

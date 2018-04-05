@@ -1,14 +1,27 @@
 <div class="container">
-  <div class="row">
-    <button *ngIf="!publicHoliday" class="btn-info" (click)="setPublicHoliday()">Helligdag</button>
-    <button *ngIf="publicHoliday" class="btn-info" (click)="setWorkfreeday()">Arbejdsfridag</button>
+  <div class="col-lg-12" style="text-align: center">
+    <h2>Opret Arbejdsfridag for {{employee.FirstName}} {{employee.LastName}}</h2>
   </div>
-  <div class="col-lg-6">
+  <hr>
     <form [formGroup]="workfreedayGroup" (ngSubmit)="createWorkfreeDay()" novalidate>
-      <label>Vælg dato:
-      <input type="date"
-      formControlName="date">
-      </label>
+      <div class="col-lg-12" style="text-align: center">
+        <label><b>Start Dato:</b>
+          <input type="date"
+                 formControlName="dateStart">
+        </label>
+        <label><b>Slut Dato:</b>
+          <input type="date"
+                 formControlName="dateEnd">
+        </label>
+        <select #t (change)="setDay(t.value)">
+          <option disabled selected>-Vælg dag-</option>
+          <option [value]="1">Mandag</option>
+          <option [value]="2">Tirsdag</option>
+          <option [value]="3">Onsdag</option>
+          <option [value]="4">Torsdag</option>
+          <option [value]="5">Fredag</option>
+        </select>
+      </div>
+      <button class="btn btn-success" type="submit">Opret</button>
     </form>
-  </div>
 </div>

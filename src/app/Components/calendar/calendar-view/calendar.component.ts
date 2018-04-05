@@ -33,6 +33,7 @@ export class CalendarComponent implements OnInit {
 
   status: Status;
 
+  initHasBeenRun: boolean = false;
   isEmployee: boolean;
   isDepartmentChief: boolean;
   isCEO: boolean;
@@ -66,19 +67,18 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit() {
     //call back hell - aaaaaaaahhhhhhhhh
-        this.route.paramMap.subscribe(params => {
-          this.employeeService.getById(+params.get('id')).subscribe( employee => {
-            this.employee = employee;
-            this.currentDate = this.getCurrentDate(+params.get('year'), +params.get('month'));
-            this.getHolidayYear();
-          });
-
+    console.log('ok');
+    this.route.paramMap.subscribe(params => {
+      this.employeeService.getById(+params.get('id')).subscribe( employee => {
+        this.employee = employee;
+        this.currentDate = this.getCurrentDate(+params.get('year'), +params.get('month'));
+        this.getHolidayYear();
+      });
     });
   }
 
   getHolidayYear(){
     let holidayYearsSpecs = [];
-    console.log('1');
     this.holidayYearSpecSerivce.getAll().subscribe( specs => {
       if(specs != null){
         for(let holidayYearSpec of specs){
@@ -95,13 +95,9 @@ export class CalendarComponent implements OnInit {
         const currentHolidayYearSpec = holidayYearsSpecs.find(x => x.StartDate <= this.currentDate && x.EndDate >= this.currentDate);
         if(currentHolidayYearSpec != null){
           this.currentHolidayYearSpec = currentHolidayYearSpec;
-          console.log('2');
-          console.log(currentHolidayYearSpec);
-          console.log(this.employee);
           const currentHolidayYear = this.employee.HolidayYears.find(x => x.CurrentHolidayYear.Id === currentHolidayYearSpec.Id);
-          console.log(currentHolidayYear);
           this.currentHolidayYear = currentHolidayYear;
-          this.getCurrentMonth(this.currentDate.getMonth());
+          this.formatPublicHolidaysAndWorkfreeDays();
           this.initData();
         }
       }
@@ -109,14 +105,17 @@ export class CalendarComponent implements OnInit {
   }
 
   initData(){
+    this.initHasBeenRun = false;
     this.loggedInUser = JSON.parse(sessionStorage.getItem('currentEmployee'));
+    this.getCurrentMonth(this.currentDate.getMonth());
     this.initArrays();
     this.populateCalendar();
     this.getAllDatesInMonth();
-    this.formatAbsencesInCurrentMonth()
+    this.formatAbsencesInCurrentMonth();
     this.validateApprovalPermissions();
     this.checkForApprovalPermission();
     this.withinHolidayYearInterval();
+    this.initHasBeenRun = true;
   }
 
   //skal flyttes til controlleren for alle componenterne i kalender-viewet
@@ -152,19 +151,8 @@ export class CalendarComponent implements OnInit {
    */
   //skal flyttes til controlleren for alle componenterne i kalender-viewet
   nextMonth($event){
-    let december = 11;
-    const currentMonth = this.currentMonth.MonthDate.getMonth();
-    if(currentMonth < december){
-      let year = this.currentMonth.MonthDate.getFullYear();
-      let month = this.currentMonth.MonthDate.getMonth()+1;
-      this.router.navigate(['calendar/' + this.employee.Id + '/' + year + '/' + month]);
-    }
-    else if(currentMonth === december){
-      let year = this.currentMonth.MonthDate.getFullYear()+1;
-      let month = 0;
-      this.router.navigate(['calendar/' + this.employee.Id + '/' + year + '/' + month]);
-    }
-
+    this.currentDate.setMonth(this.currentDate.getMonth()+1)
+    this.initData();
   }
 
   /**
@@ -173,18 +161,8 @@ export class CalendarComponent implements OnInit {
    */
   //skal flyttes til controlleren for alle componenterne i kalender-viewet
   previousMonth($event){
-    let january = 0;
-    const currentMonth = this.currentMonth.MonthDate.getMonth();
-    if(currentMonth > january){
-      let year = this.currentMonth.MonthDate.getFullYear();
-      let month = this.currentMonth.MonthDate.getMonth()-1;
-      this.router.navigateByUrl('calendar/' + this.employee.Id + '/' + year + '/' + month);
-    }
-    else if(currentMonth === january){
-      let year = this.currentMonth.MonthDate.getFullYear()-1;
-      let month = 11;
-      this.router.navigateByUrl('calendar/' + this.employee.Id + '/' + year + '/' + month);
-    }
+    this.currentDate.setMonth(this.currentDate.getMonth()-1)
+    this.initData();
   }
 
   refreshCalendar()
@@ -605,6 +583,23 @@ export class CalendarComponent implements OnInit {
         const absenceToAdd = absence.Date.toString();
         const date = new Date(Date.parse(absenceToAdd));
         absence.Date = date;
+      }
+    }
+  }
+
+  formatPublicHolidaysAndWorkfreeDays(){
+    if(this.currentHolidayYearSpec.PublicHolidays != null){
+      for(let publicHoliday of this.currentHolidayYearSpec.PublicHolidays){
+        const dateToFormat = publicHoliday.Date.toString();
+        const date = new Date(Date.parse(dateToFormat));
+        publicHoliday.Date = date;
+      }
+    }
+    if(this.employee.WorkfreeDays != null){
+      for(let workfreeDay of this.employee.WorkfreeDays){
+        const dateToFormat = workfreeDay.Date.toString();
+        const date = new Date(Date.parse(dateToFormat));
+        workfreeDay.Date = date;
       }
     }
   }

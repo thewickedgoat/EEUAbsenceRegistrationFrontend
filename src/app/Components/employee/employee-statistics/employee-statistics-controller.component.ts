@@ -1,8 +1,9 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {Department} from '../../../entities/department';
-import {Employee} from '../../../entities/Employee';
 import {StatusService} from '../../../services/status.service';
 import {Status} from '../../../entities/status';
+import {Employee} from '../../../entities/Employee';
+import {HolidayYear} from '../../../entities/HolidayYear';
 
 @Component({
   selector: 'app-employee-statistics-controller',
@@ -48,20 +49,21 @@ export class EmployeeStatisticsControllerComponent implements OnInit {
     this.currentMonthNumber = +i;
   }
 
-  /*getCurrentMonthForEmployee(employee: Employee, monthNumber: number){
+  getCurrentMonthForEmployee(employee: Employee, monthNumber: number){
     const currentHolidayYear = this.getHolidayYearForEmployee(employee);
     const month = currentHolidayYear.Months.find(x => x.MonthDate.getMonth() === monthNumber);
     return month;
-  }*/
+  }
 
-  /*getHolidayYearForEmployee(employee: Employee){
+  getHolidayYearForEmployee(employee: Employee){
     let holidayYears = employee.HolidayYears;
-    for(let currentHolidayYear of holidayYears){
-      if(currentHolidayYear.StartDate.getFullYear() === this.holidayYearStart){
-        return currentHolidayYear;
-      }
+    for(let holidayYear of holidayYears){
+      const date = this.formatHolidayYearStartDate(holidayYear);
+      holidayYear.CurrentHolidayYear.StartDate = date;
     }
-  }*/
+    const currentHolidayYear = holidayYears.find(x => x.CurrentHolidayYear.StartDate.getFullYear() === this.holidayYearStart);
+    return currentHolidayYear;
+  }
 
   sortStatuses(statuses: Status[]){
     let statusArray = new Array<Status>();
@@ -77,4 +79,9 @@ export class EmployeeStatisticsControllerComponent implements OnInit {
     return statusArray;
   }
 
+  formatHolidayYearStartDate(holidayYear: HolidayYear){
+    const dateToFormat = holidayYear.CurrentHolidayYear.StartDate.toString();
+    const date = new Date(Date.parse(dateToFormat));
+    return date;
+  }
 }

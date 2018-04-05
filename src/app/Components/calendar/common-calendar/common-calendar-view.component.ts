@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {Employee} from '../../../entities/Employee';
 import {Absence} from '../../../entities/absence';
+import {PublicHoliday} from '../../../entities/publicholiday';
 
 @Component({
   selector: 'app-common-calendar-view',
@@ -12,7 +13,8 @@ export class CommonCalendarViewComponent implements OnInit {
 
   @Input()
   employee: Employee;
-
+  @Input()
+  publicHolidays: PublicHoliday[];
   @Input()
   absencesInCurrentMonth: Absence[];
   @Input()
@@ -27,8 +29,8 @@ export class CommonCalendarViewComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    this.formatWorkfreeDays();
   }
-
 
 
   /**
@@ -68,12 +70,33 @@ export class CommonCalendarViewComponent implements OnInit {
       }
     }
     return false;
-}
+  }
+
+  formatWorkfreeDays(){
+    if(this.employee.WorkfreeDays != null){
+      for(let workfreeDay of this.employee.WorkfreeDays){
+        const dateToFormat = workfreeDay.Date.toString();
+        const date = new Date(Date.parse(dateToFormat));
+        workfreeDay.Date = date;
+      }
+    }
+  }
 
   /**
    * Page navigation
    */
   goToCalendar(){
     this.emitter.emit(this.employee.Id);
+  }
+
+  isDateLocked(date: Date){
+    const workFreeday = this.employee.WorkfreeDays.find(x => x.Date.getFullYear() === date.getFullYear() &&
+      x.Date.getMonth() === date.getMonth() && x.Date.getDate() === date.getDate());
+    const publicHoliday = this.publicHolidays.find(x => x.Date.getFullYear() === date.getFullYear() &&
+      x.Date.getMonth() === date.getMonth() && x.Date.getDate() === date.getDate());
+    if(workFreeday != null || publicHoliday != null){
+      return true;
+    }
+    else return false;
   }
 }

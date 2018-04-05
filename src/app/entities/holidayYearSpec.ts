@@ -1,5 +1,6 @@
 import {HolidayYear} from './HolidayYear';
 import {WorkfreeDay} from './workfreeDay';
+import {PublicHoliday} from './publicholiday';
 
 export class HolidayYearSpec {
   Id?: number;
@@ -7,5 +8,5 @@ export class HolidayYearSpec {
   StartDate: Date;
   EndDate: Date;
   HolidayYears: HolidayYear[];
-  PublicHolidays?: WorkfreeDay[];
+  PublicHolidays?: PublicHoliday[];
 }

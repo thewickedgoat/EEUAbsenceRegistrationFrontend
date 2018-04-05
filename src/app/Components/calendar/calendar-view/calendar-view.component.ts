@@ -4,6 +4,8 @@ import {Month} from '../../../entities/month';
 import {AbsenceService} from '../../../services/absence.service';
 import {Status} from '../../../entities/status';
 import {MonthService} from '../../../services/month.service';
+import {PublicHoliday} from '../../../entities/publicholiday';
+import {Employee} from '../../../entities/Employee';
 
 @Component({
   selector: 'app-calendar-view',
@@ -28,6 +30,12 @@ export class CalendarViewComponent implements OnInit {
   absencesInCurrentMonth: Absence[];
   @Input()
   vacationLimitReached: boolean;
+  @Input()
+  publicHolidays: PublicHoliday[];
+  @Input()
+  employee: Employee;
+  @Input()
+  initHasBeenRun: boolean;
 
   @Output()
   emitter = new EventEmitter();
@@ -49,15 +57,19 @@ export class CalendarViewComponent implements OnInit {
   }
   /**
    * based on the day of the week it wii return the weekList in the current week the calendar is building
-   * @param id
+   * @param week
    * @param day
    * @returns {number}
    */
-  getWeekList(id: number, day: number){
-    let currentWeek = this.weeks[id];
-
-    return this.getDayInWeek(currentWeek, day);
-
+  isDayEditable(week: number, day: number){
+    let currentWeek = this.weeks[week];
+    if(this.getDayInWeek(currentWeek, day) === -1){
+      return false;
+    }
+    else if(this.isPublicHolidayOrWorkfreeday(week, day) === true){
+      return false;
+    }
+    else return true;
   }
 
   /**
@@ -251,6 +263,16 @@ export class CalendarViewComponent implements OnInit {
 
   isStatusVacationRelated(statusCode: string){
     if(statusCode === 'F' || statusCode === 'FF' || statusCode === 'HF' || statusCode === 'HFF'){
+      return true;
+    }
+    else return false;
+  }
+
+  isPublicHolidayOrWorkfreeday(week: number, day: number){
+    let currentDate = this.convertToDate(week, day);
+    let workfreeDay = this.employee.WorkfreeDays.find(x => x.Date.getFullYear() === currentDate.getFullYear() &&
+    x.Date.getMonth() === currentDate.getMonth() && x.Date.getDate() === currentDate.getDate());
+    if(workfreeDay != null){
       return true;
     }
     else return false;

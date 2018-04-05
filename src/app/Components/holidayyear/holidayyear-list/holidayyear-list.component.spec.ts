@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { WorkfreedaysCreateComponent } from './workfreedays-create.component';
+import { HolidayyearListComponent } from './holidayyear-list.component';
 
-describe('WorkfreedaysCreateComponent', () => {
-  let component: WorkfreedaysCreateComponent;
-  let fixture: ComponentFixture<WorkfreedaysCreateComponent>;
+describe('HolidayyearListComponent', () => {
+  let component: HolidayyearListComponent;
+  let fixture: ComponentFixture<HolidayyearListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ WorkfreedaysCreateComponent ]
+      declarations: [ HolidayyearListComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(WorkfreedaysCreateComponent);
+    fixture = TestBed.createComponent(HolidayyearListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

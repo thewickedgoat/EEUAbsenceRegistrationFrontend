@@ -1,5 +1,6 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
+import {Employee} from '../../../entities/Employee';
 
 @Component({
   selector: 'app-administration-view',
@@ -11,10 +12,21 @@ export class AdministrationViewComponent implements OnInit {
 
   @Input()
   currentHolidayYearSpec: HolidayYearSpec;
-
+  @Input()
+  holidayYearStart: Date;
+  @Input()
+  holidayYearEnd: Date;
+  @Input()
+  employees: Employee[];
+  @Output()
+  emitter = new EventEmitter();
   constructor() { }
 
   ngOnInit() {
+    console.log(this.employees);
   }
 
+  updateView(){
+    this.emitter.emit()
+  }
 }

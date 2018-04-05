@@ -1,0 +1,28 @@
+<div>
+  <div class="row">
+    <div>
+      <h2><b>Opret Ferieår</b></h2>
+    </div>
+  </div>
+  <hr>
+  <form [formGroup]="holidayYearGroup" (submit)="create()" novalidate>
+    <div class="row">
+      <label><b>Start Dato:</b>
+        <input type="date"
+               formControlName="dateStart">
+      </label>
+    </div>
+    <div class="row">
+      <label><b>Slut Dato:</b>
+        <input type="date"
+               formControlName="dateEnd">
+      </label>
+    </div>
+  </form>
+  <hr>
+  <div class="row">
+    <div class="col-lg-12">
+      <button type="submit">Opret</button>
+    </div>
+  </div>
+</div>

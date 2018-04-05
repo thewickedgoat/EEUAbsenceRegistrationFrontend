@@ -46,7 +46,6 @@ import { EmployeeMonthStatisticsComponent } from './Components/employee/employee
 import { EmployeeYearStatisticsComponent } from './Components/employee/employee-statistics/employee-year-statistics/employee-year-statistics.component';
 import { EmployeeDeleteDialogComponent } from './Components/employee/employee-delete-dialog/employee-delete-dialog.component';
 import { AdministrationComponent } from './Components/administration/administration/administration.component';
-import { WorkfreedaysCreateComponent } from './Components/workfreedays/workfreedays-create/workfreedays-create.component';
 import { WorkfreedaysCreateViewComponent } from './Components/workfreedays/workfreedays-create-view/workfreedays-create-view.component';
 import { AdministrationViewComponent } from './Components/administration/administration/administration-view.component';
 import {WorkfreedayService} from './services/workfreeday.service';
@@ -54,6 +53,17 @@ import { WorkfreedaysComponent } from './Components/workfreedays/workfreedays/wo
 import { PublicHolidayComponent } from './Components/workfreedays/public-holiday/public-holiday.component';
 import { WorkfreedayComponent } from './Components/workfreedays/workfreeday/workfreeday.component';
 import {HolidayYearSpecService} from './services/holidayyearspec.service';
+import { PublicholidaysCreateViewComponent } from './Components/workfreedays/publicholidays-create-view/publicholidays-create-view.component';
+import {PublicholidayService} from './services/publicholiday.service';
+import { WorkfreedayCreateErrorComponent } from './Components/Errors/workfreeday-create-error/workfreeday-create-error.component';
+import { UniversalErrorCatcherComponent } from './Components/Errors/universal-error-catcher/universal-error-catcher.component';
+import { PublicholidayCreateErrorComponent } from './Components/Errors/publicholiday-create-error/publicholiday-create-error.component';
+import { HolidayyearCreateViewComponent } from './Components/holidayyear/holidayyear-create/holidayyear-create-view.component';
+import { HolidayyearEmployeeCreateViewComponent } from './Components/holidayyear/holidayyear-employee-create-view/holidayyear-employee-create-view.component';
+import { HolidayyearAdministrationComponent } from './Components/holidayyear/holidayyear-administration/holidayyear-administration.component';
+import { HolidayyearAdministrationViewComponent } from './Components/holidayyear/holidayyear-administration-view/holidayyear-administration-view.component';
+import { HolidayyearListComponent } from './Components/holidayyear/holidayyear-list/holidayyear-list.component';
+import { HolidayyearRemainingEmployeeComponent } from './Components/holidayyear/holidayyear-remaining-employee/holidayyear-remaining-employee.component';
 
 
 const routes: Routes = [
@@ -67,7 +77,8 @@ const routes: Routes = [
   {path: 'month/:month/:yearStart/:yearEnd', component: MonthComponent},
   {path: 'common-calendar/:year/:month', component: CommonCalendarComponent},
   {path: 'login', component: LoginComponent},
-  {path: 'getHolidayYear/:yearStart', component: AdminOverviewComponent},
+  {path: 'holidayyears', component: HolidayyearAdministrationComponent},
+  {path: 'stats/:yearStart', component: AdminOverviewComponent},
   {path: 'work', component: AdministrationComponent},
   {path: ' ', redirectTo: 'login'}
 
@@ -105,12 +116,21 @@ const routes: Routes = [
     StatusControllerComponent,
     ToolbarComponent,
     AdministrationComponent,
-    WorkfreedaysCreateComponent,
     WorkfreedaysCreateViewComponent,
     AdministrationViewComponent,
     WorkfreedaysComponent,
     PublicHolidayComponent,
-    WorkfreedayComponent
+    WorkfreedayComponent,
+    PublicholidaysCreateViewComponent,
+    WorkfreedayCreateErrorComponent,
+    UniversalErrorCatcherComponent,
+    PublicholidayCreateErrorComponent,
+    HolidayyearCreateViewComponent,
+    HolidayyearEmployeeCreateViewComponent,
+    HolidayyearAdministrationComponent,
+    HolidayyearAdministrationViewComponent,
+    HolidayyearListComponent,
+    HolidayyearRemainingEmployeeComponent
   ],
   imports: [
     BrowserModule,
@@ -127,6 +147,12 @@ const routes: Routes = [
   entryComponents: [
     EmployeeDeleteDialogComponent,
     WorkfreedaysCreateViewComponent,
+    PublicholidaysCreateViewComponent,
+    UniversalErrorCatcherComponent,
+    WorkfreedayCreateErrorComponent,
+    PublicholidayCreateErrorComponent,
+    HolidayyearCreateViewComponent,
+    HolidayyearEmployeeCreateViewComponent
   ],
   providers: [
     EmployeeService,
@@ -137,6 +163,7 @@ const routes: Routes = [
     MonthService,
     HolidayyearService,
     HolidayYearSpecService,
+    PublicholidayService,
     StatusService,
     WorkfreedayService],
   bootstrap: [AppComponent]

@@ -1,0 +1,16 @@
+<div class="container">
+  <div class="col-sm-12">
+    <h2><strong>Opret Helligdag</strong></h2>
+    <hr>
+  </div>
+  <form [formGroup]="publicHolidayGroup" (ngSubmit)="createPublicHoliday()" novalidate>
+    <label><b>Vælg dato:</b>
+      <input type="date" formControlName="date">
+    </label>
+    <label><b>Navn på hellidag:</b>
+      <input type="text" formControlName="name">
+    </label>
+    <button class="btn btn-success" type="submit">Opret</button>
+  </form>
+
+</div>

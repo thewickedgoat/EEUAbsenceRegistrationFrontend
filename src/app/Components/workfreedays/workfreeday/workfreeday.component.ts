@@ -1,6 +1,5 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, OnChanges, Output, ViewEncapsulation} from '@angular/core';
 import {Employee} from '../../../entities/Employee';
-import {WorkfreeDay} from '../../../entities/workfreeDay';
 
 @Component({
   selector: 'app-workfreeday',
@@ -11,15 +10,45 @@ import {WorkfreeDay} from '../../../entities/workfreeDay';
 export class WorkfreedayComponent implements OnInit {
 
   @Input()
-  employee: Employee;
+  employees: Employee[];
 
-  @Input()
-  workfreeDays: WorkfreeDay[];
+  selectedEmployee: Employee;
+
+  @Output()
+  emitter = new EventEmitter();
 
   constructor() {
   }
 
   ngOnInit() {
+
   }
 
+  ngOnChanges()
+  {
+
+    console.log('nanie?!?')
+  }
+
+  selectEmployee(value: string){
+    const id = parseInt(value);
+    const selectedEmployee = this.employees.find(x => x.Id === id);
+    this.selectedEmployee = selectedEmployee;
+  }
+
+  createWorkfreeDay(){
+    this.emitter.emit(this.selectedEmployee);
+  }
+
+  delete(){
+
+  }
+
+  edit(){
+
+  }
+
+  test(){
+    console.log('nani?!');
+  }
 }

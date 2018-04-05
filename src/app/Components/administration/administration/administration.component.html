@@ -1,3 +1,8 @@
+<app-toolbar></app-toolbar>
 <app-administration-view
-[currentHolidayYearSpec]="currentHolidayYearSpec">
+[currentHolidayYearSpec]="currentHolidayYearSpec"
+[holidayYearStart]="holidayYearStart"
+[holidayYearEnd]="holidayYearEnd"
+[employees]="employees"
+(emitter)="updateView()">
 </app-administration-view>

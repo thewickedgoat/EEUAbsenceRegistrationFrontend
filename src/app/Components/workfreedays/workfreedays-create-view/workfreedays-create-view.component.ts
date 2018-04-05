@@ -1,9 +1,8 @@
 import {Component, EventEmitter, Inject, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {Employee} from '../../../entities/employee';
-import {WorkFreedayType} from '../../../entities/workFreedayType.enum';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {EmployeeDeleteDialogComponent} from '../../employee/employee-delete-dialog/employee-delete-dialog.component';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {WorkfreeDay} from '../../../entities/workfreeDay';
 
 @Component({
   selector: 'app-workfreedays-create-view',
@@ -13,45 +12,51 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 })
 export class WorkfreedaysCreateViewComponent implements OnInit {
 
-  employees: Employee[];
+  dayNames = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
 
-  publicHoliday: boolean = false;
+  employee: Employee;
   workfreedayGroup: FormGroup;
+  dayNumber: number;
 
-  @Output()
-  emitter = new EventEmitter();
-
-  constructor(private formBuilder: FormBuilder, public dialogRef: MatDialogRef<EmployeeDeleteDialogComponent>,
+  constructor(private formBuilder: FormBuilder, public dialogRef: MatDialogRef<WorkfreedaysCreateViewComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) {
     this.workfreedayGroup = this.formBuilder.group({
-      date: ['', Validators.required],
-      employee: ['', Validators.required],
-      type: ['', Validators.required]
+      dateStart: ['', Validators.required],
+      dateEnd: ['', Validators.required],
     });
   }
 
   ngOnInit() {
-    this.employees = this.data.employees;
-    console.log(this.employees);
+    this.employee = this.data.employee;
   }
 
-  getType(id: number){
-    return WorkFreedayType[id]
-  }
-
-  createWorkfreeDay(){
+  createWorkfreeDay(): void{
+    console.log(this.dayNumber);
     const values = this.workfreedayGroup.value;
-
+    const startDate = new Date(values.dateStart);
+    const endDate = new Date(values.dateEnd);
+    const name = this.dayNames[this.dayNumber];
+    let dateToCreate = startDate;
+    let datesToCreate = new Array<Date>();
+    console.log(endDate.getDate());
+    do{
+      if(dateToCreate.getDay() === this.dayNumber){
+        const workfreeDayDate = new Date(dateToCreate);
+        datesToCreate.push(workfreeDayDate);
+      }
+      dateToCreate.setDate(dateToCreate.getDate()+1);
+    }
+    while (dateToCreate <= endDate);
+    let workfreeDays = new Array<WorkfreeDay>();
+    for(let workfreeDate of datesToCreate){
+      const workfreeDay: WorkfreeDay = {Date: workfreeDate, Name: name, Employee: this.employee};
+      workfreeDays.push(workfreeDay);
+    }
+    this.dialogRef.close(workfreeDays);
   }
 
-  setPublicHoliday(){
-    this.publicHoliday = true;
-    console.log(this.workfreedayGroup.controls['date'].value);
+  setDay(t){
+    const id = parseInt(t);
+    this.dayNumber = id;
   }
-
-  setWorkfreeday(){
-    this.publicHoliday = false;
-    console.log(this.workfreedayGroup.controls['date'].value);
-  }
-
 }

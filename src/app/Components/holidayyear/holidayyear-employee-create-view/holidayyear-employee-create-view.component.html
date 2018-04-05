@@ -1,0 +1,47 @@
+<div class="container">
+  <div class="row" style="text-align: center">
+    <div>
+      <h2><b>Administrer ferie for {{data.Employee.FirstName}} {{data.Employee.FirstName}}</b></h2>
+    </div>
+  </div>
+  <hr>
+  <div class="row" style="text-align: center">
+    <div class="col-lg-12">
+      <h2><b>Resterende ferie/feriefridage</b></h2>
+    </div>
+  </div>
+  <div class="row">
+
+  </div>
+  <hr>
+  <div class="row">
+
+  </div>
+  <form [formGroup]="holidayYearGroup" (submit)="create()" novalidate>
+    <div class="row">
+      <label><b>Feriedage til rådighed:</b>
+        <input type="text"
+               formControlName="holidayAvailable">
+      </label>
+    </div>
+    <div class="row">
+      <label><b>Feriefridage til rådighed</b>
+        <input type="text"
+               formControlName="holidayFreedaysAvailable">
+      </label>
+    </div>
+    <div class="row">
+      <label><b>Ferie overført:</b>
+        <input type="text"
+               formControlName="holidayTransfered">
+      </label>
+    </div>
+  </form>
+  <hr>
+  <div class="row">
+    <div class="col-lg-12">
+      <button type="submit">Opret</button>
+    </div>
+  </div>
+</div>
+

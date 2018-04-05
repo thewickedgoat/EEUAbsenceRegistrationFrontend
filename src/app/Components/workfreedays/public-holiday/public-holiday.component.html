@@ -1,3 +1,11 @@
-<p>
-  public-holiday works!
-</p>
+<div class="container">
+  <div class="col-sm-12" style="text-align: center"><h3><strong>Helligdage</strong></h3></div>
+  <nav style="background-color: white; height: 400px; width: 300px; overflow-y: scroll">
+    <ul *ngIf="publicHolidays">
+      <li *ngFor="let publicHoliday of publicHolidays">{{publicHoliday.Name}} - {{publicHoliday.Date | date: 'dd/MM/yyyy'}}</li>
+    </ul>
+  </nav>
+  <div>
+    <button class="btn btn-success btn-lg" (click)="createPublicHoliday()">Opret Helligdag</button>
+  </div>
+</div>

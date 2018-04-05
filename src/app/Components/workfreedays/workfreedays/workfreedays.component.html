@@ -1,29 +1,21 @@
-<div class="container">
-  <div class="row">
+<div *ngIf="employees" class="container">
+  <div class="col-lg-12" style="text-align: center">
+    <h1>Administration af Arbejdsfridage</h1>
+    <hr>
+  </div>
+  <div *ngIf="currentHolidayYearSpec" class="row">
     <div>
-      <div>
-        <select #t (change)="selectEmployee(t.value)">
-          <option disabled selected> -- Vælg en medarbejder --</option>
-          <option *ngFor="let employee of employees" [value]="employee.Id">{{employee.FirstName}} {{employee.LastName}}</option>
-        </select>
-      </div>
       <app-workfreeday
-      [employee]="getEmployee()"
-      [workfreeDays]="getWorkfreeDaysOfEmployee(selectedEmployee)">
+      [employees]="employees"
+      (emitter)="createWorkfreeDay($event)">
       </app-workfreeday>
     </div>
     <div>
-      <app-public-holiday>asdfasdf</app-public-holiday>
+      <app-public-holiday
+      [currentHolidayYearSpec]="currentHolidayYearSpec"
+      (emitter)="createPublicHoliday($event)">asdfasdf</app-public-holiday>
     </div>
   </div>
   <hr>
-  <div class="row">
-    <div>
-      <button (click)="createWorkfreeDay()">Opret Arbejdsfridag</button>
-    </div>
-    <div>
-      <button (click)="createPublicHoliday()">Opret Helligdag</button>
-    </div>
-  </div>
 </div>
 
