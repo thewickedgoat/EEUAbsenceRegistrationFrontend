@@ -270,6 +270,11 @@ export class CalendarViewComponent implements OnInit {
 
   isPublicHolidayOrWorkfreeday(week: number, day: number){
     let currentDate = this.convertToDate(week, day);
+    let publicHoliday = this.publicHolidays.find(x => x.Date.getFullYear() === currentDate.getFullYear() &&
+      x.Date.getMonth() === currentDate.getMonth() && x.Date.getDate() === currentDate.getDate());
+    if(publicHoliday != null){
+      return true;
+    }
     let workfreeDay = this.employee.WorkfreeDays.find(x => x.Date.getFullYear() === currentDate.getFullYear() &&
     x.Date.getMonth() === currentDate.getMonth() && x.Date.getDate() === currentDate.getDate());
     if(workfreeDay != null){

@@ -53,7 +53,7 @@ export class CommonCalendarComponent implements OnInit {
 
   employeeIsInCurrentHolidayYear(employee: Employee){
     const holidayYears = employee.HolidayYears;
-    const holidayYear = holidayYears.find(x => x.CurrentHolidayYear.Id === this.currentHolidayYearSpec.Id)
+    const holidayYear = holidayYears.find(x => x.CurrentHolidayYear.Id === this.currentHolidayYearSpec.Id);
     if(holidayYear === null){
       return false;
     }
