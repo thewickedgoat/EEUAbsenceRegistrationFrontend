@@ -338,7 +338,7 @@ export class CalendarComponent implements OnInit {
     this.isEmployee = false;
     const loggedInEmployee = this.loggedInUser;
     if(loggedInEmployee.Id === this.employee.Id && loggedInEmployee.EmployeeRole != EmployeeRole.Afdelingsleder
-      || loggedInEmployee.Id === this.employee.Id && loggedInEmployee.EmployeeRole != EmployeeRole.Direktør){
+      || loggedInEmployee.Id === this.employee.Id && loggedInEmployee.EmployeeRole != EmployeeRole.CEO){
       this.isEmployee = true;
     }
     if(loggedInEmployee.Id === this.employee.Id && loggedInEmployee.EmployeeRole === EmployeeRole.Afdelingsleder){
@@ -350,11 +350,11 @@ export class CalendarComponent implements OnInit {
       && this.employee.Department.Id === loggedInEmployee.Department.Id){
       this.isDepartmentChief = true;
     }
-    if(loggedInEmployee.EmployeeRole === EmployeeRole.Direktør && loggedInEmployee.Id === this.employee.Id){
+    if(loggedInEmployee.EmployeeRole === EmployeeRole.CEO && loggedInEmployee.Id === this.employee.Id){
       this.isEmployee = true;
       this.isCEO = true;
     }
-    if(loggedInEmployee.EmployeeRole === EmployeeRole.Direktør && this.employee.EmployeeRole === EmployeeRole.Afdelingsleder){
+    if(loggedInEmployee.EmployeeRole === EmployeeRole.CEO && this.employee.EmployeeRole === EmployeeRole.Afdelingsleder){
       this.isCEO = true;
     }
     if(loggedInEmployee.EmployeeRole === EmployeeRole.Administrator){

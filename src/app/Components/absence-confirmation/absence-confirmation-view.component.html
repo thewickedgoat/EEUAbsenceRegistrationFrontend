@@ -45,7 +45,7 @@
       Admin: <input type="checkbox" [disabled]="true">
     </div>
   </div>
-  <!--Godkend for dig selv som Direktør-->
+  <!--Godkend for dig selv som CEO-->
   <div *ngIf="isEmployee && isCEO">
     <div>
       <button *ngIf="!isMonthApprovedByEmployee" class="btn btn-info" (click)="approveMonth()">Godkend dit fravær</button>
@@ -83,7 +83,7 @@
     </div>
   </div>
 
-  <!--Godkend som Direktør-->
+  <!--Godkend som CEO-->
   <div *ngIf="isCEO && !isEmployee">
     <div *ngIf="isMonthApprovedByEmployee">
       Afdelingsleder: <input type="checkbox" [disabled]="true" checked="checked">
@@ -158,7 +158,7 @@
       && isMonthApprovedByEmployee" class="btn btn-info" (click)="reopenMonth()">Genåben måned</button>
     </div>
   </div>
-  <!--Godkend Direktør-->
+  <!--Godkend CEO-->
   <div *ngIf="isAdmin && employee.EmployeeRole === 4">
     <div *ngIf="isMonthApprovedByEmployee">
       Direktør: <input type="checkbox" [disabled]="true" checked="checked">

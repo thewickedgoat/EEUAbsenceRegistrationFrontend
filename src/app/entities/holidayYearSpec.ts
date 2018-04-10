@@ -1,5 +1,4 @@
 import {HolidayYear} from './HolidayYear';
-import {WorkfreeDay} from './workfreeDay';
 import {PublicHoliday} from './publicholiday';
 
 export class HolidayYearSpec {

@@ -5,10 +5,6 @@
   </div>
   <div *ngIf="currentHolidayYearSpec" class="row">
     <div>
-      <app-workfreeday
-      [employees]="employees"
-      (emitter)="createWorkfreeDay($event)">
-      </app-workfreeday>
     </div>
     <div>
       <app-public-holiday

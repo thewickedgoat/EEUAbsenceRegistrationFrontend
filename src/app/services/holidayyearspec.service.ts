@@ -4,7 +4,7 @@ import {Observable} from 'rxjs/Observable';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {HolidayYearSpec} from '../entities/holidayYearSpec';
 
-const url = environment.apiEndPoint + 'holidayyearspec';
+const url = environment.apiEndPoint + 'holidayyearspec/';
 const jwt = environment.jwt();
 
 @Injectable()
@@ -13,23 +13,23 @@ export class HolidayYearSpecService {
   constructor(private http: HttpClient) { }
 
   post(holidayYearSpec: HolidayYearSpec): Observable<HolidayYearSpec> {
-    return this.http.post<HolidayYearSpec>(url, holidayYearSpec, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)});
+    return this.http.post<HolidayYearSpec>(url + 'Post', holidayYearSpec, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)});
   }
 
   put(holidayYearSpec: HolidayYearSpec): Observable<HolidayYearSpec> {
-    return this.http.put<HolidayYearSpec>(url + '/' + holidayYearSpec.Id, holidayYearSpec, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)});
+    return this.http.put<HolidayYearSpec>(url + 'Put' + '/' + holidayYearSpec.Id, holidayYearSpec, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)});
   }
 
   getById(id: number): Observable<HolidayYearSpec>{
-    return this.http.get<HolidayYearSpec>(url + '/' + id, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)});
+    return this.http.get<HolidayYearSpec>(url + 'GetById' + '/' + id, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)});
   }
 
   getAll(): Observable<HolidayYearSpec[]> {
-    return this.http.get<HolidayYearSpec[]>(url, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)});
+    return this.http.get<HolidayYearSpec[]>(url + 'GetAll', {headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)});
   }
 
   delete(id: number): Observable<any> {
-    return this.http.delete<any>(url + '/' + id, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)});
+    return this.http.delete<any>(url + 'Delete' + '/' + id, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)});
 
   }
 

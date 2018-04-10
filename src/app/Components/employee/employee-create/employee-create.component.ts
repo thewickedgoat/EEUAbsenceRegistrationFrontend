@@ -70,11 +70,6 @@ export class EmployeeCreateComponent implements OnInit {
     });
   }
 
-  test(){
-    const values = this.employeeGroup.value;
-    console.log(this.employeeGroup.controls['department'].value);
-    console.log(this.employeeGroup.controls['employeeRole'].value);
-  }
   /**
    * Gets the department value for the formGroup
    * @param departmentName

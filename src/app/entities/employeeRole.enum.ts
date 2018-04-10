@@ -2,5 +2,5 @@ export enum EmployeeRole {
   Medarbejder = 0,
   Afdelingsleder = 1,
   Administrator = 2,
-  Direktør = 3
+  CEO = 3
 }
