@@ -17,7 +17,7 @@ export class WorkfreedayService {
   }
 
   postList(workfreeDays: WorkfreeDay[]): Observable<WorkfreeDay[]>{
-    return this.http.post<WorkfreeDay[]>(url + 'PostList', workfreeDays,{headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)})
+    return this.http.post<WorkfreeDay[]>(url + 'PostList', workfreeDays,{headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)});
   }
 
   put(workfreeDay: WorkfreeDay): Observable<WorkfreeDay> {
@@ -34,6 +34,5 @@ export class WorkfreedayService {
 
   delete(id: number): Observable<any> {
     return this.http.delete<any>(url + 'Delete' + '/' + id, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)});
-
   }
 }

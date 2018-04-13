@@ -30,13 +30,10 @@ export class EmployeeEditComponent implements OnInit {
     this.showPassword = false;
     this.employeeUpdated = false;
     this.isNotEditable = true;
-    this.route.paramMap.switchMap(params => this.employeeService.getById(+params.get('id')))
-      .subscribe(employee => {this.employee = employee; console.log(this.employee); this.createFormgroup();});
-    this.departmentService.getAll().subscribe(departments => this.departments = departments);
-
   }
 
   ngOnInit() {
+    this.initData();
     this.loggedInUser = JSON.parse(sessionStorage.getItem('currentEmployee'));
   }
 
@@ -55,6 +52,11 @@ export class EmployeeEditComponent implements OnInit {
     });
   }
 
+  initData(){
+    this.route.paramMap.switchMap(params => this.employeeService.getById(+params.get('id')))
+      .subscribe(employee => {this.employee = employee; console.log(this.employee); this.createFormgroup();});
+    this.departmentService.getAll().subscribe(departments => this.departments = departments);
+  }
 
   /**
    * Goes back to last visited page
@@ -157,6 +159,8 @@ export class EmployeeEditComponent implements OnInit {
     else return false;
   }
 
-
+  updateView(){
+    this.initData();
+  }
 
 }

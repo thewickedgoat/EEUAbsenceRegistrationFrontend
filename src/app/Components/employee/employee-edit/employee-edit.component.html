@@ -140,7 +140,8 @@
     </div>
     <div>
       <app-workfreeday
-        [employee]="employee"></app-workfreeday>
+        [employee]="employee"
+      (emitter)="updateView()"></app-workfreeday>
     </div>
   </div>
   <ngb-alert *ngIf="employeeUpdated" (close)="close()" type="success">Ændringer gemt</ngb-alert>
