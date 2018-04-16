@@ -159,8 +159,15 @@ export class EmployeeEditComponent implements OnInit {
     else return false;
   }
 
-  updateView(){
-    this.initData();
+  updateWorkfreeDaysList(){
+    console.log('3');
+    console.log(this.employee);
+    this.route.paramMap.switchMap(params => this.employeeService.getById(+params.get('id')))
+      .subscribe(employee => {
+        this.employee.WorkfreeDays = employee.WorkfreeDays;
+        console.log('4');
+        console.log(this.employee)
+      });
   }
 
 }

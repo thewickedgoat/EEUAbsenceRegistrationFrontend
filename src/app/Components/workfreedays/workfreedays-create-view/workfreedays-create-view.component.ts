@@ -3,6 +3,7 @@ import {Employee} from '../../../entities/employee';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {WorkfreeDay} from '../../../entities/workfreeDay';
+import {EmployeeRole} from '../../../entities/employeeRole.enum';
 
 @Component({
   selector: 'app-workfreedays-create-view',
@@ -48,10 +49,28 @@ export class WorkfreedaysCreateViewComponent implements OnInit {
     }
     while (dateToCreate <= endDate);
     let workfreeDays = new Array<WorkfreeDay>();
+    const employee: Employee = {
+      Id: this.employee.Id,
+      FirstName: ' ',
+      LastName: ' ',
+      UserName: ' ',
+      Email: ' ',
+      Password: ' ',
+      HolidayYears: null,
+      EmployeeRole: EmployeeRole.Medarbejder,
+      Department: null,
+      WorkfreeDays: null,
+      Note: ' '
+    }
+    console.log('start');
+    console.log(this.employee);
     for(let workfreeDate of datesToCreate){
-      const workfreeDay: WorkfreeDay = {Date: workfreeDate, Name: name, Employee: this.employee};
+      const workfreeDay: WorkfreeDay = {Date: workfreeDate, Name: name, Employee: employee};
       workfreeDays.push(workfreeDay);
     }
+
+    console.log(this.employee);
+    console.log(workfreeDays);
     this.dialogRef.close(workfreeDays);
   }
 

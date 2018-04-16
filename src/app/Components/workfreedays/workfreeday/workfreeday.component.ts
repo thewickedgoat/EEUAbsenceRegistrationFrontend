@@ -10,6 +10,7 @@ import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
 import {HolidayYearSpecService} from '../../../services/holidayyearspec.service';
 import {WorkfreeDay} from '../../../entities/workfreeDay';
 
+
 @Component({
   selector: 'app-workfreeday',
   templateUrl: './workfreeday.component.html',
@@ -38,13 +39,14 @@ export class WorkfreedayComponent implements OnInit {
   ngOnInit() {
     this.getHolidayYearSpec();
     this.formatWorkfreeDays();
+    console.log(this.employee.WorkfreeDays);
   }
 
   ngOnChanges()
   {
     console.log('damnit ryan');
     if(this.currentHolidayYearSpec != null){
-
+      this.formatWorkfreeDays();
       this.selectHolidayYearSpec(this.currentIndex);
     }
     console.log(this.employee.WorkfreeDays);
@@ -58,7 +60,14 @@ export class WorkfreedayComponent implements OnInit {
 
   }
 
+  test(){
+    console.log(this.currentWorkfreeDayList);
+    this.currentWorkfreeDayList = this.currentWorkfreeDayList.concat(this.currentWorkfreeDayList);
+    console.log(this.currentWorkfreeDayList);
+  }
+
   selectHolidayYearSpec(id: number){
+    this.currentWorkfreeDayList = [];
     let index = +id;
     this.currentHolidayYearSpec = this.holidayYearSpecs.find(x => x.Id === index);
     this.formatHolidayYearStartEnd(this.currentHolidayYearSpec);
@@ -67,7 +76,6 @@ export class WorkfreedayComponent implements OnInit {
     this.currentWorkfreeDayList = this.employee.WorkfreeDays.filter(x => x.Date >= startDate && x.Date <= endDate);
     this.currentIndex = index;
     console.log('nani?!');
-    console.log(this.currentHolidayYearSpec);
   }
 
   getHolidayYearSpec(){
@@ -142,10 +150,14 @@ export class WorkfreedayComponent implements OnInit {
               return;
             }
             else{
-              console.log('damn son');
-              this.createWorkfreeDays(workfreeDays);
-              this.updateView();
-              return;
+              console.log('1');
+              console.log(this.employee);
+              this.workfreedayService.postList(workfreeDays).subscribe(wfd => {
+                console.log(this.employee);
+                console.log(wfd);
+                console.log('2');
+                this.updateView();
+              });
             }
           }
         }
@@ -181,10 +193,8 @@ export class WorkfreedayComponent implements OnInit {
     return absenceDaysToList;
   }
 
-  createWorkfreeDays(workfreeDays: WorkfreeDay[]){
-    this.workfreedayService.postList(workfreeDays).subscribe(wfd => {
-      return;
-    });
+  async createWorkfreeDays(workfreeDays: WorkfreeDay[]){
+    console.log('toast');
   }
 
   workfreedaysNotInRange(workfreeDays: WorkfreeDay[]){
