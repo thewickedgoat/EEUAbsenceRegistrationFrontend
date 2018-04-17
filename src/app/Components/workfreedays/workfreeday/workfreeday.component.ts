@@ -19,7 +19,7 @@ import {WorkfreeDay} from '../../../entities/workfreeDay';
 })
 export class WorkfreedayComponent implements OnInit {
 
-  currentHolidayYearSpec: HolidayYearSpec;
+  currentHolidayYearSpec: HolidayYearSpec = null;
   holidayYearSpecs: HolidayYearSpec[];
   currentWorkfreeDayList: WorkfreeDay[] = [];
   currentIndex: number;
@@ -37,14 +37,18 @@ export class WorkfreedayComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getHolidayYearSpec();
-    this.formatWorkfreeDays();
-    console.log(this.employee.WorkfreeDays);
+    console.log("diller");
+    console.log(this.currentHolidayYearSpec);
+    if(this.currentHolidayYearSpec === null) {
+      this.getHolidayYearSpec();
+      this.formatWorkfreeDays();
+      console.log(this.employee.WorkfreeDays);
+    }
   }
 
-  ngOnChanges()
-  {
+  ngOnChanges(){
     console.log('damnit ryan');
+    console.log(this.currentHolidayYearSpec);
     if(this.currentHolidayYearSpec != null){
       this.formatWorkfreeDays();
       this.selectHolidayYearSpec(this.currentIndex);
@@ -60,22 +64,19 @@ export class WorkfreedayComponent implements OnInit {
 
   }
 
-  test(){
-    console.log(this.currentWorkfreeDayList);
-    this.currentWorkfreeDayList = this.currentWorkfreeDayList.concat(this.currentWorkfreeDayList);
-    console.log(this.currentWorkfreeDayList);
-  }
-
   selectHolidayYearSpec(id: number){
-    this.currentWorkfreeDayList = [];
-    let index = +id;
-    this.currentHolidayYearSpec = this.holidayYearSpecs.find(x => x.Id === index);
-    this.formatHolidayYearStartEnd(this.currentHolidayYearSpec);
-    const startDate = this.currentHolidayYearSpec.StartDate;
-    const endDate = this.currentHolidayYearSpec.EndDate;
-    this.currentWorkfreeDayList = this.employee.WorkfreeDays.filter(x => x.Date >= startDate && x.Date <= endDate);
-    this.currentIndex = index;
-    console.log('nani?!');
+    if(this.employee.WorkfreeDays != null) {
+      this.currentWorkfreeDayList = [];
+      let index = +id;
+      console.log(index);
+      this.currentHolidayYearSpec = this.holidayYearSpecs.find(x => x.Id === index);
+      this.formatHolidayYearStartEnd(this.currentHolidayYearSpec);
+      const startDate = this.currentHolidayYearSpec.StartDate;
+      const endDate = this.currentHolidayYearSpec.EndDate;
+      this.currentWorkfreeDayList = this.employee.WorkfreeDays.filter(x => x.Date >= startDate && x.Date <= endDate);
+      this.currentIndex = index;
+      console.log('nani?!');
+    }
   }
 
   getHolidayYearSpec(){
@@ -85,10 +86,12 @@ export class WorkfreedayComponent implements OnInit {
   }
 
   formatWorkfreeDays(){
-    for(let workfreeDay of this.employee.WorkfreeDays){
-      const dateToFormat = workfreeDay.Date.toString();
-      const date = new Date(Date.parse(dateToFormat));
-      workfreeDay.Date = date;
+    if(this.employee.WorkfreeDays != null) {
+      for (let workfreeDay of this.employee.WorkfreeDays) {
+        const dateToFormat = workfreeDay.Date.toString();
+        const date = new Date(Date.parse(dateToFormat));
+        workfreeDay.Date = date;
+      }
     }
   }
 
@@ -123,6 +126,8 @@ export class WorkfreedayComponent implements OnInit {
 
   create(selectedEmployee: Employee){
     let workfreeDays = [];
+    console.log('sss');
+    console.log(this.employee);
     if(selectedEmployee != null){
       let dialogRef = this.dialog.open(WorkfreedaysCreateViewComponent, {
         data: {

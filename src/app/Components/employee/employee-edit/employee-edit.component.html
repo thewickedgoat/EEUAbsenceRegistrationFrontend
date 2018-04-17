@@ -114,9 +114,9 @@
                 </div>
               </label>
             </div>
-            <div class="row">
+            <div class="row" >
               <label class="center-block col-md-12">Vælg en afdeling:
-                <select class="form-control"
+                <select class="form-control" *ngIf="employee.Department != null"
                         placeholder="Vælg afdeling"
                         [ngClass]="{'is-invalid': nameIsInvalid('department'), 'is-valid': nameIsValid('department')}"
                         formControlName="department"

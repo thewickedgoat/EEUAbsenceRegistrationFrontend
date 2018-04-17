@@ -32,14 +32,14 @@ export class WorkfreedaysCreateViewComponent implements OnInit {
   }
 
   createWorkfreeDay(): void{
-    console.log(this.dayNumber);
     const values = this.workfreedayGroup.value;
     const startDate = new Date(values.dateStart);
     const endDate = new Date(values.dateEnd);
     const name = this.dayNames[this.dayNumber];
+    console.log('start');
+    console.log(this.employee);
     let dateToCreate = startDate;
     let datesToCreate = new Array<Date>();
-    console.log(endDate.getDate());
     do{
       if(dateToCreate.getDay() === this.dayNumber){
         const workfreeDayDate = new Date(dateToCreate);

@@ -33,6 +33,7 @@ export class EmployeeEditComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log("Main page init");
     this.initData();
     this.loggedInUser = JSON.parse(sessionStorage.getItem('currentEmployee'));
   }
@@ -162,8 +163,11 @@ export class EmployeeEditComponent implements OnInit {
   updateWorkfreeDaysList(){
     console.log('3');
     console.log(this.employee);
+    let tempEmp = this.employee;
+    this.employee = new Employee();
     this.route.paramMap.switchMap(params => this.employeeService.getById(+params.get('id')))
       .subscribe(employee => {
+        this.employee = tempEmp;
         this.employee.WorkfreeDays = employee.WorkfreeDays;
         console.log('4');
         console.log(this.employee)

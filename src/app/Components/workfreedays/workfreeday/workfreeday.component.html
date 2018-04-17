@@ -9,7 +9,7 @@
   <div>
     <nav style="background-color: white; height: 400px; width: 300px; overflow-y: scroll">
       <ul *ngIf="employee">
-        <li *ngFor="let workfreeDay of currentWorkfreeDayList" (click)="test()" style="margin: 5px">{{workfreeDay.Name}} - {{workfreeDay.Date | date: 'dd/MM/yyyy'}}
+        <li *ngFor="let workfreeDay of currentWorkfreeDayList" style="margin: 5px">{{workfreeDay.Name}} - {{workfreeDay.Date | date: 'dd/MM/yyyy'}}
           <button class="btn btn-warning btn-sm" (click)="edit(workfreeDay)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
           <button class="btn btn-danger btn-sm" (click)="delete(workfreeDay.Id)"><i class="fa fa-trash" aria-hidden="true"></i></button></li>
       </ul>
@@ -17,8 +17,5 @@
   </div>
   <div>
     <button class="btn btn-success btn-lg" (click)="create(employee)">Opret Arbejdsfridag</button>
-  </div>
-  <div>
-    <button class="btn btn-success btn-lg" (click)="test()">Muh</button>
   </div>
 </div>
