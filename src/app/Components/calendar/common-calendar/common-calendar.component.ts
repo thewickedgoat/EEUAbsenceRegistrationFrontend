@@ -34,6 +34,7 @@ export class CommonCalendarComponent implements OnInit {
               private holidayYearSpecSerivce: HolidayYearSpecService) { }
 
   ngOnInit() {
+    console.log('test');
     this.route.paramMap.subscribe(params => {
       this.getDates(+params.get('year'), +params.get('month'));
       this.getCurrentHolidayYearSpec();

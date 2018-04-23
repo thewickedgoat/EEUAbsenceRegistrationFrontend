@@ -61,9 +61,12 @@ import { PublicholidayCreateErrorComponent } from './Components/Errors/publichol
 import { HolidayyearCreateViewComponent } from './Components/holidayyear/holidayyear-create/holidayyear-create-view.component';
 import { HolidayyearEmployeeCreateViewComponent } from './Components/holidayyear/holidayyear-employee-create-view/holidayyear-employee-create-view.component';
 import { HolidayyearAdministrationComponent } from './Components/holidayyear/holidayyear-administration/holidayyear-administration.component';
-import { HolidayyearAdministrationViewComponent } from './Components/holidayyear/holidayyear-administration-view/holidayyear-administration-view.component';
+import { HolidayyearAdministrationViewComponent } from './Components/holidayyear/holidayyear-administration/holidayyear-administration-view.component';
 import { HolidayyearListComponent } from './Components/holidayyear/holidayyear-list/holidayyear-list.component';
 import { HolidayyearRemainingEmployeeComponent } from './Components/holidayyear/holidayyear-remaining-employee/holidayyear-remaining-employee.component';
+import { PublicHolidayViewComponent } from './Components/workfreedays/public-holiday/public-holiday-view.component';
+import { HolidayyearEmployeeComponent } from './Components/holidayyear/holidayyear-employee/holidayyear-employee.component';
+import { HolidayyearEmployeeViewComponent } from './Components/holidayyear/holidayyear-employee/holidayyear-employee-view.component';
 
 
 const routes: Routes = [
@@ -130,7 +133,10 @@ const routes: Routes = [
     HolidayyearAdministrationComponent,
     HolidayyearAdministrationViewComponent,
     HolidayyearListComponent,
-    HolidayyearRemainingEmployeeComponent
+    HolidayyearRemainingEmployeeComponent,
+    PublicHolidayViewComponent,
+    HolidayyearEmployeeComponent,
+    HolidayyearEmployeeViewComponent
   ],
   imports: [
     BrowserModule,

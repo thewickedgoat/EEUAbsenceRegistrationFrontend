@@ -33,7 +33,6 @@ export class EmployeeEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("Main page init");
     this.initData();
     this.loggedInUser = JSON.parse(sessionStorage.getItem('currentEmployee'));
   }
@@ -48,14 +47,14 @@ export class EmployeeEditComponent implements OnInit {
       userName: [{value: '', disabled: this.isNotEditable}, Validators.required],
       email: [{value: '', disabled: this.isNotEditable}, Validators.required],
       password: [{value: '', disabled: this.isNotEditable}, Validators.required],
-      employeeRole:[{value: this.employee.EmployeeRole, disabled: this.isNotEditable}, Validators.required],
+      employeeRole:[{value: '', disabled: this.isNotEditable}, Validators.required],
       department: [{value: '', disabled: this.isNotEditable}, Validators.required]
     });
   }
 
   initData(){
     this.route.paramMap.switchMap(params => this.employeeService.getById(+params.get('id')))
-      .subscribe(employee => {this.employee = employee; console.log(this.employee); this.createFormgroup();});
+      .subscribe(employee => {this.employee = employee; this.createFormgroup();});
     this.departmentService.getAll().subscribe(departments => this.departments = departments);
   }
 
@@ -70,10 +69,8 @@ export class EmployeeEditComponent implements OnInit {
    * Updates the employee
    */
   updateEmployee(){
-    console.log('wut');
     this.employeeService.put(this.employee).subscribe(() => {
       //this.authenticationService.update(this.employee);
-      console.log('kek');
     });
   }
 
@@ -161,16 +158,12 @@ export class EmployeeEditComponent implements OnInit {
   }
 
   updateWorkfreeDaysList(){
-    console.log('3');
-    console.log(this.employee);
     let tempEmp = this.employee;
     this.employee = new Employee();
     this.route.paramMap.switchMap(params => this.employeeService.getById(+params.get('id')))
       .subscribe(employee => {
         this.employee = tempEmp;
         this.employee.WorkfreeDays = employee.WorkfreeDays;
-        console.log('4');
-        console.log(this.employee)
       });
   }
 

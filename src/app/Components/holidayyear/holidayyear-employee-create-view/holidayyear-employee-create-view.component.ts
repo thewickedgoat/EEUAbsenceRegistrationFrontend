@@ -1,8 +1,9 @@
 import {Component, Inject, OnInit, ViewEncapsulation} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {HolidayyearCreateViewComponent} from '../holidayyear-create/holidayyear-create-view.component';
 import {HolidayYear} from '../../../entities/HolidayYear';
+import {Month} from '../../../entities/month';
+import {Absence} from '../../../entities/absence';
 
 @Component({
   selector: 'app-holidayyear-employee-create-view',
@@ -28,15 +29,18 @@ export class HolidayyearEmployeeCreateViewComponent implements OnInit {
 
   create(){
     const values = this.holidayYearGroup.value;
-    const holidayAvailable = values.holidayAvailable;
-    const holidayFreedaysAvailable = values.holidayFreedaysAvailable;
-    const holidayTransfered = values.holidayTransfered;
+    const months = this.createMonths();
+    const holidayAvailable = +values.holidayAvailable;
+    const holidayFreedaysAvailable = +values.holidayFreedaysAvailable;
+    const holidayTransfered = +values.holidayTransfered;
     const holidayUsed = 0;
     const holidayFreedaysUsed = 0;
-    const employee = this.data.Employee;
+    const employee = this.data.employee;
+    const currentHolidayYearSpec = this.data.holidayYearSpec;
+    currentHolidayYearSpec.HolidayYears = null;
     const newHolidayYear: HolidayYear = {
-      CurrentHolidayYear: null,
-      Months: null,
+      CurrentHolidayYear: currentHolidayYearSpec,
+      Months: months,
       Employee: employee,
       IsClosed: false,
       HolidayAvailable: holidayAvailable,
@@ -48,4 +52,32 @@ export class HolidayyearEmployeeCreateViewComponent implements OnInit {
     this.dialogRef.close(newHolidayYear);
   }
 
+  createMonths(){
+    let months = new Array<Month>();
+    let startDate = this.data.holidayYearSpec.StartDate;
+    const endDate = this.data.holidayYearSpec.EndDate;
+    console.log(endDate);
+    do{
+      let monthDate = new Date();
+      monthDate.setDate(startDate.getDate());
+      monthDate.setMonth(startDate.getMonth());
+      monthDate.setFullYear(startDate.getFullYear());
+      const month: Month = {
+        MonthDate: monthDate,
+        AbsencesInMonth: new Array<Absence>(),
+        HolidayYear: null,
+        IsLockedByEmployee: false,
+        IsLockedByChief: false,
+        IsLockedByCEO: false,
+        IsLockedByAdmin: false};
+      months.push(month);
+      startDate.setMonth(startDate.getMonth()+1);
+    }
+    while(startDate < endDate);
+    return months;
+  }
+
+  cancel(){
+    this.dialogRef.close();
+  }
 }

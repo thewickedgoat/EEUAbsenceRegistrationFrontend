@@ -1,11 +1,17 @@
 <div class="container">
+  <div class="row" style="text-align: center">
+    <div class="col-sm-12">
+      <h1><b><strong>Fraværsoversigt for {{holidayYearStart}} - {{holidayYearStart+1}}</strong></b></h1>
+    </div>
+  </div>
   <div class="col-sm-12" style="border: #020203; border-style: solid;">
     <div>
       <button type="button" class="btn btn-primary" (click)="toggleMonthYear()">
         {{toggleButtonText}}
       </button>
     </div>
-    <select (change)="test($event.target.value)">
+    <select #t (change)="test(t.value)">
+      <option disabled selected> -- Angiv måned --</option>
       <option *ngFor="let monthName of monthNames; let i = index" [value]="i">
         {{monthName.valueOf()}}
       </option>
@@ -57,7 +63,7 @@
                                           [statuses]="statuses"
             ></app-employee-year-statistics>
           </div>
-          <div *ngIf="buttonClicked===true" class="col-md-12">
+          <div *ngIf="buttonClicked===true && monthSelected===true" class="col-md-12">
             <app-employee-month-statistics *ngFor="let employee of department.Employees"
                                            [employee]="employee"
                                            [currentMonth]="getCurrentMonthForEmployee(employee, currentMonthNumber)"
@@ -68,4 +74,5 @@
       </div>
     </div>
   </div>
+
 </div>

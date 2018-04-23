@@ -1,0 +1,6 @@
+<app-holidayyear-employee-view *ngIf="selectedEmployee && selectedHolidayYear"
+  [selectedEmployee]="selectedEmployee"
+  [selectedHolidayYear]="selectedHolidayYear"
+  [isNotEditable]="isNotEditable"
+  (updateHolidayYearEmitter)="updateHolidayYear($event)"
+  (toggleEmitter)="toggleEditable()"></app-holidayyear-employee-view>

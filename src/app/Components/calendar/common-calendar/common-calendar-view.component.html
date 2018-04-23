@@ -12,7 +12,7 @@
       <div class="row">
         <div *ngFor="let day of daysInCurrentMonth">
           <div *ngIf="day.getDay() != 0 && day.getDay() !=6 && isPowerOfTwo() && !isDateLocked(day)" class="weekDayBoxOfTwo" >
-            {{getAbsenceCode(day.getFullYear(), day.getMonth(), day.getDate())}}
+            <b>{{getAbsenceCode(day.getFullYear(), day.getMonth(), day.getDate())}}</b>
           </div>
           <div *ngIf="day.getDay() === 0 || day.getDay() === 6 || isDateLocked(day)" class="weekEndBox">
             {{getAbsenceCode(day.getFullYear(), day.getMonth(), day.getDate())}}

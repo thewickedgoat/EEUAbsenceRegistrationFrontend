@@ -20,6 +20,7 @@ export class EmployeeStatisticsControllerComponent implements OnInit {
   holidayYearStart: number;
   currentMonthNumber: number = 0;
   buttonClicked: boolean = false;
+  monthSelected: boolean = false;
   toggleButtonText: string;
   statuses: Status[];
 
@@ -47,11 +48,14 @@ export class EmployeeStatisticsControllerComponent implements OnInit {
   test(i){
     console.log(+i);
     this.currentMonthNumber = +i;
+    this.monthSelected = true;
   }
 
   getCurrentMonthForEmployee(employee: Employee, monthNumber: number){
     const currentHolidayYear = this.getHolidayYearForEmployee(employee);
+    this.formatMonthDate(currentHolidayYear);
     const month = currentHolidayYear.Months.find(x => x.MonthDate.getMonth() === monthNumber);
+    console.log(month);
     return month;
   }
 
@@ -77,6 +81,16 @@ export class EmployeeStatisticsControllerComponent implements OnInit {
       }
     }
     return statusArray;
+  }
+
+  formatMonthDate(holidayYear: HolidayYear){
+    if(holidayYear != null){
+      for(let month of holidayYear.Months){
+        const dateToFormat = month.MonthDate.toString();
+        const date = new Date(Date.parse(dateToFormat));
+        month.MonthDate = date;
+      }
+    }
   }
 
   formatHolidayYearStartDate(holidayYear: HolidayYear){

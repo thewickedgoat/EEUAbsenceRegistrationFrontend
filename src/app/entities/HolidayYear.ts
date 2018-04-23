@@ -6,7 +6,7 @@ export class HolidayYear{
   Id?: number;
   CurrentHolidayYear?: HolidayYearSpec;
   Months?: Month[];
-  Employee: Employee;
+  Employee?: Employee;
   IsClosed: boolean;
   HolidayAvailable: number;
   HolidayFreedayAvailable: number;

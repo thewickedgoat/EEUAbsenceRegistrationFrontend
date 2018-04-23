@@ -1,6 +1,6 @@
 <div *ngIf="employees" class="container">
   <div class="col-lg-12" style="text-align: center">
-    <h1>Administration af Arbejdsfridage</h1>
+    <h1>Administration af ferieår</h1>
     <hr>
   </div>
   <div *ngIf="currentHolidayYearSpec" class="row">
@@ -9,7 +9,7 @@
     <div>
       <app-public-holiday
       [currentHolidayYearSpec]="currentHolidayYearSpec"
-      (emitter)="createPublicHoliday($event)">asdfasdf</app-public-holiday>
+      (emitter)="createPublicHoliday($event)"></app-public-holiday>
     </div>
   </div>
   <hr>

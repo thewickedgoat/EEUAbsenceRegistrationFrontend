@@ -1,0 +1,63 @@
+<div class="container" *ngIf="selectedEmployee != null">
+  <div>
+    <form [formGroup]="formGroup" (ngSubmit)="updateHolidayYear()" novalidate>
+      <div class="form-group">
+        <div class="row">
+          <label>Navn:
+            <input class="form-control"
+                   formControlName="name"
+                   [(ngModel)]="name">
+            <!--[ngClass]="{'is-invalid': nameIsInvalid('firstName'), 'is-valid': nameIsValid('firstName')}"-->
+          </label>
+        </div>
+        <div class="row">
+          <label>Ferie til rådighed (total):
+            <input class="form-control"
+                   formControlName="total"
+                   [(ngModel)]="total">
+          </label>
+        </div>
+        <div class="row">
+          <label>Ferie til optjent:
+            <input class="form-control"
+                   formControlName="holidayAvailable"
+                   [(ngModel)]="selectedHolidayYear.HolidayAvailable">
+          </label>
+        </div>
+        <div class="row">
+          <label>Ferie brugt:
+            <input class="form-control"
+                   formControlName="holidayUsed"
+                   [(ngModel)]="selectedHolidayYear.HolidaysUsed">
+          </label>
+        </div>
+        <div class="row">
+          <label>Feriefridage optjent:
+            <input class="form-control"
+                   formControlName="holidayFreedaysAvailable"
+                   [(ngModel)]="selectedHolidayYear.HolidayFreedayAvailable">
+          </label>
+        </div>
+        <div class="row">
+          <label>Feriefridage brugt:
+            <input class="form-control"
+                   formControlName="holidayFreedaysUsed"
+                   [(ngModel)]="selectedHolidayYear.HolidayFreedaysUsed">
+          </label>
+        </div>
+        <div class="row">
+          <label>Ferie overført fra sidste år:
+            <input class="form-control"
+                   formControlName="holidayTransfered"
+                   [(ngModel)]="selectedHolidayYear.HolidayTransfered">
+
+          </label>
+        </div>
+        <div>
+          <button class="btn-info" (click)="toggleEditable()" *ngIf="isNotEditable">Rediger</button>
+          <button class="btn-success" type="submit" *ngIf="!isNotEditable">Gem Ændringer</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

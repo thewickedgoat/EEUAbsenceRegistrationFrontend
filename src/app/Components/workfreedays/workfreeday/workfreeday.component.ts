@@ -37,27 +37,23 @@ export class WorkfreedayComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("diller");
-    console.log(this.currentHolidayYearSpec);
     if(this.currentHolidayYearSpec === null) {
       this.getHolidayYearSpec();
       this.formatWorkfreeDays();
-      console.log(this.employee.WorkfreeDays);
     }
   }
 
   ngOnChanges(){
-    console.log('damnit ryan');
-    console.log(this.currentHolidayYearSpec);
     if(this.currentHolidayYearSpec != null){
       this.formatWorkfreeDays();
       this.selectHolidayYearSpec(this.currentIndex);
     }
-    console.log(this.employee.WorkfreeDays);
   }
 
-  delete(){
-
+  delete(id: number){
+    this.workfreedayService.delete(id).subscribe(() => {
+      this.updateView();
+    });
   }
 
   edit(){
@@ -68,14 +64,12 @@ export class WorkfreedayComponent implements OnInit {
     if(this.employee.WorkfreeDays != null) {
       this.currentWorkfreeDayList = [];
       let index = +id;
-      console.log(index);
       this.currentHolidayYearSpec = this.holidayYearSpecs.find(x => x.Id === index);
       this.formatHolidayYearStartEnd(this.currentHolidayYearSpec);
       const startDate = this.currentHolidayYearSpec.StartDate;
       const endDate = this.currentHolidayYearSpec.EndDate;
       this.currentWorkfreeDayList = this.employee.WorkfreeDays.filter(x => x.Date >= startDate && x.Date <= endDate);
       this.currentIndex = index;
-      console.log('nani?!');
     }
   }
 
@@ -126,8 +120,6 @@ export class WorkfreedayComponent implements OnInit {
 
   create(selectedEmployee: Employee){
     let workfreeDays = [];
-    console.log('sss');
-    console.log(this.employee);
     if(selectedEmployee != null){
       let dialogRef = this.dialog.open(WorkfreedaysCreateViewComponent, {
         data: {
@@ -155,12 +147,7 @@ export class WorkfreedayComponent implements OnInit {
               return;
             }
             else{
-              console.log('1');
-              console.log(this.employee);
               this.workfreedayService.postList(workfreeDays).subscribe(wfd => {
-                console.log(this.employee);
-                console.log(wfd);
-                console.log('2');
                 this.updateView();
               });
             }
@@ -198,16 +185,12 @@ export class WorkfreedayComponent implements OnInit {
     return absenceDaysToList;
   }
 
-  async createWorkfreeDays(workfreeDays: WorkfreeDay[]){
-    console.log('toast');
-  }
-
   workfreedaysNotInRange(workfreeDays: WorkfreeDay[]){
     const workfreeDaysNotInRange = [];
     if(workfreeDays.length > 0){
       const endDate = this.currentHolidayYearSpec.EndDate;
       for(let workfreeDay of workfreeDays){
-        const workfreeDayNotInRange = workfreeDays.find(x=> x.Date > endDate);
+        const workfreeDayNotInRange = workfreeDays.find(x=> x.Date.getDate() > endDate.getDate());
         if(workfreeDayNotInRange != null){
           workfreeDaysNotInRange.push(workfreeDayNotInRange);
         }
@@ -251,7 +234,9 @@ export class WorkfreedayComponent implements OnInit {
       dialogRef.afterClosed().subscribe(result => {
         if(result === true){
           this.deleteWorkfreeDays(overlappingWorkfreeDays);
-          this.createWorkfreeDays(workfreeDays);
+          this.workfreedayService.postList(workfreeDays).subscribe(wfd => {
+            this.updateView();
+          });
         }
         else return;
       });

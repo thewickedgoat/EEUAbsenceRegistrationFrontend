@@ -8,30 +8,35 @@
         <a><i class="fa fa-home fa-lg"></i> Månedsoversigt</a>
       </li>
       <li *ngIf="!isAdmin()" (click)="toEmployeeProfile()">
-        <a><i class="fa fa-id-card-o" aria-hidden="true"></i> Min Profil</a>
+        <a><i class="fa fa-id-card-o" aria-hidden="true"></i> Min Profil </a>
       </li>
       <li *ngIf="isAdmin()" (click)="toEmployeeProfile()">
-        <a><i class="fa fa-id-card-o" aria-hidden="true"></i> Admin Profil</a>
+        <a><i class="fa fa-id-card-o" aria-hidden="true"></i> Admin Profil </a>
       </li>
       <li *ngIf="!isAdmin()" (click)="toCalendar()">
-        <a><i class="fa fa-calendar fa-lg"></i> Kalender</a>
+        <a><i class="fa fa-calendar fa-lg"></i> Kalender </a>
       </li>
       <li *ngIf="isAdmin()" (click)="toOverview()">
-        <a><i class="fa fa-list-alt fa-lg"></i> Ferieårsoversigt</a>
+        <a><i class="fa fa-list-alt fa-lg"></i> Ferieårsoversigt </a>
       </li>
       <li *ngIf="!isAdmin()" (click)="toOverview()">
-        <a><i class="fa fa-list-alt fa-lg"></i> Mit Ferieår</a>
+        <a><i class="fa fa-list-alt fa-lg"></i> Mit Ferieår </a>
       </li>
       <li *ngIf="isAdmin()" (click)="toEmployees()">
         <a ><i class="fa fa-users fa-lg"></i> Medarbejdere </a>
+      </li>
+      <li *ngIf="isAdmin()" (click)="toHolidayYearAdministration()">
+        <a ><i class="fa fa-wrench fa-lg"></i> Ferieårs Administration </a>
+      </li>
+      <li *ngIf="isAdmin()" (click)="toStats()">
+        <a ><i class="fa fa-bar-chart fa-lg"></i> Statistikker </a>
       </li>
       <li *ngIf="!isAdmin()" (click)="toEmployees()">
         <a ><i class="fa fa-users fa-lg"></i> Kollegaer </a>
       </li>
       <li (click)="logOut()">
-        <a><i class="fa fa-sign-out fa-lg"></i> Logud</a>
+        <a><i class="fa fa-sign-out fa-lg"></i> Logud </a>
       </li>
     </ul>
   </div>
-
 </div>

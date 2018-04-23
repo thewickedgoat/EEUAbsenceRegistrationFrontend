@@ -1,0 +1,27 @@
+
+
+.menu li {
+  position: relative;
+  padding-left: 1em;
+  margin: 0.25em 0;
+  list-style: none;
+  line-height: 1.5em;
+  font-size:15px;
+  cursor: pointer;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+
+.menu li:hover {
+  color: #2693ff;
+}
+
+.menu li:after {
+  position: absolute;
+  top: 2.1em;
+  left: 0.9em;
+  width: 2px;
+  height: calc(100% - 2em);
+  content: '';
+  z-index: 0;
+}

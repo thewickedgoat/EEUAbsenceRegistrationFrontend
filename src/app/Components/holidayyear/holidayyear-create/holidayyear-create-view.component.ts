@@ -45,7 +45,7 @@ export class HolidayyearCreateViewComponent implements OnInit {
   }
 
   cancel(){
-    this.dialogRef.close()
+    this.dialogRef.close();
   }
 
 }

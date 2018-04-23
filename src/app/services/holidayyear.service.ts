@@ -4,7 +4,7 @@ import {Observable} from 'rxjs/Observable';
 import {environment} from '../../environments/environment';
 import {HolidayYear} from '../entities/HolidayYear';
 
-const url = environment.apiEndPoint + 'holidayyear/';
+const url = environment.apiEndPoint + 'HolidayYear/';
 const jwt = environment.jwt();
 
 @Injectable()

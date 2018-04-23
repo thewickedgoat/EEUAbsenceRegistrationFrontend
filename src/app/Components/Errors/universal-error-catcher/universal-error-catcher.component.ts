@@ -15,4 +15,16 @@ export class UniversalErrorCatcherComponent implements OnInit {
   ngOnInit() {
   }
 
+  accept(){
+    this.dialogRef.close(true);
+  }
+
+  cancel(){
+    this.dialogRef.close(false);
+  }
+
+  ok(){
+    this.dialogRef.close();
+  }
+
 }

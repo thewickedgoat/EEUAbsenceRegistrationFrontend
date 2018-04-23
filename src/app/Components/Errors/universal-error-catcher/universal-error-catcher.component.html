@@ -1,3 +1,18 @@
-<p>
-  universal-error-catcher works!
-</p>
+<div class="container">
+  <div class="row">
+    <h2><b><strong>Der opstod en fejl</strong></b></h2>
+  </div>
+  <hr>
+  <div class="row">
+    Fejlmeddelelse: '{{data.errorMessage}}'
+  </div>
+  <div class="row">
+    {{data.errorHandler}}
+  </div>
+  <hr>
+  <div class="row">
+    <button *ngIf="data.multipleOptions != true" class="btn-info" (click)="ok()">Ok</button>
+    <button *ngIf="data.multipleOptions === true" class="btn-success" (click)="accept()">Ja</button>
+    <button *ngIf="data.multipleOptions === true" class="btn-danger" (click)="cancel()">Annuller</button>
+  </div>
+</div>

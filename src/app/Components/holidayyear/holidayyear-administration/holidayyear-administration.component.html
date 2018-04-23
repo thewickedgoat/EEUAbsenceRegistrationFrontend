@@ -1,6 +1,15 @@
 <app-toolbar></app-toolbar>
 <div class="container">
-  <app-holidayyear-administration-view>
-
+  <button class="btn-success" (click)="createHolidayYearSpec()">Test</button>
+  <app-holidayyear-administration-view
+    [selectedHolidayYearSpec]="selectedHolidayYearSpec"
+  [holidayYearSpecs]="holidayYearSpecs"
+  [employees]="employees"
+  [selectedEmployee]="selectedEmployee"
+  [selectedHolidayYear]="selectedHolidayYear"
+  (selectHolidayYearEmitter)="selectHolidayYear($event)"
+  (updateEmitter)="updateHolidayYearSpec()"
+  (selectEmployeeEmitter)="selectEmployee($event)"
+  (toggleEditEmitter)="toggleEdit($event)">
   </app-holidayyear-administration-view>
 </div>

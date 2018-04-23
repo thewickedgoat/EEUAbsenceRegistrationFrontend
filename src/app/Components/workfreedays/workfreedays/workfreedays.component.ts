@@ -53,47 +53,6 @@ export class WorkfreedaysComponent implements OnInit {
     this.formatAbsenceDatesForAllEmployees();
   }
 
-  createWorkfreeDay(selectedEmployee: Employee){
-    console.log(selectedEmployee);
-    let workfreeDays;
-    if(selectedEmployee != null){
-      let dialogRef = this.dialog.open(WorkfreedaysCreateViewComponent, {
-        data: {
-          employee: selectedEmployee
-        }
-      });
-      dialogRef.afterClosed().subscribe(result => {
-        workfreeDays = result;
-        if(workfreeDays != null){
-          const absencesInEmployee = this.formatAbsenceDates(selectedEmployee);
-          const absenceDaysToList = [];
-          for(let workfreeDay of workfreeDays){
-            const absenceOnWorkfreeDay = absencesInEmployee.find(x => x.Date.getFullYear() === workfreeDay.Date.getFullYear()
-              && x.Date.getMonth() === workfreeDay.Date.getMonth() && x.Date.getDate() === workfreeDay.Date.getDate());
-            if(absenceOnWorkfreeDay != null){
-              absenceDaysToList.push(absenceOnWorkfreeDay);
-            }
-          }
-          if(absenceDaysToList.length > 0){
-            this.workfreeDayError(absenceDaysToList, selectedEmployee);
-            return;
-          }
-          else{
-            for(let workfreeday of workfreeDays){
-              this.workfreedayService.post(workfreeday).subscribe(wfd => {
-                console.log(selectedEmployee);
-                this.updateView();
-                console.log(this.employees.find(x => x.Id === selectedEmployee.Id))
-              });
-            }
-
-          }
-        }
-        else return;
-      });
-    }
-  }
-
   createPublicHoliday(){
     let publicHoliday;
     let dialogRef = this.dialog.open(PublicholidaysCreateViewComponent, {
@@ -178,26 +137,6 @@ export class WorkfreedaysComponent implements OnInit {
       }
     });
   }
-
-  workfreeDayError(absences: Absence[], selectedEmployee: Employee){
-    const date = absences[0].Date;
-    let dialogRef = this.dialog.open(WorkfreedayCreateErrorComponent, {
-      data: {
-        errorMessage: 'Der blev fundet dage med fraværskoder overløbende med en eller flere af de arbejdsfridage.',
-        errorHandleMessage: 'Vil du gå til måneden for den første dato?',
-        absences: absences
-      },
-      width: '400px'
-    });
-   dialogRef.afterClosed().subscribe(result => {
-     if(result === true){
-       const year = date.getFullYear();
-       const month = date.getMonth();
-       this.router.navigate(['calendar/' + selectedEmployee.Id + '/' + year + '/' + month])
-       this.updateView();
-     }
-   });
- }
 
  updateView(){
     this.emitter.emit()
