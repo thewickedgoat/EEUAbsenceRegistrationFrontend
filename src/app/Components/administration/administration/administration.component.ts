@@ -3,6 +3,7 @@ import {HolidayYearSpecService} from '../../../services/holidayyearspec.service'
 import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
 import {EmployeeService} from '../../../services/employee.service';
 import {Employee} from '../../../entities/Employee';
+import {DateformatingService} from '../../../services/dateformating.service';
 
 @Component({
   selector: 'app-administration',
@@ -18,6 +19,7 @@ export class AdministrationComponent implements OnInit {
   holidayYearEnd: Date;
 
   constructor(private holidayYearSpecService: HolidayYearSpecService,
+              private dateformatingService: DateformatingService,
               private employeeService: EmployeeService) { }
 
   ngOnInit() {
@@ -48,12 +50,8 @@ export class AdministrationComponent implements OnInit {
 
   formatHolidayYearDates(holidayYearsSpecs: HolidayYearSpec[]){
     for(let holidayYearSpec of holidayYearsSpecs){
-      const startDateToParse = holidayYearSpec.StartDate.toString();
-      const endDateToParse = holidayYearSpec.EndDate.toString();
-      const startDate = new Date(Date.parse(startDateToParse));
-      const endDate = new Date(Date.parse(endDateToParse));
-      holidayYearSpec.StartDate = startDate;
-      holidayYearSpec.EndDate = endDate;
+      holidayYearSpec.StartDate = this.dateformatingService.formatDate(holidayYearSpec.StartDate);
+      holidayYearSpec.EndDate = this.dateformatingService.formatDate(holidayYearSpec.EndDate);
     }
     return holidayYearsSpecs;
   }

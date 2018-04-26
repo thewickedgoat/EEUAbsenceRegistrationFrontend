@@ -8,7 +8,7 @@
       <h4>Opret Medarbejder:</h4>
     </div>
     <div class="col-md-12">
-      <form [formGroup]="employeeGroup" novalidate>
+      <form [formGroup]="employeeGroup" (ngSubmit)="createEmployee()" novalidate>
         <div class="form-group">
           <label class="center-block col-md-12">Fornavn:
             <input class="form-control"

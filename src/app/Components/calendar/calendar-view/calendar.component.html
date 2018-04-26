@@ -37,7 +37,10 @@
             [holidayYear]="currentHolidayYear"
             [absencesInCurrentMonth]="currentMonth.AbsencesInMonth"
           [holidayYearEnd]="currentHolidayYearSpec.EndDate"
-          [holidayYearStart]="currentHolidayYearSpec.StartDate"></app-absence-overview-controller>
+          [holidayYearStart]="currentHolidayYearSpec.StartDate"
+          [holidayYearSpecs]="holidayYearSpecs"
+          [currentHolidayYearSpec]="currentHolidayYearSpec"
+          (emitter)="selectHolidayYear($event)"></app-absence-overview-controller>
         </div>
         <div  class="btn btn-success" (click)="back()">
           Tilbage

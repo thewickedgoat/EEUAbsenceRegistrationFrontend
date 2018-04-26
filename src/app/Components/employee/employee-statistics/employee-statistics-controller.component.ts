@@ -4,6 +4,9 @@ import {StatusService} from '../../../services/status.service';
 import {Status} from '../../../entities/status';
 import {Employee} from '../../../entities/Employee';
 import {HolidayYear} from '../../../entities/HolidayYear';
+import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
+import {HolidayYearSpecService} from '../../../services/holidayyearspec.service';
+import {DateformatingService} from '../../../services/dateformating.service';
 
 @Component({
   selector: 'app-employee-statistics-controller',
@@ -18,52 +21,67 @@ export class EmployeeStatisticsControllerComponent implements OnInit {
   departments: Department[];
   @Input()
   holidayYearStart: number;
+
+  selectedHolidayYearSpec: HolidayYearSpec;
+  holidayYearSpecs: HolidayYearSpec[];
   currentMonthNumber: number = 0;
-  buttonClicked: boolean = false;
+  monthView: boolean = false;
   monthSelected: boolean = false;
   toggleButtonText: string;
   statuses: Status[];
 
-  constructor(private statusSerivce: StatusService) { }
+  constructor(private statusSerivce: StatusService,
+              private holidayYearSpecService: HolidayYearSpecService,
+              private dateformatingService: DateformatingService) { }
 
   ngOnInit() {
     this.toggleButtonText = 'Se månedsoversigt';
     this.statusSerivce.getAll().subscribe(statuses => {
       this.statuses = this.sortStatuses(statuses);
     });
+    this.holidayYearSpecService.getAll().subscribe(specs => {
+      this.holidayYearSpecs = specs;
+      const date = new Date();
+
+    });
   }
 
   toggleMonthYear(){
-    console.log('clicked');
-    if(this.buttonClicked === false){
-      this.buttonClicked = true;
+    if(this.monthView === false){
+      this.monthView = true;
       this.toggleButtonText = 'Se årsoversigt'
     }
-    else if(this.buttonClicked === true){
-      this.buttonClicked = false;
+    else if(this.monthView === true){
+      this.monthView = false;
       this.toggleButtonText = 'Se månedsoversigt'
     }
   }
 
-  test(i){
-    console.log(+i);
+  selectMonth(i){
     this.currentMonthNumber = +i;
     this.monthSelected = true;
+  }
+
+  employeeIsInCurrentHolidayYear(employee: Employee){
+    const holidayYears = employee.HolidayYears;
+    const holidayYear = holidayYears.find(x => x.CurrentHolidayYear.Id === this.selectedHolidayYearSpec.Id);
+    if(holidayYear === null){
+      return false;
+    }
+    else return true;
   }
 
   getCurrentMonthForEmployee(employee: Employee, monthNumber: number){
     const currentHolidayYear = this.getHolidayYearForEmployee(employee);
     this.formatMonthDate(currentHolidayYear);
     const month = currentHolidayYear.Months.find(x => x.MonthDate.getMonth() === monthNumber);
-    console.log(month);
     return month;
   }
 
   getHolidayYearForEmployee(employee: Employee){
     let holidayYears = employee.HolidayYears;
     for(let holidayYear of holidayYears){
-      const date = this.formatHolidayYearStartDate(holidayYear);
-      holidayYear.CurrentHolidayYear.StartDate = date;
+      holidayYear.CurrentHolidayYear.StartDate = this.dateformatingService.formatDate(holidayYear.CurrentHolidayYear.StartDate);
     }
     const currentHolidayYear = holidayYears.find(x => x.CurrentHolidayYear.StartDate.getFullYear() === this.holidayYearStart);
     return currentHolidayYear;
@@ -86,16 +104,8 @@ export class EmployeeStatisticsControllerComponent implements OnInit {
   formatMonthDate(holidayYear: HolidayYear){
     if(holidayYear != null){
       for(let month of holidayYear.Months){
-        const dateToFormat = month.MonthDate.toString();
-        const date = new Date(Date.parse(dateToFormat));
-        month.MonthDate = date;
+        month.MonthDate = this.dateformatingService.formatDate(month.MonthDate);
       }
     }
-  }
-
-  formatHolidayYearStartDate(holidayYear: HolidayYear){
-    const dateToFormat = holidayYear.CurrentHolidayYear.StartDate.toString();
-    const date = new Date(Date.parse(dateToFormat));
-    return date;
   }
 }

@@ -91,10 +91,10 @@
     <div *ngIf="!isMonthApprovedByEmployee">
       Afdelingsleder: <input type="checkbox" [disabled]="true">
     </div>
-    <div *ngIf="!isMonthApprovedByChief">
+    <div *ngIf="!isMonthApprovedByCEO">
       <button class="btn btn-info" (click)="approveMonth()">Godkend som Direktør</button>
     </div>
-    <div *ngIf="isMonthApprovedByChief">
+    <div *ngIf="isMonthApprovedByCEO">
       Direktør: <input type="checkbox" [disabled]="true" checked="checked">
     </div>
     <div *ngIf="isMonthApprovedByAdmin">

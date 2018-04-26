@@ -27,8 +27,6 @@ export class AuthenticationService {
 
   login(username, password): Observable<string>{
     const requestString = "grant_type=password&username=" + username + "&password=" + password;
-    console.log(requestString);
-    //sessionStorage.setItem('currentEmployee', JSON.stringify(employee));
     console.log(sessionStorage.getItem('token'));
     return this.http.post<string>('http://localhost:51017/token', requestString);
 

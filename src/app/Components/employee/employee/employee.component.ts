@@ -47,31 +47,13 @@ export class EmployeeComponent implements OnInit {
 
   }
 
-  /**
-   * Self explanatory
-   * @param $event
-   */
-  cancelDeletion($event) {
-    this.employeeToDelete = null;
-    $event.stopPropagation();
-  }
-
-  /**
-   * emits the Id of the employee to delete
-   * @param id
-   * @param $event
-   */
-  deleteAccepted(id: number, $event) {
-    $event.stopPropagation();
-    this.emitter.emit(id);
-  }
-
-  /**
+   /**
    * Page navigation
    */
   goToCalendar(){
+    const date = new Date();
     this.router
-      .navigateByUrl('overview/' + this.employee.Id);
+      .navigateByUrl('calendar/' + this.employee.Id + '/' + date.getFullYear() + '/' + date.getMonth());
   }
 
   /**

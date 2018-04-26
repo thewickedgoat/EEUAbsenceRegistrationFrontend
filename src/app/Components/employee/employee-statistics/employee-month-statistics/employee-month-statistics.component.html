@@ -1,6 +1,6 @@
  <div class="row">
    <div class="col-sm-3">{{employee.FirstName}} {{employee.LastName}}</div>
-   <div class="col-md-6">
+   <div class="col-md-5">
      <div class="row">
        <div class="col-md-1">{{holiday}}</div>
        <div class="col-md-1">{{holidayFreedays}}</div>
@@ -11,9 +11,66 @@
        <div class="col-md-1">{{seniordays}}</div>
      </div>
    </div>
-   <div class="col-md-3">
-     <div class="row">
-
+   <div class="col-md-4">
+     <div *ngIf="employee.EmployeeRole === 0" class="row">
+       <div *ngIf="currentMonth.IsLockedByEmployee" class="col-sm-4">
+         <i class="fa fa-check-square-o" aria-hidden="true"> Godkendt</i>
+       </div>
+       <div *ngIf="!currentMonth.IsLockedByEmployee" class="col-sm-4">
+         <i class="fa fa-window-close-o" aria-hidden="true"> Afventer</i>
+       </div>
+       <div *ngIf="currentMonth.IsLockedByChief" class="col-sm-4">
+         <i class="fa fa-check-square-o" aria-hidden="true"> Godkendt</i>
+       </div>
+       <div *ngIf="!currentMonth.IsLockedByChief" class="col-sm-4">
+         <i class="fa fa-window-close-o" aria-hidden="true"> Afventer</i>
+       </div>
+       <div *ngIf="currentMonth.IsLockedByAdmin" class="col-sm-4">
+         <i class="fa fa-check-square-o" aria-hidden="true"> Godkendt</i>
+       </div>
+       <div *ngIf="!currentMonth.IsLockedByAdmin" class="col-sm-4">
+         <i class="fa fa-window-close-o" aria-hidden="true"> Afventer</i>
+       </div>
+     </div>
+     <div *ngIf="employee.EmployeeRole === 1" class="row">
+       <div *ngIf="currentMonth.IsLockedByEmployee" class="col-sm-4">
+         <i class="fa fa-check-square-o" aria-hidden="true"> Godkendt</i>
+       </div>
+       <div *ngIf="!currentMonth.IsLockedByEmployee" class="col-sm-4">
+         <i class="fa fa-window-close-o" aria-hidden="true"> Afventer</i>
+       </div>
+       <div *ngIf="currentMonth.IsLockedByCEO" class="col-sm-4">
+         <i class="fa fa-check-square-o" aria-hidden="true"> Godkendt</i>
+       </div>
+       <div *ngIf="!currentMonth.IsLockedByCEO" class="col-sm-4">
+         <i class="fa fa-window-close-o" aria-hidden="true"> Afventer</i>
+       </div>
+       <div *ngIf="currentMonth.IsLockedByAdmin" class="col-sm-4">
+         <i class="fa fa-check-square-o" aria-hidden="true"> Godkendt</i>
+       </div>
+       <div *ngIf="!currentMonth.IsLockedByAdmin" class="col-sm-4">
+         <i class="fa fa-window-close-o" aria-hidden="true"> Afventer</i>
+       </div>
+     </div>
+     <div *ngIf="employee.EmployeeRole === 3" class="row">
+       <div *ngIf="currentMonth.IsLockedByEmployee" class="col-sm-4">
+         <i class="fa fa-check-square-o" aria-hidden="true"> Godkendt</i>
+       </div>
+       <div *ngIf="!currentMonth.IsLockedByEmployee" class="col-sm-4">
+         <i class="fa fa-window-close-o" aria-hidden="true"> Afventer</i>
+       </div>
+       <div *ngIf="currentMonth.IsLockedByCEO" class="col-sm-4">
+         <i class="fa fa-check-square-o" aria-hidden="true"> Godkendt</i>
+       </div>
+       <div *ngIf="!currentMonth.IsLockedByCEO" class="col-sm-4">
+         <i class="fa fa-window-close-o" aria-hidden="true"> Afventer</i>
+       </div>
+       <div *ngIf="currentMonth.IsLockedByAdmin" class="col-sm-4">
+         <i class="fa fa-check-square-o" aria-hidden="true"> Godkendt</i>
+       </div>
+       <div *ngIf="!currentMonth.IsLockedByAdmin" class="col-sm-4">
+         <i class="fa fa-window-close-o" aria-hidden="true"> Afventer</i>
+       </div>
      </div>
    </div>
  </div>

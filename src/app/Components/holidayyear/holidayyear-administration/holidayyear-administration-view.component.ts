@@ -32,6 +32,8 @@ export class HolidayyearAdministrationViewComponent implements OnInit {
   selectEmployeeEmitter = new EventEmitter();
   @Output()
   toggleEditEmitter = new EventEmitter();
+  @Output()
+  createHolidayYearSpecEmitter = new EventEmitter();
 
   constructor(private dialog: MatDialog,) { }
 
@@ -51,16 +53,11 @@ export class HolidayyearAdministrationViewComponent implements OnInit {
   }
 
   toggleEdit(bool: boolean){
-    console.log('ayyy')
     this.toggleEditEmitter.emit(bool);
   }
 
-  test(){
-    let dialogRef = this.dialog.open(HolidayyearEmployeeCreateViewComponent, {
-      data: {
-        employee: this.selectedEmployee,
-        selectedHolidayYear: this.selectedHolidayYear
-      }
-    });
+  createHolidayYearSpec(){
+    this.createHolidayYearSpecEmitter.emit();
   }
+
 }

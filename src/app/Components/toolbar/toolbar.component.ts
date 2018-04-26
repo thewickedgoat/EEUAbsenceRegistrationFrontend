@@ -5,6 +5,8 @@ import {AuthenticationService} from '../../services/authentication.service';
 import {Router} from '@angular/router';
 import {HolidayYearSpec} from '../../entities/holidayYearSpec';
 import {HolidayYearSpecService} from '../../services/holidayyearspec.service';
+import {DateFormatter} from '@angular/common/src/pipes/deprecated/intl';
+import {DateformatingService} from '../../services/dateformating.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -22,7 +24,8 @@ export class ToolbarComponent implements OnInit {
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService,
-    private holidayYearSpecService: HolidayYearSpecService) { }
+    private holidayYearSpecService: HolidayYearSpecService,
+    private dateformatingService: DateformatingService) { }
 
   ngOnInit() {
     this.loggedInUser = JSON.parse(sessionStorage.getItem('currentEmployee'));
@@ -59,12 +62,8 @@ export class ToolbarComponent implements OnInit {
   formatHolidayYearSpecs(holidayYearSpecs: HolidayYearSpec[]){
     if(holidayYearSpecs != null){
       for(let holidayYearSpec of holidayYearSpecs){
-        const startDateToParse = holidayYearSpec.StartDate.toString();
-        const endDateToParse = holidayYearSpec.EndDate.toString();
-        const startDate = new Date(Date.parse(startDateToParse));
-        const endDate = new Date(Date.parse(endDateToParse));
-        holidayYearSpec.StartDate = startDate;
-        holidayYearSpec.EndDate = endDate;
+        holidayYearSpec.StartDate = this.dateformatingService.formatDate(holidayYearSpec.StartDate);
+        holidayYearSpec.EndDate = this.dateformatingService.formatDate(holidayYearSpec.EndDate);
       }
     }
   }

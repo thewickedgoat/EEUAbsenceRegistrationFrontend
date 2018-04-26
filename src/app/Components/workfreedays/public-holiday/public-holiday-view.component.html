@@ -5,7 +5,7 @@
       <li *ngFor="let publicHoliday of publicHolidays">{{publicHoliday.Name}} - {{publicHoliday.Date | date: 'dd/MM/yyyy'}}</li>
     </ul>
   </nav>
-  <div>
+  <div *ngIf="currentHolidayYearSpec">
     <button class="btn btn-success btn-lg" (click)="createPublicHoliday()">Opret Helligdag</button>
   </div>
 </div>

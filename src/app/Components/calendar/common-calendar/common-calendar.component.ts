@@ -8,6 +8,7 @@ import {HolidayYearSpecService} from '../../../services/holidayyearspec.service'
 import {HolidayYear} from '../../../entities/HolidayYear';
 import {Month} from '../../../entities/month';
 import {EmployeeService} from '../../../services/employee.service';
+import {DateformatingService} from '../../../services/dateformating.service';
 
 @Component({
   selector: 'app-common-calendar',
@@ -31,10 +32,10 @@ export class CommonCalendarComponent implements OnInit {
               private route: ActivatedRoute,
               private departmentService: DepartmentService,
               private employeeService: EmployeeService,
-              private holidayYearSpecSerivce: HolidayYearSpecService) { }
+              private holidayYearSpecSerivce: HolidayYearSpecService,
+              private dateformatingService: DateformatingService) { }
 
   ngOnInit() {
-    console.log('test');
     this.route.paramMap.subscribe(params => {
       this.getDates(+params.get('year'), +params.get('month'));
       this.getCurrentHolidayYearSpec();
@@ -42,12 +43,13 @@ export class CommonCalendarComponent implements OnInit {
   }
 
   initData(){
-    this.formatPublicHolidays()
+    this.formatPublicHolidays();
     this.getHolidayYearStartEnd();
     this.daysInCurrentMonth = new Array<Date>();
     this.daysInMonth();
     this.departmentService.getAll().subscribe(departments => {
       this.departments = departments;
+      console.log(this.departments);
     });
   }
 
@@ -138,9 +140,7 @@ export class CommonCalendarComponent implements OnInit {
   formatPublicHolidays(){
     if(this.currentHolidayYearSpec.PublicHolidays != null){
       for(let publicHoliday of this.currentHolidayYearSpec.PublicHolidays){
-        const dateToFormat = publicHoliday.Date.toString();
-        const date = new Date(Date.parse(dateToFormat));
-        publicHoliday.Date = date;
+        publicHoliday.Date = this.dateformatingService.formatDate(publicHoliday.Date);
       }
     }
   }
@@ -160,7 +160,7 @@ export class CommonCalendarComponent implements OnInit {
       }
       holidayYearsSpecs = specs;
       if(holidayYearsSpecs != null){
-        this.currentHolidayYearSpec = holidayYearsSpecs.find(x => x.StartDate <= this.currentDate && x.EndDate >= this.currentDate)
+        this.currentHolidayYearSpec = holidayYearsSpecs.find(x => x.StartDate <= this.currentDate && x.EndDate >= this.currentDate);
         this.initData();
       }
     });
@@ -183,7 +183,7 @@ export class CommonCalendarComponent implements OnInit {
     const currentHolidayYear = employee.HolidayYears.find(x => x.CurrentHolidayYear.Id === this.currentHolidayYearSpec.Id);
     if(currentHolidayYear != null){
       for(let month of currentHolidayYear.Months){
-        month.MonthDate = this.convertDates(month);
+        month.MonthDate = this.dateformatingService.formatDate(month.MonthDate);
       }
       const currentMonth = currentHolidayYear.Months.find(x => x.MonthDate.getMonth() === this.currentDate.getMonth() &&
       x.MonthDate.getFullYear() === this.currentDate.getFullYear());
@@ -196,11 +196,5 @@ export class CommonCalendarComponent implements OnInit {
         return currentMonth.AbsencesInMonth;
       }
     }
-  }
-
-  convertDates(month: Month){
-    const monthDateToParse = month.MonthDate.toString();
-    const monthDate = new Date(Date.parse(monthDateToParse));
-    return monthDate;
   }
 }

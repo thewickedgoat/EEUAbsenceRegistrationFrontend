@@ -10,6 +10,7 @@ import {UniversalErrorCatcherComponent} from '../../Errors/universal-error-catch
 import {HolidayyearEmployeeCreateViewComponent} from '../holidayyear-employee-create-view/holidayyear-employee-create-view.component';
 import {HolidayyearService} from '../../../services/holidayyear.service';
 import {HolidayyearCreateViewComponent} from '../holidayyear-create/holidayyear-create-view.component';
+import {DateformatingService} from '../../../services/dateformating.service';
 
 @Component({
   selector: 'app-holidayyear-administration',
@@ -30,6 +31,7 @@ export class HolidayyearAdministrationComponent implements OnInit {
     private holidayYearSpecService: HolidayYearSpecService,
     private employeeService: EmployeeService,
     private holidayyearService: HolidayyearService,
+    private dateformatingService: DateformatingService,
     private dialog: MatDialog) { }
 
   ngOnInit() {
@@ -48,34 +50,26 @@ export class HolidayyearAdministrationComponent implements OnInit {
       for(let holidayYearSpec of this.holidayYearSpecs){
         this.formatHolidayYearStartEnd(holidayYearSpec);
       }
-      console.log(this.holidayYearSpecs);
-      console.log(this.selectedHolidayYearSpec);
-    })
+    });
   }
 
   getCurrentHolidayYearSpec(){
     let date = new Date();
-    console.log(date);
     const currentHolidayYearSpec = this.holidayYearSpecs.find(x => x.StartDate <= date && x.EndDate >= date);
     this.selectedHolidayYearSpec = currentHolidayYearSpec;
-    console.log(this.selectedHolidayYearSpec);
   }
 
   formatHolidayYearStartEnd(holidayYearSpec: HolidayYearSpec){
     if(holidayYearSpec != null){
-      const startDateToParse = holidayYearSpec.StartDate.toString();
-      const endDateToParse = holidayYearSpec.EndDate.toString();
-      const startDate = new Date(Date.parse(startDateToParse));
-      const endDate = new Date(Date.parse(endDateToParse));
-      holidayYearSpec.StartDate = startDate;
-      holidayYearSpec.EndDate = endDate;
+      holidayYearSpec.StartDate = this.dateformatingService.formatDate(holidayYearSpec.StartDate);
+      holidayYearSpec.EndDate = this.dateformatingService.formatDate(holidayYearSpec.EndDate);
     }
   }
 
   selectHolidayYear(id: number){
     const index = +id;
-    console.log(index);
-    this.selectedHolidayYearSpec = this.holidayYearSpecs.find(x => x.Id === index);
+    this.holidayYearSpecService.set(index);
+    this.selectedHolidayYearSpec = this.holidayYearSpecService.getSelectedHolidayYearSpec();
   }
 
   updateHolidayYearSpec(){
@@ -90,8 +84,6 @@ export class HolidayyearAdministrationComponent implements OnInit {
   getEmployees(){
     this.employeeService.getAll().subscribe(emps => {
       this.employees = emps;
-      console.log(emps);
-      console.log(this.employees);
     });
   }
 
@@ -106,20 +98,15 @@ export class HolidayyearAdministrationComponent implements OnInit {
       });
     }
     else {
-      console.log('test');
       let selectedEmployee = this.employees.find(x => x.Id === id);
       this.selectedEmployee = selectedEmployee;
       this.getEmployeeHolidayYear();
-      console.log(selectedEmployee);
     }
   }
 
   getEmployeeHolidayYear(){
-    console.log('wut');
     let holidayYear = this.selectedEmployee.HolidayYears.find(x => x.CurrentHolidayYear.Id === this.selectedHolidayYearSpec.Id);
-    console.log(holidayYear);
     if(!holidayYear){
-      console.log('i should be here');
       let dialogRef = this.dialog.open(UniversalErrorCatcherComponent, {
         data: {
           errorMessage: 'Der er endnu ikke oprettet specifikationer for denne medarbejder i det valgte ferieår.',
@@ -141,7 +128,6 @@ export class HolidayyearAdministrationComponent implements OnInit {
   }
 
   toggleEdit(bool: boolean){
-    console.log('test');
     if(bool === true){
       this.currentlyEditing = false;
     }

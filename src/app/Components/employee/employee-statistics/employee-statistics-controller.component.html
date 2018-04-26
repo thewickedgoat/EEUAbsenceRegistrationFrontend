@@ -10,26 +10,33 @@
         {{toggleButtonText}}
       </button>
     </div>
-    <select #t (change)="test(t.value)">
-      <option disabled selected> -- Angiv måned --</option>
-      <option *ngFor="let monthName of monthNames; let i = index" [value]="i">
-        {{monthName.valueOf()}}
-      </option>
-    </select>
+    <div class="col-sm-12">
+      <div *ngIf="monthView" class="row">
+        <select #t (change)="selectMonth(t.value)">
+          <option disabled selected> -- Angiv måned --</option>
+          <option *ngFor="let monthName of monthNames; let i = index" [value]="i">
+            {{monthName.valueOf()}}
+          </option>
+        </select>
+      </div>
+    </div>
     <div class="row">
       <div class="col-md-3"><b><strong>Afdeling/Navn</strong></b></div>
-      <div class="col-md-6"><b><strong>Total dage holdt til dato/Fraværskoder</strong></b></div>
-      <div class="col-md-3">
-        <div class="row">
+      <div class="col-md-5"><b><strong>Total dage holdt til dato/Fraværskoder</strong></b></div>
+      <div class="col-md-4">
+        <div *ngIf="!monthView" class="row">
           <div class="col-md-4"><b><strong>Overført</strong></b></div>
           <div class="col-md-4"><b><strong>Optjent</strong></b></div>
           <div class="col-md-4"><b><strong>Rest</strong></b></div>
+        </div>
+        <div *ngIf="monthView" class="row">
+          <div class="col-md-12"><b><strong>Godkendelse for denne måned:</strong></b></div>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-3"></div>
-      <div class="col md-6">
+      <div class="col md-5">
         <div class="row">
           <div class="col-md-1"><b>F</b></div>
           <div class="col-md-1"><b>FF</b></div>
@@ -40,13 +47,18 @@
           <div class="col-md-1"><b>SN</b></div>
         </div>
       </div>
-      <div class="col-md-3">
-        <div class="row">
+      <div class="col-md-4">
+        <div *ngIf="!monthView" class="row">
           <div class="col-md-4"><b>F</b></div>
           <div class="col-md-2"><b>F</b></div>
           <div class="col-md-2"><b>FF</b></div>
           <div class="col-md-2"><b>F</b></div>
           <div class="col-md-2"><b>FF</b></div>
+        </div>
+        <div *ngIf="monthView" class="row">
+          <div class="col-md-4"><b><strong>Medarb.</strong></b></div>
+          <div class="col-md-4"><b><strong>Chef</strong></b></div>
+          <div class="col-md-4"><b><strong>Admin</strong></b></div>
         </div>
       </div>
     </div>
@@ -56,23 +68,26 @@
           <div class="col-md-12">
             <b><strong>{{department.Name}}</strong></b>
           </div>
-          <div *ngIf="buttonClicked===false" class="col-md-12">
-            <app-employee-year-statistics *ngFor="let employee of department.Employees"
-                                          [employee]="employee"
-                                          [currentHolidayYear]="getHolidayYearForEmployee(employee)"
-                                          [statuses]="statuses"
-            ></app-employee-year-statistics>
+          <div *ngIf="monthView===false" class="col-md-12">
+            <div *ngFor="let employee of department.Employees">
+              <app-employee-year-statistics *ngIf="employee.EmployeeRole != 2 && employeeIsInCurrentHolidayYear(employee)"
+                                            [employee]="employee"
+                                            [currentHolidayYear]="getHolidayYearForEmployee(employee)"
+                                            [statuses]="statuses"
+              ></app-employee-year-statistics>
+            </div>
           </div>
-          <div *ngIf="buttonClicked===true && monthSelected===true" class="col-md-12">
-            <app-employee-month-statistics *ngFor="let employee of department.Employees"
-                                           [employee]="employee"
-                                           [currentMonth]="getCurrentMonthForEmployee(employee, currentMonthNumber)"
-                                           [statuses]="statuses"
-            ></app-employee-month-statistics>
+          <div *ngIf="monthView===true && monthSelected===true" class="col-md-12">
+            <div *ngFor="let employee of department.Employees">
+              <app-employee-month-statistics *ngIf="employee.EmployeeRole != 2"
+                [employee]="employee"
+                [currentMonth]="getCurrentMonthForEmployee(employee, currentMonthNumber)"
+                [statuses]="statuses"
+              ></app-employee-month-statistics>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
 </div>

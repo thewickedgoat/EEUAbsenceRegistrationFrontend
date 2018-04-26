@@ -67,6 +67,7 @@ import { HolidayyearRemainingEmployeeComponent } from './Components/holidayyear/
 import { PublicHolidayViewComponent } from './Components/workfreedays/public-holiday/public-holiday-view.component';
 import { HolidayyearEmployeeComponent } from './Components/holidayyear/holidayyear-employee/holidayyear-employee.component';
 import { HolidayyearEmployeeViewComponent } from './Components/holidayyear/holidayyear-employee/holidayyear-employee-view.component';
+import {DateformatingService} from './services/dateformating.service';
 
 
 const routes: Routes = [
@@ -171,7 +172,8 @@ const routes: Routes = [
     HolidayYearSpecService,
     PublicholidayService,
     StatusService,
-    WorkfreedayService],
+    WorkfreedayService,
+    DateformatingService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

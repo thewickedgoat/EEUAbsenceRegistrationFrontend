@@ -9,6 +9,7 @@ import {Router} from '@angular/router';
 import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
 import {HolidayYearSpecService} from '../../../services/holidayyearspec.service';
 import {WorkfreeDay} from '../../../entities/workfreeDay';
+import {DateformatingService} from '../../../services/dateformating.service';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class WorkfreedayComponent implements OnInit {
   constructor( private dialog: MatDialog,
                private router: Router,
                private holidayYearSpecService: HolidayYearSpecService,
+               private dateformatingService: DateformatingService,
                private workfreedayService: WorkfreedayService) {
   }
 
@@ -82,20 +84,14 @@ export class WorkfreedayComponent implements OnInit {
   formatWorkfreeDays(){
     if(this.employee.WorkfreeDays != null) {
       for (let workfreeDay of this.employee.WorkfreeDays) {
-        const dateToFormat = workfreeDay.Date.toString();
-        const date = new Date(Date.parse(dateToFormat));
-        workfreeDay.Date = date;
+        workfreeDay.Date = this.dateformatingService.formatDate(workfreeDay.Date);
       }
     }
   }
 
   formatHolidayYearStartEnd(holidayYearSpec: HolidayYearSpec){
-    const startDateToParse = holidayYearSpec.StartDate.toString();
-    const endDateToParse = holidayYearSpec.EndDate.toString();
-    const startDate = new Date(Date.parse(startDateToParse));
-    const endDate = new Date(Date.parse(endDateToParse));
-    holidayYearSpec.StartDate = startDate;
-    holidayYearSpec.EndDate = endDate;
+    holidayYearSpec.StartDate = this.dateformatingService.formatDate(holidayYearSpec.StartDate);
+    holidayYearSpec.EndDate = this.dateformatingService.formatDate(holidayYearSpec.EndDate);
   }
 
   formatAbsenceDates(employee: Employee){
@@ -106,9 +102,7 @@ export class WorkfreedayComponent implements OnInit {
         for(let month of currentHolidayYear.Months){
           if(month.AbsencesInMonth.length > 0){
             for(let absence of month.AbsencesInMonth){
-              const dateToFormat = absence.Date.toString();
-              const date = new Date(Date.parse(dateToFormat));
-              absence.Date = date;
+              absence.Date = this.dateformatingService.formatDate(absence.Date);
               absencesInEmployee.push(absence);
             }
           }

@@ -37,5 +37,9 @@
       </form>
     </div>
   </div>
+  <div *ngIf="loggingIn" class="col-lg-12">
+    <i class="fa fa-spinner fa-spin"></i>
+    Logger ind...
+  </div>
   <ngb-alert *ngIf="loginError" (close)="close()" type="danger">Forkert adgangskode eller password</ngb-alert>
 </div>

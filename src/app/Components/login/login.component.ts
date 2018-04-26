@@ -4,6 +4,8 @@ import {EmployeeService} from '../../services/employee.service';
 import {Employee} from '../../entities/Employee';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AuthenticationService} from '../../services/authentication.service';
+import {HolidayYearSpecService} from '../../services/holidayyearspec.service';
+import {DateformatingService} from '../../services/dateformating.service';
 
 @Component({
   selector: 'app-login',
@@ -17,11 +19,16 @@ export class LoginComponent implements OnInit {
   loginGroup: FormGroup;
   employees: Employee[];
   employeeToLogin: Employee;
-
+  loggingIn: boolean = false;
   returnUrl : string;
 
-  constructor(private router: Router, private authenticationService: AuthenticationService, private employeeService: EmployeeService,
-              private formBuilder: FormBuilder, private route: ActivatedRoute) {
+  constructor(private router: Router,
+              private authenticationService: AuthenticationService,
+              private employeeService: EmployeeService,
+              private holidayYearSpecService: HolidayYearSpecService,
+              private dateFormatingService: DateformatingService,
+              private formBuilder: FormBuilder,
+              private route: ActivatedRoute) {
       this.loginGroup = this.formBuilder.group({
       userName: ['', Validators.required],
       password: ['', Validators.required]
@@ -40,33 +47,36 @@ export class LoginComponent implements OnInit {
   loginEmployee($event){
     let username = this.loginGroup.controls['userName'].value;
     let password = this.loginGroup.controls['password'].value;
-    console.log(username);
     this.authenticationService.login(username, password).subscribe(data => {
-    this.validateLogin($event, data);
-    this.employeeService.getAll().subscribe(employees => {
-      let employeeToLogin = employees.find(x => x.UserName === username);
-      sessionStorage.setItem('currentEmployee', JSON.stringify(employeeToLogin));
-      this.router.navigate(['employees']);
+      console.log(data);
+      this.validateLogin($event, data);
+      this.loggingIn = true;
+      setTimeout(() => {
+        this.employeeService.getAll().subscribe(employees => {
+          let employeeToLogin = employees.find(x => x.UserName === username);
+          sessionStorage.setItem('currentEmployee', JSON.stringify(employeeToLogin));
+          this.setSelectedHolidayYearSpec();
+          this.router.navigate(['employees']);
         });
+      }, 3000);
     }, error => {
       if(error.status.toString() === '400'){
         this.loginFailed();
       }
-      else{
-        console.log('well, youre fucked');
-      }
     });
-    //if(this.employeeToLogin.EmployeeRole === EmployeeRole.Administrator){
-    //}
-    //else {
-      //let date = new Date();
-      //let year = date.getFullYear();
-      //let month = date.getMonth();
-      //this.authenticationService.login(username, password).subscribe(x => {
-        //this.validateLogin($event, x);
-        //this.router.navigate(['common-calendar/' + year + '/' + month]);
-      //});
-    //}
+  }
+
+  setSelectedHolidayYearSpec(){
+    this.holidayYearSpecService.getAll().subscribe(specs => {
+      let date = new Date();
+      for(let spec of specs){
+        spec.StartDate = this.dateFormatingService.formatDate(spec.StartDate);
+        spec.EndDate = this.dateFormatingService.formatDate(spec.EndDate);
+      }
+      const spec = specs.find(x => x.StartDate <= date && x.EndDate >= date);
+      console.log(spec);
+      this.holidayYearSpecService.set(spec.Id);
+    });
   }
 
   loginFailed(){
@@ -81,8 +91,7 @@ export class LoginComponent implements OnInit {
    */
   validateLogin(event : any, token: any)
   {
-    console.log(token);
-    var bearerToken = token.access_token;
+    let bearerToken = token.access_token;
     if(bearerToken != null && bearerToken.length > 0)
     {
       sessionStorage.setItem('employee', JSON.stringify(this.employeeToLogin));

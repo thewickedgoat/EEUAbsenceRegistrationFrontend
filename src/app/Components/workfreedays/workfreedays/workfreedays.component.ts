@@ -13,6 +13,7 @@ import {Router} from '@angular/router';
 import {PublicHoliday} from '../../../entities/publicholiday';
 import {PublicholidayCreateErrorComponent} from '../../Errors/publicholiday-create-error/publicholiday-create-error.component';
 import {AbsenceService} from '../../../services/absence.service';
+import {DateformatingService} from '../../../services/dateformating.service';
 
 @Component({
   selector: 'app-workfreedays',
@@ -40,6 +41,7 @@ export class WorkfreedaysComponent implements OnInit {
               private employeeService: EmployeeService,
               private publicHolidayService: PublicholidayService,
               private workfreedayService: WorkfreedayService,
+              private dateformatingService: DateformatingService,
               private dialog: MatDialog,
               private router: Router) {
 
@@ -104,9 +106,7 @@ export class WorkfreedaysComponent implements OnInit {
         for(let month of currentHolidayYear.Months){
           if(month.AbsencesInMonth.length > 0){
             for(let absence of month.AbsencesInMonth){
-              const dateToFormat = absence.Date.toString();
-              const date = new Date(Date.parse(dateToFormat));
-              absence.Date = date;
+              absence.Date = this.dateformatingService.formatDate(absence.Date);
               absencesInEmployee.push(absence);
             }
           }

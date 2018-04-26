@@ -7,6 +7,7 @@ import {Employee} from '../../../entities/Employee';
 import {EmployeeService} from '../../../services/employee.service';
 import {MatDialog} from '@angular/material';
 import {EmployeeDeleteDialogComponent} from '../employee-delete-dialog/employee-delete-dialog.component';
+import {HolidayYearSpecService} from '../../../services/holidayyearspec.service';
 
 
 @Component({
@@ -22,12 +23,17 @@ export class EmployeeListComponent implements OnInit {
   employees: Employee[];
   employeeDeleted: boolean = false;
 
-  constructor(private employeeService: EmployeeService, private departmentService: DepartmentService, private router: Router, private dialog: MatDialog) {
+  constructor(private employeeService: EmployeeService,
+              private departmentService: DepartmentService,
+              private holidayYearSpecService: HolidayYearSpecService,
+              private router: Router,
+              private dialog: MatDialog) {
 
   }
 
   ngOnInit() {
       this.initData();
+      console.log(this.holidayYearSpecService.getSelectedHolidayYearSpec());
   }
 
   /**
@@ -39,14 +45,11 @@ export class EmployeeListComponent implements OnInit {
   }
 
   deleteRequested(employeeId: number): void{
-    console.log(employeeId);
     let employee = this.employees.find(x => x.Id === employeeId);
     let dialogRef = this.dialog.open(EmployeeDeleteDialogComponent, {data: {employee: employee}});
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
       if(result === true){
         this.deleteEmployeeFromList(employeeId);
-        console.log('damn');
       }
     });
   }
@@ -72,17 +75,20 @@ export class EmployeeListComponent implements OnInit {
    * Navigate to create employee
    */
   createEmployee() {
-    this.router
-      .navigateByUrl('employees/create');
+    if(this.isAdmin()){
+      this.router
+        .navigateByUrl('employees/create');
+    }
   }
 
   /**
    * Navigate to create employee
    */
   createDepartment(){
-    console.log('ayy')
-    this.router
-      .navigateByUrl('department/create');
+    if(this.isAdmin()){
+      this.router
+        .navigateByUrl('department/create');
+    }
   }
 
   /**

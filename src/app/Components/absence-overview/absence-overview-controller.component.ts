@@ -1,10 +1,11 @@
-import {Component, Input, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Employee} from '../../entities/Employee';
 import {Absence} from '../../entities/absence';
 import {AbsenceOverviewComponent} from './absence-overview.component';
 import {Status} from '../../entities/status';
 import {StatusService} from '../../services/status.service';
 import {HolidayYear} from '../../entities/HolidayYear';
+import {HolidayYearSpec} from '../../entities/holidayYearSpec';
 
 @Component({
   selector: 'app-absence-overview-controller',
@@ -25,6 +26,13 @@ export class AbsenceOverviewControllerComponent implements OnInit {
   holidayYearEnd: Date;
   @Input()
   holidayYear: HolidayYear;
+  @Input()
+  holidayYearSpecs: HolidayYearSpec[];
+  @Input()
+  currentHolidayYearSpec: HolidayYearSpec;
+
+  @Output()
+  emitter = new EventEmitter();
 
   statuses: Status[];
 
@@ -51,6 +59,19 @@ export class AbsenceOverviewControllerComponent implements OnInit {
       this.statuses = statuses;
       this.getAllAbsencesInStatusGroup();
     });
+  }
+
+  selectHolidayYear(index){
+    let id = +index;
+    console.log(id);
+    this.emitter.emit(id);
+  }
+
+  isCurrentHolidayYear(id: number){
+    if(this.currentHolidayYearSpec.Id === id){
+      return true;
+    }
+    else return false;
   }
 
   getAllAbsencesInStatusGroup(){
@@ -90,7 +111,7 @@ export class AbsenceOverviewControllerComponent implements OnInit {
   }
 
   vacationSpent(){
-    const vacationAvailable = this.holidayYear.HolidayAvailable;
+    const vacationAvailable = this.holidayYear.HolidayAvailable+this.holidayYear.HolidayTransfered;
     const vacationSpent = this.holidayYear.HolidaysUsed;
     let remainingVacation = vacationAvailable-vacationSpent;
     return remainingVacation;
@@ -102,5 +123,6 @@ export class AbsenceOverviewControllerComponent implements OnInit {
     let remainingVacationFreedays = vacationAvailable-vacationSpent;
     return remainingVacationFreedays;
   }
+
 
 }
