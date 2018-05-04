@@ -21,7 +21,7 @@ import {DateformatingService} from '../../../services/dateformating.service';
 export class HolidayyearAdministrationComponent implements OnInit {
 
   holidayYearSpecs: HolidayYearSpec[];
-  selectedHolidayYearSpec: HolidayYearSpec;
+  currentHolidayYearSpec: HolidayYearSpec;
   selectedEmployee: Employee;
   selectedHolidayYear: HolidayYear;
   employees: Employee[];
@@ -40,6 +40,7 @@ export class HolidayyearAdministrationComponent implements OnInit {
 
   initData(){
     this.getHolidayYearSpecs();
+    this.getCurrentHolidayYearSpec();
     this.getEmployees();
 
   }
@@ -54,9 +55,10 @@ export class HolidayyearAdministrationComponent implements OnInit {
   }
 
   getCurrentHolidayYearSpec(){
-    let date = new Date();
-    const currentHolidayYearSpec = this.holidayYearSpecs.find(x => x.StartDate <= date && x.EndDate >= date);
-    this.selectedHolidayYearSpec = currentHolidayYearSpec;
+    const currentHolidayYearSpec = JSON.parse(sessionStorage.getItem('currentHolidayYearSpec'));
+    currentHolidayYearSpec.StartDate = this.dateformatingService.formatDate(currentHolidayYearSpec.StartDate);
+    currentHolidayYearSpec.EndDate = this.dateformatingService.formatDate(currentHolidayYearSpec.EndDate);
+    this.currentHolidayYearSpec = currentHolidayYearSpec;
   }
 
   formatHolidayYearStartEnd(holidayYearSpec: HolidayYearSpec){
@@ -68,16 +70,17 @@ export class HolidayyearAdministrationComponent implements OnInit {
 
   selectHolidayYear(id: number){
     const index = +id;
-    this.holidayYearSpecService.set(index);
-    this.selectedHolidayYearSpec = this.holidayYearSpecService.getSelectedHolidayYearSpec();
+    this.holidayYearSpecService.getById(index).subscribe(hys => {
+      sessionStorage.setItem('currentHolidayYearSpec', JSON.stringify(hys));
+    });
   }
 
   updateHolidayYearSpec(){
-    let tempHys = this.selectedHolidayYearSpec;
-    this.selectedHolidayYearSpec = new HolidayYearSpec();
+    let tempHys = this.currentHolidayYearSpec;
+    this.currentHolidayYearSpec = new HolidayYearSpec();
     this.holidayYearSpecService.getById(tempHys.Id).subscribe(hys => {
       tempHys = hys;
-      this.selectedHolidayYearSpec = tempHys;
+      this.currentHolidayYearSpec = tempHys;
     });
   }
 
@@ -105,7 +108,8 @@ export class HolidayyearAdministrationComponent implements OnInit {
   }
 
   getEmployeeHolidayYear(){
-    let holidayYear = this.selectedEmployee.HolidayYears.find(x => x.CurrentHolidayYear.Id === this.selectedHolidayYearSpec.Id);
+    let holidayYear = this.selectedEmployee.HolidayYears.find(x => x.CurrentHolidayYear.Id === this.currentHolidayYearSpec.Id);
+    console.log(holidayYear);
     if(!holidayYear){
       let dialogRef = this.dialog.open(UniversalErrorCatcherComponent, {
         data: {
@@ -138,10 +142,11 @@ export class HolidayyearAdministrationComponent implements OnInit {
   }
 
   createEmployeeHolidayYear(){
+    console.log(this.currentHolidayYearSpec);
     let dialogRef = this.dialog.open(HolidayyearEmployeeCreateViewComponent, {
       data: {
         employee: this.selectedEmployee,
-        holidayYearSpec: this.selectedHolidayYearSpec
+        holidayYearSpec: this.currentHolidayYearSpec
       }
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -149,7 +154,10 @@ export class HolidayyearAdministrationComponent implements OnInit {
       if(result != null){
         console.log(result);
         this.holidayyearService.post(result).subscribe(holidayYear => {
+          console.log(holidayYear);
           this.selectedHolidayYear = holidayYear;
+          this.initData();
+          console.log(this.selectedHolidayYear);
         })
       }
     });
@@ -165,7 +173,7 @@ export class HolidayyearAdministrationComponent implements OnInit {
       if(result != null){
         this.holidayYearSpecService.post(result).subscribe(hys => {
           console.log(hys);
-          this.selectedHolidayYearSpec = hys;
+          this.currentHolidayYearSpec = hys;
         })
       }
     });

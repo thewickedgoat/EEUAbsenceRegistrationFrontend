@@ -55,8 +55,11 @@ export class ToolbarComponent implements OnInit {
   }
 
   getCurrentHolidayYearSpec(){
-    const date = new Date();
-    this.currentHolidayYearSpec = this.holidayYearSpecs.find(x => x.StartDate <= date && x.EndDate >= date);
+    let currentHolidayYearSpec = JSON.parse(sessionStorage.getItem('currentHolidayYearSpec'));
+    currentHolidayYearSpec.StartDate = this.dateformatingService.formatDate(currentHolidayYearSpec.StartDate);
+    currentHolidayYearSpec.EndDate = this.dateformatingService.formatDate(currentHolidayYearSpec.EndDate);
+    this.currentHolidayYearSpec = currentHolidayYearSpec;
+    console.log(this.currentHolidayYearSpec);
   }
 
   formatHolidayYearSpecs(holidayYearSpecs: HolidayYearSpec[]){
@@ -66,6 +69,21 @@ export class ToolbarComponent implements OnInit {
         holidayYearSpec.EndDate = this.dateformatingService.formatDate(holidayYearSpec.EndDate);
       }
     }
+  }
+
+  isCurrentHolidayYearSpec(id: number){
+    const currentHolidayYearSpec = JSON.parse(sessionStorage.getItem('currentHolidayYearSpec'));
+    if(currentHolidayYearSpec.Id === id){
+      return true;
+    }
+    else return false;
+  }
+
+  selectHolidayYear(id: number){
+    const index = +id;
+    this.holidayYearSpecService.getById(index).subscribe(hys => {
+      sessionStorage.setItem('currentHolidayYearSpec', JSON.stringify(hys));
+    });
   }
 
   toHolidayYearAdministration(){
@@ -113,4 +131,6 @@ export class ToolbarComponent implements OnInit {
   toCommonCalendar(){
     this.router.navigateByUrl('common-calendar/' + this.currentDate.getFullYear() + '/' + this.currentDate.getMonth());
   }
+
+
 }

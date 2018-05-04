@@ -64,11 +64,14 @@ export class EmployeeStatisticsControllerComponent implements OnInit {
 
   employeeIsInCurrentHolidayYear(employee: Employee){
     const holidayYears = employee.HolidayYears;
-    const holidayYear = holidayYears.find(x => x.CurrentHolidayYear.Id === this.selectedHolidayYearSpec.Id);
-    if(holidayYear === null){
-      return false;
+    if(holidayYears != null){
+      console.log('hai');
+      const holidayYear = holidayYears.find(x => x.CurrentHolidayYear.Id === this.selectedHolidayYearSpec.Id);
+      if(holidayYear === null){
+        return false;
+      }
+      else return true;
     }
-    else return true;
   }
 
   getCurrentMonthForEmployee(employee: Employee, monthNumber: number){

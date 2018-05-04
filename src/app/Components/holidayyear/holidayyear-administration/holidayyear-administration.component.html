@@ -1,12 +1,11 @@
 <app-toolbar></app-toolbar>
 <div class="container">
   <app-holidayyear-administration-view
-    [selectedHolidayYearSpec]="selectedHolidayYearSpec"
+    [selectedHolidayYearSpec]="currentHolidayYearSpec"
   [holidayYearSpecs]="holidayYearSpecs"
   [employees]="employees"
   [selectedEmployee]="selectedEmployee"
   [selectedHolidayYear]="selectedHolidayYear"
-  (selectHolidayYearEmitter)="selectHolidayYear($event)"
   (updateEmitter)="updateHolidayYearSpec()"
   (selectEmployeeEmitter)="selectEmployee($event)"
   (toggleEditEmitter)="toggleEdit($event)"

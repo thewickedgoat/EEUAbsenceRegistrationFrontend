@@ -7,12 +7,6 @@
   </div>
   <div class="row">
     <div class="col-lg-12" style="text-align: center">
-      <select #t (change)="selectHolidayYear(t.value)">
-        <option disabled selected> -- Angiv ferieår --</option>
-        <option *ngFor="let holidayYearSpec of holidayYearSpecs" [value]="holidayYearSpec.Id">{{holidayYearSpec.Name}}</option>
-      </select>
-    </div>
-    <div class="col-lg-12" style="text-align: center">
       <button class="btn btn-success" (click)="createHolidayYearSpec()">Opret ferieår</button>
     </div>
   </div>

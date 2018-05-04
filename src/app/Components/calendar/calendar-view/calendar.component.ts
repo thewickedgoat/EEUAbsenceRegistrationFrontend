@@ -93,10 +93,14 @@ export class CalendarComponent implements OnInit {
       this.holidayYearSpecs = specs;
       holidayYearsSpecs = this.holidayYearSpecs;
       if(holidayYearsSpecs != null){
-        const currentHolidayYearSpec = holidayYearsSpecs.find(x => x.StartDate <= this.currentDate && x.EndDate >= this.currentDate);
+        const currentHolidayYearSpec = JSON.parse(sessionStorage.getItem('currentHolidayYearSpec'));
         if(currentHolidayYearSpec != null){
+          currentHolidayYearSpec.StartDate = this.dateformatingService.formatDate(currentHolidayYearSpec.StartDate);
+          currentHolidayYearSpec.EndDate = this.dateformatingService.formatDate(currentHolidayYearSpec.EndDate);
           this.currentHolidayYearSpec = currentHolidayYearSpec;
-          const currentHolidayYear = this.employee.HolidayYears.find(x => x.CurrentHolidayYear.Id === currentHolidayYearSpec.Id);
+          console.log(this.employee.HolidayYears);
+          const currentHolidayYear = this.employee.HolidayYears.find(x => x.CurrentHolidayYear.Id === this.currentHolidayYearSpec.Id);
+          console.log(currentHolidayYear);
           this.currentHolidayYear = currentHolidayYear;
           this.formatPublicHolidaysAndWorkfreeDays();
           this.initData();
@@ -126,6 +130,7 @@ export class CalendarComponent implements OnInit {
 
   //skal flyttes til controlleren for alle componenterne i kalender-viewet
   getCurrentMonth(month: number){
+    console.log(this.currentHolidayYear);
     let months = this.currentHolidayYear.Months;
     if(months != null){
       for(let month of months){

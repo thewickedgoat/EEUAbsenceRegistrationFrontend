@@ -33,7 +33,16 @@ export class EmployeeListComponent implements OnInit {
 
   ngOnInit() {
       this.initData();
-      console.log(this.holidayYearSpecService.getSelectedHolidayYearSpec());
+  }
+
+  test(){
+  }
+
+  test2(){
+  }
+
+  test3(){
+
   }
 
   /**

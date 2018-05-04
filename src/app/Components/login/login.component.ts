@@ -74,8 +74,8 @@ export class LoginComponent implements OnInit {
         spec.EndDate = this.dateFormatingService.formatDate(spec.EndDate);
       }
       const spec = specs.find(x => x.StartDate <= date && x.EndDate >= date);
+      sessionStorage.setItem('currentHolidayYearSpec', JSON.stringify(spec));
       console.log(spec);
-      this.holidayYearSpecService.set(spec.Id);
     });
   }
 

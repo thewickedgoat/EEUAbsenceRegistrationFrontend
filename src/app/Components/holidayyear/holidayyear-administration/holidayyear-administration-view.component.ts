@@ -25,8 +25,6 @@ export class HolidayyearAdministrationViewComponent implements OnInit {
   selectedHolidayYear: HolidayYear;
 
   @Output()
-  selectHolidayYearEmitter = new EventEmitter();
-  @Output()
   updateEmitter = new EventEmitter();
   @Output()
   selectEmployeeEmitter = new EventEmitter();
@@ -40,9 +38,6 @@ export class HolidayyearAdministrationViewComponent implements OnInit {
   ngOnInit() {
   }
 
-  selectHolidayYear(id){
-    this.selectHolidayYearEmitter.emit(id);
-  }
 
   updateHolidayYearSpec(){
     this.updateEmitter.emit();

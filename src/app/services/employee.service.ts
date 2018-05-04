@@ -27,6 +27,7 @@ export class EmployeeService {
   }
 
   getAll(): Observable<Employee[]> {
+    console.log(jwt);
     return this.http.get<Employee[]>(url + 'GetAll', {headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)});
   }
 
