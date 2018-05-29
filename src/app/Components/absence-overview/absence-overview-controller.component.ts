@@ -61,19 +61,6 @@ export class AbsenceOverviewControllerComponent implements OnInit {
     });
   }
 
-  selectHolidayYear(index){
-    let id = +index;
-    console.log(id);
-    this.emitter.emit(id);
-  }
-
-  isCurrentHolidayYear(id: number){
-    if(this.currentHolidayYearSpec.Id === id){
-      return true;
-    }
-    else return false;
-  }
-
   getAllAbsencesInStatusGroup(){
     this.absenceStatusGroup = [];
     const absences = this.absencesInCurrentMonth;

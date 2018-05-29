@@ -34,7 +34,7 @@ export class ToolbarComponent implements OnInit {
     this.currentDate.setMonth(this.currentDate.getMonth());
     this.holidayYearSpecService.getAll().subscribe(hys => {
       this.formatHolidayYearSpecs(hys);
-      this.holidayYearSpecs = hys;
+      this.setHolidayYearSpecList(hys);
       this.getCurrentHolidayYearSpec();
     })
   }
@@ -42,13 +42,6 @@ export class ToolbarComponent implements OnInit {
   isAdmin(){
     if(this.loggedInUser.EmployeeRole === EmployeeRole.Administrator)
     {
-      return true;
-    }
-    else return false;
-  }
-
-  isChief(){
-    if(this.loggedInUser.EmployeeRole === EmployeeRole.Afdelingsleder){
       return true;
     }
     else return false;
@@ -71,6 +64,28 @@ export class ToolbarComponent implements OnInit {
     }
   }
 
+  /**
+   * Sets the list of HolidayYearSpecs depending on the loggedInUser being admin or not.
+   * Admins should be able to see all HolidayYearSpecs, but 'normal' users should only
+   * be able to see those who they have a HolidayYear reference with.
+   */
+  setHolidayYearSpecList(holidayYearSpecs: HolidayYearSpec[]){
+    const holidayYearsInUser = this.loggedInUser.HolidayYears;
+    let holidayYearSpecsMatched = new Array<HolidayYearSpec>();
+    if(this.isAdmin()){
+      this.holidayYearSpecs = holidayYearSpecs;
+    }
+    else {
+      for(let holidayYearSpec of holidayYearSpecs){
+        const matchedHolidayYear = holidayYearsInUser.find(x => x.CurrentHolidayYear.Id === holidayYearSpec.Id);
+        if(matchedHolidayYear != null){
+          holidayYearSpecsMatched.push(holidayYearSpec);
+        }
+      }
+      this.holidayYearSpecs = holidayYearSpecsMatched;
+    }
+  }
+
   isCurrentHolidayYearSpec(id: number){
     const currentHolidayYearSpec = JSON.parse(sessionStorage.getItem('currentHolidayYearSpec'));
     if(currentHolidayYearSpec.Id === id){
@@ -83,6 +98,7 @@ export class ToolbarComponent implements OnInit {
     const index = +id;
     this.holidayYearSpecService.getById(index).subscribe(hys => {
       sessionStorage.setItem('currentHolidayYearSpec', JSON.stringify(hys));
+      location.reload();
     });
   }
 
@@ -91,7 +107,7 @@ export class ToolbarComponent implements OnInit {
   }
 
   toStats(){
-    this.router.navigateByUrl('stats/' + this.currentHolidayYearSpec.StartDate.getFullYear())
+    this.router.navigateByUrl('stats/' + this.currentHolidayYearSpec.StartDate.getFullYear());
   }
 
   /**
@@ -101,36 +117,32 @@ export class ToolbarComponent implements OnInit {
     this.authenticationService.logout(JSON.parse(sessionStorage.getItem('currentEmployee')));
     this.router.navigateByUrl('login');
   }
+
   /**
    * Page navigation
    */
   toEmployees(){
     this.router.navigateByUrl('employees');
   }
+
   /**
    * Page navigation
    */
   toEmployeeProfile(){
-    this.router.navigateByUrl('employees/profile/' + this.loggedInUser.Id)
+    this.router.navigateByUrl('employees/profile/' + this.loggedInUser.Id);
   }
-  /**
-   * Page navigation
-   */
-  toOverview(){
-    this.router.navigateByUrl('overview/' + this.loggedInUser.Id)
-  }
+
   /**
    * Page navigation
    */
   toCalendar(){
     this.router.navigateByUrl('calendar/' + this.loggedInUser.Id + '/' + this.currentDate.getFullYear() + '/' + this.currentDate.getMonth());
   }
+
   /**
    * Page navigation
    */
-  toCommonCalendar(){
-    this.router.navigateByUrl('common-calendar/' + this.currentDate.getFullYear() + '/' + this.currentDate.getMonth());
+  toPublicCalendar(){
+    this.router.navigateByUrl('public-calendar/' + this.currentDate.getMonth());
   }
-
-
 }

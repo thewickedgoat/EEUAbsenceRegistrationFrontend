@@ -69,8 +69,9 @@ export class EmployeeEditComponent implements OnInit {
    * Updates the employee
    */
   updateEmployee(){
+    this.authenticationService.update(this.employee).subscribe(() => {
+    });
     this.employeeService.put(this.employee).subscribe(() => {
-      //this.authenticationService.update(this.employee);
     });
   }
 

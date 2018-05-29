@@ -53,8 +53,6 @@ export class CalendarViewComponent implements OnInit {
   ngOnInit() {
   }
 
-  ngOnChanges(){
-  }
   /**
    * based on the day of the week it wii return the weekList in the current week the calendar is building
    * @param week

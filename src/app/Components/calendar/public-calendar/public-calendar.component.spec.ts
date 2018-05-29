@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CommonCalendarViewComponent } from './common-calendar-view.component';
+import { PublicCalendarComponent } from './public-calendar.component';
 
-describe('CommonCalendarViewComponent', () => {
-  let component: CommonCalendarViewComponent;
-  let fixture: ComponentFixture<CommonCalendarViewComponent>;
+describe('PublicCalendarComponent', () => {
+  let component: PublicCalendarComponent;
+  let fixture: ComponentFixture<PublicCalendarComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CommonCalendarViewComponent ]
+      declarations: [ PublicCalendarComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CommonCalendarViewComponent);
+    fixture = TestBed.createComponent(PublicCalendarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

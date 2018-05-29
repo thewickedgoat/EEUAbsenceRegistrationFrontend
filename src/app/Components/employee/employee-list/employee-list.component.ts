@@ -35,16 +35,6 @@ export class EmployeeListComponent implements OnInit {
       this.initData();
   }
 
-  test(){
-  }
-
-  test2(){
-  }
-
-  test3(){
-
-  }
-
   /**
    * Based on the ID of the emitted method, deletes an employee with the given Id
    * @param id
@@ -52,6 +42,7 @@ export class EmployeeListComponent implements OnInit {
   deleteEmployeeFromList(id: number){
     this.employeeService.delete(id).subscribe(()=> this.initData());
   }
+
 
   deleteRequested(employeeId: number): void{
     let employee = this.employees.find(x => x.Id === employeeId);

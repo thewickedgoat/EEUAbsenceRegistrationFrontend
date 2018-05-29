@@ -3,10 +3,7 @@
     <h4>
       <b>Ferieåret: </b>
       <div style="text-align: center">
-        <select #t (change)="selectHolidayYear(t.value)">
-          <option disabled selected> -- Angiv ferieår --</option>
-          <option *ngFor="let holidayYearSpec of holidayYearSpecs" [selected]="isCurrentHolidayYear(holidayYearSpec.Id)" [value]="holidayYearSpec.Id">{{holidayYearSpec.Name}}</option>
-        </select>
+        {{currentHolidayYearSpec.Name}}
       </div>
     </h4>
   </div>

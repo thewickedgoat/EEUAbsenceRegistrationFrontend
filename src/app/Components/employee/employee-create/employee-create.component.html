@@ -8,7 +8,7 @@
       <h4>Opret Medarbejder:</h4>
     </div>
     <div class="col-md-12">
-      <form [formGroup]="employeeGroup" (ngSubmit)="createEmployee()" novalidate>
+      <form [formGroup]="employeeGroup" (ngSubmit)="createEmployee()">
         <div class="form-group">
           <label class="center-block col-md-12">Fornavn:
             <input class="form-control"
@@ -16,10 +16,9 @@
                    [ngClass]="{'is-invalid': nameIsInvalid('firstName'), 'is-valid': nameIsValid('firstName')}"
                    formControlName="firstName">
             <div *ngIf="nameIsInvalid('firstName')" class="invalid-feedback">
-              <div *ngIf="employeeGroup.controls['firstName'].errors.required">
+              <div *ngIf="employeeGroup.controls['firstName'].errors">
                 Du skal angive et fornavn.
               </div>
-
             </div>
           </label>
           <label class="center-block col-md-12">Efternavn:
@@ -28,7 +27,7 @@
                    [ngClass]="{'is-invalid': nameIsInvalid('lastName'), 'is-valid': nameIsValid('lastName')}"
                    formControlName="lastName">
             <div *ngIf="nameIsInvalid('lastName')" class="invalid-feedback">
-                <div *ngIf="employeeGroup.controls['lastName'].errors.required">
+                <div *ngIf="employeeGroup.controls['lastName'].errors">
                   Du skal angive et efternavn.
                 </div>
             </div>
@@ -39,7 +38,7 @@
             [ngClass]="{'is-invalid': nameIsInvalid('userName'), 'is-valid': nameIsValid('userName')}"
             formControlName="userName">
             <div *ngIf="nameIsInvalid('userName')" class="invalid-feedback">
-              <div *ngIf="employeeGroup.controls['userName'].errors.required">
+              <div *ngIf="employeeGroup.controls['userName'].errors">
                 Du skal angive et brugernavn.
               </div>
             </div>
@@ -50,7 +49,7 @@
                    [ngClass]="{'is-invalid': nameIsInvalid('email'), 'is-valid': nameIsValid('email')}"
                    formControlName="email">
             <div *ngIf="nameIsInvalid('email')" class="invalid-feedback">
-              <div *ngIf="employeeGroup.controls['email'].errors.required">
+              <div *ngIf="employeeGroup.controls['email'].errors">
                 Du skal angive en email.
               </div>
             </div>
@@ -63,7 +62,7 @@
                    [ngClass]="{'is-invalid': nameIsInvalid('password'), 'is-valid': nameIsValid('password')}"
                    formControlName="password">
             <div *ngIf="nameIsInvalid('password')" class="invalid-feedback">
-              <div *ngIf="employeeGroup.controls['password'].errors.required">
+              <div *ngIf="employeeGroup.controls['password'].errors">
                 Du skal angive en adgangskode.
               </div>
             </div>
@@ -79,7 +78,7 @@
               <option>Direktør</option>
             </select>
             <div *ngIf="nameIsInvalid('employeeRole')" class="invalid-feedback">
-              <div *ngIf="employeeGroup.controls['employeeRole'].errors.required">
+              <div *ngIf="employeeGroup.controls['employeeRole'].errors">
                 Du skal angive en rolle.
               </div>
             </div>
@@ -94,7 +93,7 @@
               <option *ngFor="let department of departments; let i = index">{{department.Name}}</option>
             </select>
             <div *ngIf="nameIsInvalid('department')" class="invalid-feedback">
-              <div *ngIf="employeeGroup.controls['department'].errors.required">
+              <div *ngIf="employeeGroup.controls['department'].errors">
                 Du skal angive en afdeling.
               </div>
             </div>
@@ -104,7 +103,6 @@
           </button>
         </div>
       </form>
-
       <ngb-alert *ngIf="employeeCreated" (close)="close()" type="success">Medarbejder blev oprettet</ngb-alert>
     </div>
   </div>

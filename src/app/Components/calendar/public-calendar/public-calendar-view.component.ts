@@ -5,12 +5,12 @@ import {PublicHoliday} from '../../../entities/publicholiday';
 import {DateformatingService} from '../../../services/dateformating.service';
 
 @Component({
-  selector: 'app-common-calendar-view',
-  templateUrl: './common-calendar-view.component.html',
-  styleUrls: ['./common-calendar-view.component.css'],
+  selector: 'app-public-calendar-view',
+  templateUrl: './public-calendar-view.component.html',
+  styleUrls: ['./public-calendar-view.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class CommonCalendarViewComponent implements OnInit {
+export class PublicCalendarViewComponent implements OnInit {
 
   @Input()
   employee: Employee;
@@ -46,8 +46,8 @@ export class CommonCalendarViewComponent implements OnInit {
     if(absenceInMonth.length > 0) {
       const absence = absenceInMonth.find(
         abs => abs.Date.getFullYear() === year
-      && abs.Date.getMonth() === month
-      && abs.Date.getDate() === date);
+          && abs.Date.getMonth() === month
+          && abs.Date.getDate() === date);
       if(absence != null){
         return absence.Status.StatusCode;
       }
@@ -56,7 +56,7 @@ export class CommonCalendarViewComponent implements OnInit {
     else return '';
   }
 
-   /**
+  /**
    * Styling method, every line that goes up into the power of 2 will be green instead of grey
    * @returns {boolean}
    */
@@ -98,4 +98,5 @@ export class CommonCalendarViewComponent implements OnInit {
     }
     else return false;
   }
+
 }

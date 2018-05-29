@@ -23,8 +23,6 @@ import { AbsenceOverviewControllerComponent } from './Components/absence-overvie
 import { AbsenceConfirmationComponent } from './Components/absence-confirmation/absence-confirmation.component';
 import { AbsenceConfirmationViewComponent } from './Components/absence-confirmation/absence-confirmation-view.component';
 import { DepartmentComponent } from './Components/department/department/department.component';
-import { CommonCalendarComponent } from './Components/calendar/common-calendar/common-calendar.component';
-import { CommonCalendarViewComponent } from './Components/calendar/common-calendar/common-calendar-view.component';
 import {AuthenticationService} from './services/authentication.service';
 import { MatDialogModule} from '@angular/material/';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -68,6 +66,8 @@ import { PublicHolidayViewComponent } from './Components/workfreedays/public-hol
 import { HolidayyearEmployeeComponent } from './Components/holidayyear/holidayyear-employee/holidayyear-employee.component';
 import { HolidayyearEmployeeViewComponent } from './Components/holidayyear/holidayyear-employee/holidayyear-employee-view.component';
 import {DateformatingService} from './services/dateformating.service';
+import { PublicCalendarComponent } from './Components/calendar/public-calendar/public-calendar.component';
+import { PublicCalendarViewComponent } from './Components/calendar/public-calendar/public-calendar-view.component';
 
 
 const routes: Routes = [
@@ -79,12 +79,12 @@ const routes: Routes = [
   {path: 'calendar/:id/:year/:month', component: CalendarComponent},
   {path: 'overview/:id', component: OverviewComponent},
   {path: 'month/:month/:yearStart/:yearEnd', component: MonthComponent},
-  {path: 'common-calendar/:year/:month', component: CommonCalendarComponent},
+  {path: 'public-calendar/:month', component: PublicCalendarComponent},
   {path: 'login', component: LoginComponent},
   {path: 'holidayyears', component: HolidayyearAdministrationComponent},
   {path: 'stats/:yearStart', component: AdminOverviewComponent},
   {path: 'work', component: AdministrationComponent},
-  {path: ' ', redirectTo: 'login'}
+  {path: ' ', redirectTo: 'login'},
 
 ];
 
@@ -100,8 +100,6 @@ const routes: Routes = [
     AdminOverviewViewComponent,
     CalendarComponent,
     CalendarViewComponent,
-    CommonCalendarComponent,
-    CommonCalendarViewComponent,
     DepartmentComponent,
     DepartmentCreateComponent,
     EmployeeComponent,
@@ -137,7 +135,9 @@ const routes: Routes = [
     HolidayyearRemainingEmployeeComponent,
     PublicHolidayViewComponent,
     HolidayyearEmployeeComponent,
-    HolidayyearEmployeeViewComponent
+    HolidayyearEmployeeViewComponent,
+    PublicCalendarComponent,
+    PublicCalendarViewComponent,
   ],
   imports: [
     BrowserModule,

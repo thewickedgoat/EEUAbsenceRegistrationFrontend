@@ -11,8 +11,8 @@ import {Router} from '@angular/router';
 import {PublicHoliday} from '../../../entities/publicholiday';
 import {PublicholidayCreateErrorComponent} from '../../Errors/publicholiday-create-error/publicholiday-create-error.component';
 import {AbsenceService} from '../../../services/absence.service';
-import {WorkfreedayCreateErrorComponent} from '../../Errors/workfreeday-create-error/workfreeday-create-error.component';
 import {DateformatingService} from '../../../services/dateformating.service';
+import {HolidayYearSpecService} from '../../../services/holidayyearspec.service';
 
 @Component({
   selector: 'app-public-holiday',
@@ -34,11 +34,11 @@ export class PublicHolidayComponent implements OnInit {
 
   constructor(private absenceService: AbsenceService,
               private employeeService: EmployeeService,
+              private holidayYearSpecService: HolidayYearSpecService,
               private publicHolidayService: PublicholidayService,
               private workfreedayService: WorkfreedayService,
               private dateformatingService: DateformatingService,
-              private dialog: MatDialog,
-              private router: Router) {
+              private dialog: MatDialog,) {
 
   }
 
@@ -65,27 +65,34 @@ export class PublicHolidayComponent implements OnInit {
       }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('ahva1');
       publicHoliday = result;
       if(publicHoliday != null){
         const absencesInTotal = this.absencesInTotal;
         if(absencesInTotal.length != null){
-          console.log('eat dis');
           const absenceOnPublicHoliday = absencesInTotal.filter(x => x.Date.getFullYear() === publicHoliday.Date.getFullYear()
             && x.Date.getMonth() === publicHoliday.Date.getMonth() && x.Date.getDate() === publicHoliday.Date.getDate());
-          if(absenceOnPublicHoliday.length > 0){
-            this.publicHolidayError(absenceOnPublicHoliday, publicHoliday);
+          if(this.isPublicHolidayNotInYear(publicHoliday) === true){
+            this.publicHolidayError(absenceOnPublicHoliday, publicHoliday, 2);
+            return;
+          }
+          else if(absenceOnPublicHoliday.length > 0 ){
+            this.publicHolidayError(absenceOnPublicHoliday, publicHoliday, 1);
             return;
           }
           else {
-            this.publicHolidayService.post(publicHoliday).subscribe( ph => {
-              console.log('eat dis2');
-              this.updateView();
-            });
+            this.updateCurrentHolidayYearSpec(publicHoliday);
           }
         }
       }
       else return;
+    });
+  }
+
+  updateCurrentHolidayYearSpec(publicHoliday: PublicHoliday){
+    this.publicHolidayService.post(publicHoliday).subscribe( ph => {
+      this.currentHolidayYearSpec.PublicHolidays.push(ph);
+      sessionStorage.setItem('currentHolidayYearSpec', JSON.stringify(this.currentHolidayYearSpec));
+      this.updateView();
     });
   }
 
@@ -118,11 +125,21 @@ export class PublicHolidayComponent implements OnInit {
     }
   }
 
-  publicHolidayError(absences: Absence[], publicHoliday: PublicHoliday){
+  isPublicHolidayNotInYear(publicHoliday: PublicHoliday){
+    if(publicHoliday.Date >= this.currentHolidayYearSpec.StartDate && publicHoliday.Date <= this.currentHolidayYearSpec.EndDate){
+      return false;
+    }
+    else return true;
+  }
+
+  publicHolidayError(absences: Absence[], publicHoliday: PublicHoliday, errorNumber: number){
     let dialogRef = this.dialog.open(PublicholidayCreateErrorComponent, {
       data: {
-        errorMessage: 'Der blev fundet dage med fraværskoder overløbende med den angivede helligdag.',
-        errorHandleMessage: 'Vil du fjerne de ovennævnte fraværskoder',
+        errorNumber: errorNumber,
+        errorMessage1: 'Der blev fundet dage med fraværskoder overløbende med den angivede helligdag.',
+        errorHandleMessage1: 'Vil du fjerne de ovennævnte fraværskoder',
+        errorMessage2: 'Den pågælende helligdag ligger ikke i samme ferieår som det angivne.',
+        errorHandleMessage2: 'Prøv igen.',
         publicHoliday: publicHoliday,
         absences: absences,
       },

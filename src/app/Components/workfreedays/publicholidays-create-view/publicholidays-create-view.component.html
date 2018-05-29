@@ -3,14 +3,29 @@
     <h2><strong>Opret Helligdag</strong></h2>
     <hr>
   </div>
-  <form [formGroup]="publicHolidayGroup" (ngSubmit)="createPublicHoliday()" novalidate>
-    <label><b>Vælg dato:</b>
-      <input type="date" formControlName="date">
+  <form [formGroup]="publicHolidayGroup" (ngSubmit)="createPublicHoliday()">
+    <label class="center-block col-md-12"><b>Vælg dato:</b>
+      <input class="form-control"
+             type="date"
+             formControlName="date"
+             [ngClass]="{'is-invalid': isInvalid('date'), 'is-valid': isValid('date')}">
+     <div *ngIf="isInvalid('date')" class="invalid-feedback">
+        <div *ngIf="publicHolidayGroup.controls['date'].errors">
+          Du skal angive en dato.
+        </div>
+      </div>
     </label>
-    <label><b>Navn på hellidag:</b>
-      <input type="text" formControlName="name">
+    <label class="center-block col-md-12"><b>Navn på hellidag:</b>
+      <input class="form-control"
+             placeholder="Angiv navn på helligdag"
+             formControlName="name"
+             [ngClass]="{'is-invalid': isInvalid('name'), 'is-valid': isValid('name')}">
+      <div *ngIf="isInvalid('name')" class="invalid-feedback">
+        <div *ngIf="publicHolidayGroup.controls['name'].errors.required">
+          Du skal angive et navn på helligdagen.
+        </div>
+      </div>
     </label>
-    <button class="btn btn-success" type="submit">Opret</button>
+    <button [disabled]="publicHolidayGroup.invalid" class="btn btn-success" type="submit">Opret</button>
   </form>
-
 </div>

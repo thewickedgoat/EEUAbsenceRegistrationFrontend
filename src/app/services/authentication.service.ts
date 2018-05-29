@@ -6,7 +6,6 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {observableToBeFn} from 'rxjs/testing/TestScheduler';
 
 const url = environment.apiEndPoint + 'Account';
-const jwt = environment.jwt();
 
 @Injectable()
 export class AuthenticationService {
@@ -33,10 +32,10 @@ export class AuthenticationService {
   }
 
   register(employee: Employee): Observable<Employee> {
-    return this.http.post<Employee>(url + '/' + 'Register', employee, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)});
+    return this.http.post<Employee>(url + '/' + 'Register', employee, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + environment.jwt())});
   }
 
   update(employee: Employee): Observable<Employee>{
-    return this.http.put<Employee>(url + '/' + "Update", employee, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)});
+    return this.http.put<Employee>(url + '/' + 'Update', employee, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + environment.jwt())});
   }
 }

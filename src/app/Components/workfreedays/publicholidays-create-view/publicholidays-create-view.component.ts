@@ -33,4 +33,14 @@ export class PublicholidaysCreateViewComponent implements OnInit {
     this.dialogRef.close(publicHoliday);
   }
 
+  isInvalid(controlName: string){
+    const control = this.publicHolidayGroup.controls[controlName];
+    return control.invalid && (control.dirty || control.touched);
+  }
+
+  isValid(controlName: string){
+    const control = this.publicHolidayGroup.controls[controlName];
+    return !control.invalid && (control.dirty || control.touched);
+  }
+
 }

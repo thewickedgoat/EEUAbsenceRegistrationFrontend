@@ -98,9 +98,7 @@ export class CalendarComponent implements OnInit {
           currentHolidayYearSpec.StartDate = this.dateformatingService.formatDate(currentHolidayYearSpec.StartDate);
           currentHolidayYearSpec.EndDate = this.dateformatingService.formatDate(currentHolidayYearSpec.EndDate);
           this.currentHolidayYearSpec = currentHolidayYearSpec;
-          console.log(this.employee.HolidayYears);
           const currentHolidayYear = this.employee.HolidayYears.find(x => x.CurrentHolidayYear.Id === this.currentHolidayYearSpec.Id);
-          console.log(currentHolidayYear);
           this.currentHolidayYear = currentHolidayYear;
           this.formatPublicHolidaysAndWorkfreeDays();
           this.initData();

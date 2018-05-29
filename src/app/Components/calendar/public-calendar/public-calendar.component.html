@@ -1,14 +1,11 @@
 <app-toolbar></app-toolbar>
-<div *ngIf="!departments && !currentHolidayYearSpec">
-  asdfasdfasdfasdf
-</div>
-<div *ngIf="departments != null && currentHolidayYearSpec != null" >
+<div *ngIf="departments != null && currentHolidayYearSpec != null && currentMonthDate != null" >
   <div class="container">
     <div class="row" style="text-align: center">
       <div class="col-md-12" >
         <hr>
-        <h2>Månedsoversigt for {{monthNames[currentDate.getMonth()]}} {{currentDate.getFullYear()}}</h2>
-        <a style="font-size: larger "><b><strong>For ferieåret {{holidayYearStartDate.getFullYear()}} - {{holidayYearEndDate.getFullYear()}}</strong></b></a>
+        <h2>Månedsoversigt for {{monthNames[currentMonthDate.getMonth()]}} {{currentMonthDate.getFullYear()}}</h2>
+        <a style="font-size: larger "><b><strong>For ferieåret {{currentHolidayYearSpec.StartDate.getFullYear()}} - {{currentHolidayYearSpec.EndDate.getFullYear()}}</strong></b></a>
         <hr>
       </div>
     </div>
@@ -34,7 +31,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12" align="center">
-        <h4>{{monthNames[currentDate.getMonth()]}}</h4>
+        <h4>{{monthNames[currentMonthDate.getMonth()]}}</h4>
       </div>
     </div>
     <div *ngFor="let department of departments">
@@ -44,26 +41,26 @@
             <h5><b>{{department.Name}}</b></h5>
           </div>
         </div>
-          <div class="col-md-10" >
-            <div class="row">
-              <div *ngFor="let day of daysInCurrentMonth">
-                <div class="monthDay" >
-                  {{day.getDate()}}
-                </div>
+        <div class="col-md-10" >
+          <div class="row">
+            <div *ngFor="let day of daysInCurrentMonth">
+              <div class="monthDay" >
+                {{day.getDate()}}
               </div>
             </div>
           </div>
+        </div>
       </div>
       <div class="row" style="align-content: center">
         <div *ngFor="let employee of department.Employees; let i = index" class="col-lg-12">
-          <app-common-calendar-view *ngIf="employeeIsInCurrentHolidayYear(employee)"
+          <app-public-calendar-view *ngIf="employeeIsInCurrentHolidayYear(employee)"
                                     (emitter)="goToCalendar($event)"
                                     [powerOfTwo]="i"
                                     [employee]="employee"
                                     [publicHolidays]="currentHolidayYearSpec.PublicHolidays"
                                     [absencesInCurrentMonth]="getAbsencesInCurrentMonth(employee)"
                                     [daysInCurrentMonth]="daysInCurrentMonth"
-          ></app-common-calendar-view>
+          ></app-public-calendar-view>
         </div>
       </div>
     </div>

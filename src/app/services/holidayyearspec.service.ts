@@ -5,7 +5,6 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {HolidayYearSpec} from '../entities/holidayYearSpec';
 
 const url = environment.apiEndPoint + 'holidayyearspec/';
-const jwt = environment.jwt();
 
 @Injectable()
 export class HolidayYearSpecService {
@@ -15,23 +14,23 @@ export class HolidayYearSpecService {
   ) { }
 
   post(holidayYearSpec: HolidayYearSpec): Observable<HolidayYearSpec> {
-    return this.http.post<HolidayYearSpec>(url + 'Post', holidayYearSpec, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)});
+    return this.http.post<HolidayYearSpec>(url + 'Post', holidayYearSpec, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + environment.jwt())});
   }
 
   put(holidayYearSpec: HolidayYearSpec): Observable<HolidayYearSpec> {
-    return this.http.put<HolidayYearSpec>(url + 'Put' + '/' + holidayYearSpec.Id, holidayYearSpec, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)});
+    return this.http.put<HolidayYearSpec>(url + 'Put' + '/' + holidayYearSpec.Id, holidayYearSpec, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + environment.jwt())});
   }
 
   getById(id: number): Observable<HolidayYearSpec>{
-    return this.http.get<HolidayYearSpec>(url + 'GetById' + '/' + id, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)});
+    return this.http.get<HolidayYearSpec>(url + 'GetById' + '/' + id, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + environment.jwt())});
   }
 
   getAll(): Observable<HolidayYearSpec[]> {
-    return this.http.get<HolidayYearSpec[]>(url + 'GetAll', {headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)});
+    return this.http.get<HolidayYearSpec[]>(url + 'GetAll', {headers: new HttpHeaders().set('Authorization', 'Bearer ' + environment.jwt())});
   }
 
   delete(id: number): Observable<any> {
-    return this.http.delete<any>(url + 'Delete' + '/' + id, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)});
+    return this.http.delete<any>(url + 'Delete' + '/' + id, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + environment.jwt())});
   }
 
 }
