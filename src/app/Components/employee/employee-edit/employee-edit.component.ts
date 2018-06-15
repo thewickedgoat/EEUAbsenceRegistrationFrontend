@@ -54,7 +54,10 @@ export class EmployeeEditComponent implements OnInit {
 
   initData(){
     this.route.paramMap.switchMap(params => this.employeeService.getById(+params.get('id')))
-      .subscribe(employee => {this.employee = employee; this.createFormgroup();});
+      .subscribe(employee => {
+        this.employee = employee;
+        this.createFormgroup();
+      });
     this.departmentService.getAll().subscribe(departments => this.departments = departments);
   }
 
@@ -65,12 +68,16 @@ export class EmployeeEditComponent implements OnInit {
     this.location.back()
   }
 
+  test(){
+    console.log(this.employee.Department);
+    console.log(this.employee.EmployeeRole);
+  }
   /**
    * Updates the employee
    */
   updateEmployee(){
-    this.authenticationService.update(this.employee).subscribe(() => {
-    });
+    //this.authenticationService.update(this.employee).subscribe(() => {
+    //});
     this.employeeService.put(this.employee).subscribe(() => {
     });
   }

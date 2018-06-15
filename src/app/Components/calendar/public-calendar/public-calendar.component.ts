@@ -7,6 +7,8 @@ import {HolidayYearSpecService} from '../../../services/holidayyearspec.service'
 import {EmployeeService} from '../../../services/employee.service';
 import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
 import {Department} from '../../../entities/department';
+import {Absence} from '../../../entities/absence';
+import {Month} from '../../../entities/month';
 
 @Component({
   selector: 'app-public-calendar',
@@ -19,6 +21,7 @@ export class PublicCalendarComponent implements OnInit {
   monthNames = ["Januar", "Februar", "Marts", "April", "Maj", "Juni", "Juli", "August", "September", "Oktober", "November", "December"];
   departments: Department[];
   loggedInUser = JSON.parse(sessionStorage.getItem('currentEmployee'));
+  monthsInHolidayYear: number[];
 
   currentHolidayYearSpec: HolidayYearSpec;
 
@@ -45,11 +48,23 @@ export class PublicCalendarComponent implements OnInit {
     this.formatPublicHolidays();
     this.daysInCurrentMonth = new Array<Date>();
     this.daysInMonth();
+    this.getNumberOfMonthsInHolidayYear();
     this.departmentService.getAll().subscribe(departments => {
       this.departments = departments;
     });
   }
 
+  getNumberOfMonthsInHolidayYear(){
+    this.monthsInHolidayYear = [];
+    const startDate = this.currentHolidayYearSpec.StartDate;
+    let dateToIterate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+    const endDate = this.currentHolidayYearSpec.EndDate;
+    do{
+      this.monthsInHolidayYear.push(dateToIterate.getMonth());
+      dateToIterate.setMonth(dateToIterate.getMonth()+1);
+    }
+    while(dateToIterate < endDate);
+  }
 
   employeeIsInCurrentHolidayYear(employee: Employee){
     const holidayYears = employee.HolidayYears;

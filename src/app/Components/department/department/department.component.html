@@ -1,5 +1,16 @@
 <div class="col-md-12">
-  <div><b><strong>{{department.Name}}</strong></b></div>
+  <div class="row">
+    <div *ngIf="isAdmin()">
+      <button class="btn btn-sm btn-danger" (click)="deleteDepartment($event)">
+        <i class="fa fa-trash-o" aria-hidden="true"></i>
+      </button>
+      <button class="btn btn-sm btn-warning" (click)="edit($event)">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+      </button>
+    </div>
+    <i class="fa fa-building-o" aria-hidden="true"></i><b><strong> {{department.Name}}</strong></b>
+
+  </div>
   <div class="row" *ngFor="let employee of department.Employees">
     <div *ngIf="employee.EmployeeRole != admin()">
       <app-employee [employee]="employee"

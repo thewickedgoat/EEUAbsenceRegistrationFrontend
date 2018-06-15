@@ -63,12 +63,10 @@ export class WorkfreedaysComponent implements OnInit {
       }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('ahva');
       publicHoliday = result;
       if(publicHoliday != null){
         const absencesInTotal = this.absencesInTotal;
         if(absencesInTotal.length != null){
-          console.log('eat dis');
           const absenceOnPublicHoliday = absencesInTotal.filter(x => x.Date.getFullYear() === publicHoliday.Date.getFullYear()
             && x.Date.getMonth() === publicHoliday.Date.getMonth() && x.Date.getDate() === publicHoliday.Date.getDate());
           if(absenceOnPublicHoliday.length > 0){
@@ -77,7 +75,6 @@ export class WorkfreedaysComponent implements OnInit {
           }
           else {
             this.publicHolidayService.post(publicHoliday).subscribe( ph => {
-              console.log('eat dis2');
               this.updateView();
             });
           }

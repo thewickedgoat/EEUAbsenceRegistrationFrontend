@@ -16,8 +16,6 @@ export class EmployeeComponent implements OnInit {
 
   loggedInUser: Employee;
 
-  employeeToDelete: Employee;
-
   @Output()
   emitter = new EventEmitter();
 

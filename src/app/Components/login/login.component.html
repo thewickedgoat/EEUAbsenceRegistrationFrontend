@@ -1,45 +1,49 @@
-<div class="container">
-  <div class="row">
-    <div class="col-md-12">
-      <h4>Login her</h4>
-    </div>
-    <div class="col-md-12">
-      <form [formGroup]="loginGroup" (ngSubmit)="loginEmployee($event)" novalidate>
-        <div class="form-group">
-          <label class="center-block col-md-12">Brugernavn:
-            <input class="form-control"
-                   placeholder="Brugernavn her"
-                   [ngClass]="{'is-invalid': nameIsInvalid('userName'), 'is-valid': nameIsValid('userName')}"
-                   formControlName="userName">
-            <div *ngIf="nameIsInvalid('userName')" class="invalid-feedback">
-              <div *ngIf="loginGroup.controls['userName'].errors.required">
-                Du skal angive et brugernavn.
+<div class="container" style="align-content: center">
+  <div class="col-md-12 mainblock">
+    <div class="row">
+      <div class="col-md-12" style="text-align: center">
+        <h4><strong>Login</strong></h4>
+      </div>
+      <div class="col-md-12">
+        <form [formGroup]="loginGroup" (ngSubmit)="loginEmployee($event)" novalidate>
+          <div class="form-group">
+            <label class="center-block col-md-12"><b>Brugernavn:</b>
+              <input class="form-control textfield"
+                     placeholder="Brugernavn her"
+                     [ngClass]="{'is-invalid': nameIsInvalid('userName'), 'is-valid': nameIsValid('userName')}"
+                     formControlName="userName">
+              <div *ngIf="nameIsInvalid('userName')" class="invalid-feedback">
+                <div *ngIf="loginGroup.controls['userName'].errors.required">
+                  Du skal angive et brugernavn.
+                </div>
               </div>
-            </div>
-          </label>
-          <label class="center-block col-md-12">Adgangskode:
-            <input class="form-control"
-                   type="password"
-                   id="password"
-                   placeholder="Adgangskode her"
-                   [ngClass]="{'is-invalid': nameIsInvalid('password'), 'is-valid': nameIsValid('password')}"
-                   formControlName="password">
-            <div *ngIf="nameIsInvalid('password')" class="invalid-feedback">
-              <div *ngIf="loginGroup.controls['password'].errors.required">
-                Du skal angive en adgangskode.
+            </label>
+            <label class="center-block col-md-12"><b>Adgangskode:</b>
+              <input class="form-control textfield"
+                     type="password"
+                     id="password"
+                     placeholder="Adgangskode her"
+                     [ngClass]="{'is-invalid': nameIsInvalid('password'), 'is-valid': nameIsValid('password')}"
+                     formControlName="password">
+              <div *ngIf="nameIsInvalid('password')" class="invalid-feedback">
+                <div *ngIf="loginGroup.controls['password'].errors.required">
+                  Du skal angive en adgangskode.
+                </div>
               </div>
+            </label>
+            <div class="col-md-12" style="text-align: center">
+              <button [disabled]="loginGroup.invalid" type="submit" class="btn btn-info">
+                <i class="fa fa-sign-in" aria-hidden="true">Login</i>
+              </button>
             </div>
-          </label>
-          <button [disabled]="loginGroup.invalid" type="submit" class="btn btn-info">
-            <i class="fa fa-sign-in" aria-hidden="true">Login</i>
-          </button>
-        </div>
-      </form>
+          </div>
+        </form>
+      </div>
     </div>
+    <div *ngIf="loggingIn" class="col-lg-12" style="text-align: center">
+      <i class="fa fa-spinner fa-spin"></i>
+      Logger ind...
+    </div>
+    <ngb-alert *ngIf="loginError" (close)="close()" type="danger">Forkert adgangskode eller password</ngb-alert>
   </div>
-  <div *ngIf="loggingIn" class="col-lg-12">
-    <i class="fa fa-spinner fa-spin"></i>
-    Logger ind...
-  </div>
-  <ngb-alert *ngIf="loginError" (close)="close()" type="danger">Forkert adgangskode eller password</ngb-alert>
 </div>

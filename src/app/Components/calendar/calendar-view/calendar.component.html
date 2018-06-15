@@ -94,7 +94,7 @@
       (emitter)="reloadHolidayYearAndMonth()"
       (vacationLimitCheck)="resetVacationLimit()"
       (addHoliday)="addHoliday($event)"></app-calendar-view>
-        <ngb-alert *ngIf="vacationLimitReachedError" (close)="close()" type="danger">Du har ikke nok resterende ferie/feriefridage til at kunne gøre dette</ngb-alert>
+        <ngb-alert *ngIf="vacationLimitReachedError" (close)="close()" type="danger">OBS: Du har tilføjet mere ferie end du har optjent!</ngb-alert>
       </div>
     <div class="absenceTypes col-sm-2">
       <app-status-controller (emitter)="setStatus($event)"

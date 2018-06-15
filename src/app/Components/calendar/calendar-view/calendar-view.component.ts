@@ -176,13 +176,15 @@ export class CalendarViewComponent implements OnInit {
           }
         }
         else {
-          let absenceStatusCode = currentAbsence.Status.StatusCode;
-          if(this.isStatusVacationRelated(absenceStatusCode)){
-            this.updateRemainingVacation(currentAbsence, false,null);
-            this.deleteAbsence(currentAbsence);
-          }
-          else{
-            this.deleteAbsence(currentAbsence);
+          if(currentAbsence != null){
+            let absenceStatusCode = currentAbsence.Status.StatusCode;
+            if(this.isStatusVacationRelated(absenceStatusCode)){
+              this.updateRemainingVacation(currentAbsence, false,null);
+              this.deleteAbsence(currentAbsence);
+            }
+            else{
+              this.deleteAbsence(currentAbsence);
+            }
           }
         }
       }

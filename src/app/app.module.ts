@@ -68,6 +68,7 @@ import { HolidayyearEmployeeViewComponent } from './Components/holidayyear/holid
 import {DateformatingService} from './services/dateformating.service';
 import { PublicCalendarComponent } from './Components/calendar/public-calendar/public-calendar.component';
 import { PublicCalendarViewComponent } from './Components/calendar/public-calendar/public-calendar-view.component';
+import { DepartmentDeleteDialogComponent } from './Components/department/department-delete-dialog/department-delete-dialog.component';
 
 
 const routes: Routes = [
@@ -138,6 +139,7 @@ const routes: Routes = [
     HolidayyearEmployeeViewComponent,
     PublicCalendarComponent,
     PublicCalendarViewComponent,
+    DepartmentDeleteDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -153,6 +155,7 @@ const routes: Routes = [
   ],
   entryComponents: [
     EmployeeDeleteDialogComponent,
+    DepartmentDeleteDialogComponent,
     WorkfreedaysCreateViewComponent,
     PublicholidaysCreateViewComponent,
     UniversalErrorCatcherComponent,

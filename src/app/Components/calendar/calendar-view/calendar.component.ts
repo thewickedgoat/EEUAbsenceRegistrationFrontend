@@ -170,14 +170,20 @@ export class CalendarComponent implements OnInit {
   }
 
 
+  /**
+   * Selects the current holidayYearSpec and redicects to the first month in that year.
+   * @param {number} id
+   */
   selectHolidayYear(id: number){
     let selectedHolidayYearSpec = this.holidayYearSpecs.find(x => x.Id === id);
     const startDate = selectedHolidayYearSpec.StartDate;
-    console.log(startDate);
     this.router.navigateByUrl('calendar/' + this.employee.Id + '/' + startDate.getFullYear() + '/' + startDate.getMonth());
     this.initData();
   }
 
+  /**
+   * Refreshes the view.
+   */
   refreshCalendar()
   {
     this.initData();
@@ -226,17 +232,14 @@ export class CalendarComponent implements OnInit {
     if(this.isHolidayFreedaysAboutToHitLimit(statusCode, absenceStatus, holidayFreedaysUsed) ||
       this.isHolidayAboutToHitLimit(statusCode, absenceStatus, holidaysUsed)){
       this.error();
-      return;
 
     }
-    else{
-      this.deleteHoliday(absence);
-      //ugly fix - will change later
-      setTimeout(() =>{
-        absence.Status = this.status;
-        this.addHoliday(absence);
-      }, 100);
-    }
+    this.deleteHoliday(absence);
+    //ugly fix - will change later
+    setTimeout(() =>{
+      absence.Status = this.status;
+      this.addHoliday(absence);
+    }, 100);
   }
 
   //skal flyttes til controlleren
@@ -253,7 +256,6 @@ export class CalendarComponent implements OnInit {
       holidaySpent = holidayUsed+wholeDay;
       if(this.vacationLimitHit(holidaySpent, null)){
         this.error();
-        return;
       }
       holidayYear.HolidaysUsed = holidaySpent;
     }
@@ -261,7 +263,6 @@ export class CalendarComponent implements OnInit {
       holidayFreedaysSpent = holidayFreedaysUsed+wholeDay;
       if(this.vacationLimitHit(null, holidayFreedaysSpent)){
         this.error();
-        return;
       }
       holidayYear.HolidayFreedaysUsed = holidayFreedaysSpent;
     }
@@ -269,7 +270,6 @@ export class CalendarComponent implements OnInit {
       let holidaySpent = holidayUsed+halfDay;
       if(this.vacationLimitHit(holidaySpent, null)){
         this.error();
-        return;
       }
       holidayYear.HolidaysUsed = holidaySpent;
     }
@@ -277,7 +277,6 @@ export class CalendarComponent implements OnInit {
       let holidayFreedaysSpent = holidayFreedaysUsed+halfDay;
       if(this.vacationLimitHit(null, holidayFreedaysSpent)){
       this.error();
-        return;
       }
       holidayYear.HolidayFreedaysUsed = holidayFreedaysSpent;
     }

@@ -1,0 +1,43 @@
+.empStats{
+  margin: -1.5px;
+}
+.nameHeader{
+  margin: 0.5px;
+}
+
+.department{
+  background-color: darkgray;
+  border-style: solid;
+  border-width: 2px;
+  border-color: black;
+}
+
+.filler{
+  height: 24px;
+}
+
+.titleHeader{
+  margin: 0.5px;
+}
+
+.outerShell{
+
+}
+
+.innerShell{
+  background-color: #2e353d;
+  border-style: solid;
+  border-width: 2px;
+  border-color: black;
+}
+
+.innerFiller{
+  height: 24px;
+}
+
+.titleCover{
+  background-color: darkgray;
+  border-style: solid;
+  border-width: 2px;
+  border-color: black;
+}

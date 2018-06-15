@@ -71,10 +71,12 @@ export class PublicHolidayComponent implements OnInit {
         if(absencesInTotal.length != null){
           const absenceOnPublicHoliday = absencesInTotal.filter(x => x.Date.getFullYear() === publicHoliday.Date.getFullYear()
             && x.Date.getMonth() === publicHoliday.Date.getMonth() && x.Date.getDate() === publicHoliday.Date.getDate());
+          //If the public holiday isn't within the start- or enddate of the holidayYearSpec
           if(this.isPublicHolidayNotInYear(publicHoliday) === true){
             this.publicHolidayError(absenceOnPublicHoliday, publicHoliday, 2);
             return;
           }
+          //If the public holiday is overlapping with absences already created
           else if(absenceOnPublicHoliday.length > 0 ){
             this.publicHolidayError(absenceOnPublicHoliday, publicHoliday, 1);
             return;

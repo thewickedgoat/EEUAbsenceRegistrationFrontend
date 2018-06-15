@@ -8,6 +8,8 @@ import {EmployeeService} from '../../../services/employee.service';
 import {MatDialog} from '@angular/material';
 import {EmployeeDeleteDialogComponent} from '../employee-delete-dialog/employee-delete-dialog.component';
 import {HolidayYearSpecService} from '../../../services/holidayyearspec.service';
+import {DepartmentDeleteDialogComponent} from '../../department/department-delete-dialog/department-delete-dialog.component';
+import {UniversalErrorCatcherComponent} from '../../Errors/universal-error-catcher/universal-error-catcher.component';
 
 
 @Component({
@@ -21,7 +23,6 @@ export class EmployeeListComponent implements OnInit {
   loggedInUser: Employee;
   departments: Department[];
   employees: Employee[];
-  employeeDeleted: boolean = false;
 
   constructor(private employeeService: EmployeeService,
               private departmentService: DepartmentService,
@@ -43,13 +44,45 @@ export class EmployeeListComponent implements OnInit {
     this.employeeService.delete(id).subscribe(()=> this.initData());
   }
 
+  /**
+   * Based on the ID of the emitted method, deletes an department with the given Id
+   * @param id
+   */
+  deleteDepartmentFromList(id: number){
+    this.departmentService.delete(id).subscribe(()=> this.initData());
+  }
 
-  deleteRequested(employeeId: number): void{
+
+  deleteEmployeeFromDepartment(employeeId: number): void{
     let employee = this.employees.find(x => x.Id === employeeId);
     let dialogRef = this.dialog.open(EmployeeDeleteDialogComponent, {data: {employee: employee}});
     dialogRef.afterClosed().subscribe(result => {
       if(result === true){
         this.deleteEmployeeFromList(employeeId);
+      }
+    });
+  }
+
+  deleteDepartment(departmentId: number){
+    const department = this.departments.find(x => x.Id === departmentId);
+    let dialogRef = this.dialog.open(DepartmentDeleteDialogComponent, {data: {department: department}});
+    dialogRef.afterClosed().subscribe(result => {
+      if(result === true){
+        if(department.Employees.length > 0){
+          let dialogRef2 = this.dialog.open(UniversalErrorCatcherComponent, {
+            data: {
+              errorMessage: 'Der er stadig medarbejdere tilknyttet denne afdeling.',
+              errorHandler: 'Slet/Flyt disse fra afdelingen og prøv igen.',
+              multipleOptions: false
+            }
+          });
+          dialogRef2.afterClosed().subscribe(() => {
+            return;
+          });
+        }
+        else {
+          this.deleteDepartmentFromList(departmentId);
+        }
       }
     });
   }

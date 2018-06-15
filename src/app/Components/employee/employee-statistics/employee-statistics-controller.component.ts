@@ -23,7 +23,6 @@ export class EmployeeStatisticsControllerComponent implements OnInit {
   holidayYearStart: number;
 
   selectedHolidayYearSpec: HolidayYearSpec;
-  holidayYearSpecs: HolidayYearSpec[];
   currentMonthNumber: number = 0;
   monthView: boolean = false;
   monthSelected: boolean = false;
@@ -31,18 +30,13 @@ export class EmployeeStatisticsControllerComponent implements OnInit {
   statuses: Status[];
 
   constructor(private statusSerivce: StatusService,
-              private holidayYearSpecService: HolidayYearSpecService,
               private dateformatingService: DateformatingService) { }
 
   ngOnInit() {
+    this.selectedHolidayYearSpec = JSON.parse(sessionStorage.getItem('currentHolidayYearSpec'));
     this.toggleButtonText = 'Se månedsoversigt';
     this.statusSerivce.getAll().subscribe(statuses => {
       this.statuses = this.sortStatuses(statuses);
-    });
-    this.holidayYearSpecService.getAll().subscribe(specs => {
-      this.holidayYearSpecs = specs;
-      const date = new Date();
-
     });
   }
 
@@ -65,7 +59,6 @@ export class EmployeeStatisticsControllerComponent implements OnInit {
   employeeIsInCurrentHolidayYear(employee: Employee){
     const holidayYears = employee.HolidayYears;
     if(holidayYears != null){
-      console.log('hai');
       const holidayYear = holidayYears.find(x => x.CurrentHolidayYear.Id === this.selectedHolidayYearSpec.Id);
       if(holidayYear === null){
         return false;

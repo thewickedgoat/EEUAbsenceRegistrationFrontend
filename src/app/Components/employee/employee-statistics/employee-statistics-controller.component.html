@@ -1,93 +1,114 @@
-<div class="container">
+<div class="container outerShell">
   <div class="row" style="text-align: center">
     <div class="col-sm-12">
       <h1><b><strong>Fraværsoversigt for {{holidayYearStart}} - {{holidayYearStart+1}}</strong></b></h1>
+      <div>
+        <button type="button" class="btn btn-primary" (click)="toggleMonthYear()">
+          {{toggleButtonText}}
+        </button>
+      </div>
     </div>
   </div>
-  <div class="col-sm-12" style="border: #020203; border-style: solid;">
-    <div>
-      <button type="button" class="btn btn-primary" (click)="toggleMonthYear()">
-        {{toggleButtonText}}
-      </button>
+  <div class="col-sm-12 innerShell">
+    <div class="col-md-12 innerFiller">
+
     </div>
-    <div class="col-sm-12">
-      <div *ngIf="monthView" class="row">
-        <select #t (change)="selectMonth(t.value)">
-          <option disabled selected> -- Angiv måned --</option>
-          <option *ngFor="let monthName of monthNames; let i = index" [value]="i">
-            {{monthName.valueOf()}}
-          </option>
-        </select>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-3"><b><strong>Afdeling/Navn</strong></b></div>
-      <div class="col-md-5"><b><strong>Total dage holdt til dato/Fraværskoder</strong></b></div>
-      <div class="col-md-4">
-        <div *ngIf="!monthView" class="row">
-          <div class="col-md-4"><b><strong>Overført</strong></b></div>
-          <div class="col-md-4"><b><strong>Optjent</strong></b></div>
-          <div class="col-md-4"><b><strong>Rest</strong></b></div>
-        </div>
+    <div class="titleCover">
+      <div class="col-sm-12">
         <div *ngIf="monthView" class="row">
-          <div class="col-md-12"><b><strong>Godkendelse for denne måned:</strong></b></div>
+          <select #t (change)="selectMonth(t.value)">
+            <option disabled selected> -- Angiv måned --</option>
+            <option *ngFor="let monthName of monthNames; let i = index" [value]="i">
+              {{monthName.valueOf()}}
+            </option>
+          </select>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-3"></div>
-      <div class="col md-5">
-        <div class="row">
-          <div class="col-md-1"><b>F</b></div>
-          <div class="col-md-1"><b>FF</b></div>
-          <div class="col-md-1"><b>S</b></div>
-          <div class="col-md-1"><b>BS</b></div>
-          <div class="col-md-1"><b>K</b></div>
-          <div class="col-md-1"><b>B</b></div>
-          <div class="col-md-1"><b>SN</b></div>
+      <div class="col-md-12">
+        <div class="col-md-12">
+          <div class="row titleHeader">
+            <div class="col-md-3"><b><strong>Afdeling/Navn</strong></b></div>
+            <div class="col-md-5"><b><strong>Total dage holdt til dato/Fraværskoder</strong></b></div>
+            <div class="col-md-4">
+              <div *ngIf="!monthView" class="row">
+                <div class="col-md-4"><b><strong>Overført</strong></b></div>
+                <div class="col-md-4"><b><strong>Optjent</strong></b></div>
+                <div class="col-md-4"><b><strong>Rest</strong></b></div>
+              </div>
+              <div *ngIf="monthView" class="row">
+                <div class="col-md-12"><b><strong>Godkendelse for denne måned:</strong></b></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="col-md-4">
-        <div *ngIf="!monthView" class="row">
-          <div class="col-md-4"><b>F</b></div>
-          <div class="col-md-2"><b>F</b></div>
-          <div class="col-md-2"><b>FF</b></div>
-          <div class="col-md-2"><b>F</b></div>
-          <div class="col-md-2"><b>FF</b></div>
-        </div>
-        <div *ngIf="monthView" class="row">
-          <div class="col-md-4"><b><strong>Medarb.</strong></b></div>
-          <div class="col-md-4"><b><strong>Chef</strong></b></div>
-          <div class="col-md-4"><b><strong>Admin</strong></b></div>
+      <div class="col-md-12">
+        <div class="col-md-12">
+          <div class="row nameHeader">
+            <div class="col-md-3"></div>
+            <div class="col md-5">
+              <div class="row">
+                <div class="col-md-1"><b>F</b></div>
+                <div class="col-md-1"><b>FF</b></div>
+                <div class="col-md-1"><b>S</b></div>
+                <div class="col-md-1"><b>BS</b></div>
+                <div class="col-md-1"><b>K</b></div>
+                <div class="col-md-1"><b>B</b></div>
+                <div class="col-md-1"><b>SN</b></div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div *ngIf="!monthView" class="row">
+                <div class="col-md-4"><b>F</b></div>
+                <div class="col-md-2"><b>F</b></div>
+                <div class="col-md-2"><b>FF</b></div>
+                <div class="col-md-2"><b>F</b></div>
+                <div class="col-md-2"><b>FF</b></div>
+              </div>
+              <div *ngIf="monthView" class="row">
+                <div class="col-md-4"><b><strong>Medarb.</strong></b></div>
+                <div class="col-md-4"><b><strong>Chef</strong></b></div>
+                <div class="col-md-4"><b><strong>Admin</strong></b></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
     <div>
-      <div>
+      <div class="col-md-12">
         <div class="row" *ngFor="let department of departments">
-          <div class="col-md-12">
+          <div class="col-md-12 department">
             <b><strong>{{department.Name}}</strong></b>
-          </div>
-          <div *ngIf="monthView===false" class="col-md-12">
-            <div *ngFor="let employee of department.Employees">
-              <app-employee-year-statistics *ngIf="employee.EmployeeRole != 2 && employeeIsInCurrentHolidayYear(employee)"
-                                            [employee]="employee"
-                                            [currentHolidayYear]="getHolidayYearForEmployee(employee)"
-                                            [statuses]="statuses"
-              ></app-employee-year-statistics>
+            <div *ngIf="monthView===false" class="col-md-12">
+              <div *ngFor="let employee of department.Employees">
+                <div class="empStats" *ngIf="employee.EmployeeRole != 2 && employeeIsInCurrentHolidayYear(employee)">
+                  <app-employee-year-statistics
+                    [employee]="employee"
+                    [currentHolidayYear]="getHolidayYearForEmployee(employee)"
+                    [statuses]="statuses"
+                  ></app-employee-year-statistics>
+                </div>
+              </div>
             </div>
-          </div>
-          <div *ngIf="monthView===true && monthSelected===true" class="col-md-12">
-            <div *ngFor="let employee of department.Employees">
-              <app-employee-month-statistics *ngIf="employee.EmployeeRole != 2"
-                [employee]="employee"
-                [currentMonth]="getCurrentMonthForEmployee(employee, currentMonthNumber)"
-                [statuses]="statuses"
-              ></app-employee-month-statistics>
+            <div *ngIf="monthView===true && monthSelected===true" class="col-md-12">
+              <div *ngFor="let employee of department.Employees">
+                <app-employee-month-statistics *ngIf="employee.EmployeeRole != 2"
+                                               [employee]="employee"
+                                               [currentMonth]="getCurrentMonthForEmployee(employee, currentMonthNumber)"
+                                               [statuses]="statuses"
+                ></app-employee-month-statistics>
+              </div>
+            </div>
+            <div class="col-md-12 filler">
+
             </div>
           </div>
         </div>
       </div>
+    </div>
+    <div class="col-md-12 innerFiller">
+
     </div>
   </div>
 </div>

@@ -24,7 +24,8 @@
       <div *ngFor="let department of departments">
         <div>
           <app-department [department]="department"
-                          (emitter)="deleteRequested($event)"
+                          (deleteEmployeeEmitter)="deleteEmployeeFromDepartment($event)"
+                          (deleteDepartmentEmitter)="deleteDepartment($event)"
           ></app-department>
         </div>
       </div>

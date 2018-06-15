@@ -154,6 +154,43 @@ export class HolidayyearAdministrationComponent implements OnInit {
     });
   }
 
+  createHolidayYearSpec(){
+    let dialogRef = this.dialog.open(HolidayyearCreateViewComponent, {
+      data: {
+
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result != null){
+        if(this.isStartEndDateWrong(result)){
+          this.wrongStartEndDateError();
+          return;
+        }
+        //if(this.isOverlapping(result)){
+        //  this.overlappingError();
+        //  return;
+        //}
+        if(this.isMoreThanWholeYear(result)){
+          this.isNotWholeYearError();
+          return;
+        }
+        else{
+          this.holidayYearSpecService.post(result).subscribe(hys => {
+            console.log(hys);
+            this.currentHolidayYearSpec = hys;
+            sessionStorage.setItem('currentHolidayYearSpec', JSON.stringify(hys));
+            location.reload();
+          })
+        }
+      }
+    });
+  }
+
+  /**
+   * Checks if the holidayYearSpecToCreate is overlapping with an earlier holidayYearSpec
+   * @param {HolidayYearSpec} holidayYearSpecToCreate
+   * @returns {boolean}
+   */
   isOverlapping(holidayYearSpecToCreate: HolidayYearSpec){
     const holidayYearSpecs = this.holidayYearSpecs;
     for(let holidayYearSpec of holidayYearSpecs){
@@ -171,29 +208,21 @@ export class HolidayyearAdministrationComponent implements OnInit {
    * @param {HolidayYearSpec} holidayYearSpecToCreate
    * @returns {boolean}
    */
-  isNotWholeYear(holidayYearSpecToCreate: HolidayYearSpec){
-    const january = 0;
-    const december = 11;
+  isMoreThanWholeYear(holidayYearSpecToCreate: HolidayYearSpec){
+    let numberOfMonths = 0;
+    let wholeYear = 12;
     const startDate = holidayYearSpecToCreate.StartDate;
+    let dateToIterate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     const endDate = holidayYearSpecToCreate.EndDate;
-    /*If the holidayyear is between two years (fx. 01.05.2017 - 30.04.2018)*/
-    if(startDate.getMonth() >= endDate.getMonth()){
-      console.log('kaaaaay');
-      if(endDate.getMonth() != startDate.getMonth()-1 ||
-        startDate.getFullYear() >= endDate.getFullYear()
-        || endDate.getFullYear() > startDate.getFullYear()+1)
-      {
-        console.log('kaaaaay2');
-        return true;
-      }
+    do{
+      numberOfMonths++;
+      dateToIterate.setMonth(dateToIterate.getMonth()+1)
     }
-    /*If the holidayyear only spans one year (fx. 01.01.2017 - 31.12.2017*/
-    else if(startDate.getMonth() < endDate.getMonth()){
-      if(startDate.getMonth() != january || endDate.getMonth() != december || startDate.getFullYear() != endDate.getFullYear()){
-        return true;
-      }
+    while(dateToIterate < endDate);
+    if(numberOfMonths > wholeYear){
+      return true;
     }
-    return false;
+    else return false;
   }
 
   /**
@@ -209,39 +238,7 @@ export class HolidayyearAdministrationComponent implements OnInit {
     else return false;
   }
 
-  createHolidayYearSpec(){
-    let dialogRef = this.dialog.open(HolidayyearCreateViewComponent, {
-      data: {
-
-      }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if(result != null){
-        if(this.isStartEndDateWrong(result)){
-          this.wrongStartEndDate();
-          return;
-        }
-        if(this.isOverlapping(result)){
-          this.overlappingError();
-          return;
-        }
-        if(this.isNotWholeYear(result)){
-          this.isNotWholeYearError();
-          return;
-        }
-        else{
-          this.holidayYearSpecService.post(result).subscribe(hys => {
-            console.log(hys);
-            this.currentHolidayYearSpec = hys;
-            sessionStorage.setItem('currentHolidayYearSpec', JSON.stringify(hys));
-            location.reload();
-          })
-        }
-      }
-    });
-  }
-
-  wrongStartEndDate(){
+  wrongStartEndDateError(){
     let dialogRef = this.dialog.open(UniversalErrorCatcherComponent, {
       data: {
         errorMessage: 'Start datoen skal være lavere end Slut datoen.',
@@ -270,7 +267,7 @@ export class HolidayyearAdministrationComponent implements OnInit {
   isNotWholeYearError(){
     let dialogRef = this.dialog.open(UniversalErrorCatcherComponent, {
       data: {
-        errorMessage: 'Et ferieår kan ikke række over mere eller mindre end 12 måneder.',
+        errorMessage: 'Et ferieår kan ikke række over mere end 12 måneder.',
         errorHandler: 'Prøv igen.',
         multipleOptions: false
       }
