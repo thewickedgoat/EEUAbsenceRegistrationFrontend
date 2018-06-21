@@ -27,7 +27,7 @@ export class AuthenticationService {
   login(username, password): Observable<string>{
     const requestString = "grant_type=password&username=" + username + "&password=" + password;
     console.log(sessionStorage.getItem('token'));
-    return this.http.post<string>('http://localhost:51017/token', requestString);
+    return this.http.post<string>('http://eeudatabase20180621115928.azurewebsites.net/token', requestString);
 
   }
 

@@ -2,7 +2,6 @@ import { Component, EventEmitter, Output, OnInit, Input, ViewEncapsulation } fro
 import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
 import {Employee} from '../../../entities/Employee';
 import {MatDialog} from '@angular/material';
-import {HolidayyearEmployeeCreateViewComponent} from '../holidayyear-employee-create-view/holidayyear-employee-create-view.component';
 import {HolidayYear} from '../../../entities/HolidayYear';
 
 @Component({

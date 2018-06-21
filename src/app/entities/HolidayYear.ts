@@ -1,5 +1,5 @@
 import {Month} from './month';
-import {Employee} from './employee';
+import {Employee} from './Employee';
 import {HolidayYearSpec} from './holidayYearSpec';
 
 export class HolidayYear{

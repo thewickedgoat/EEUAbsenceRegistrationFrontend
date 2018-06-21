@@ -5,7 +5,6 @@ import {Status} from '../../../entities/status';
 import {Employee} from '../../../entities/Employee';
 import {HolidayYear} from '../../../entities/HolidayYear';
 import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
-import {HolidayYearSpecService} from '../../../services/holidayyearspec.service';
 import {DateformatingService} from '../../../services/dateformating.service';
 
 @Component({

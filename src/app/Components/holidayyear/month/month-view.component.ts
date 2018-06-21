@@ -1,7 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {Employee} from '../../../entities/Employee';
 import {Status} from '../../../entities/status';
-import {HolidayYear} from '../../../entities/HolidayYear';
 import {Month} from '../../../entities/month';
 import {Router} from '@angular/router';
 

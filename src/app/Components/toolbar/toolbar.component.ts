@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import {Employee} from '../../entities/employee';
+import {Employee} from '../../entities/Employee';
 import {EmployeeRole} from '../../entities/employeeRole.enum';
 import {AuthenticationService} from '../../services/authentication.service';
 import {Router} from '@angular/router';
 import {HolidayYearSpec} from '../../entities/holidayYearSpec';
 import {HolidayYearSpecService} from '../../services/holidayyearspec.service';
-import {DateFormatter} from '@angular/common/src/pipes/deprecated/intl';
 import {DateformatingService} from '../../services/dateformating.service';
 
 @Component({

@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {WorkfreedaysCreateViewComponent} from '../workfreedays-create-view/workfreedays-create-view.component';
 import {MatDialog} from '@angular/material';
 import {Employee} from '../../../entities/Employee';
 import {WorkfreedayService} from '../../../services/workfreeday.service';
@@ -7,7 +6,6 @@ import {EmployeeService} from '../../../services/employee.service';
 import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
 import {PublicholidaysCreateViewComponent} from '../publicholidays-create-view/publicholidays-create-view.component';
 import {PublicholidayService} from '../../../services/publicholiday.service';
-import {WorkfreedayCreateErrorComponent} from '../../Errors/workfreeday-create-error/workfreeday-create-error.component';
 import {Absence} from '../../../entities/absence';
 import {Router} from '@angular/router';
 import {PublicHoliday} from '../../../entities/publicholiday';

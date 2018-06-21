@@ -51,7 +51,7 @@ export class AbsenceConfirmationComponent implements OnInit {
 
 
   /**
-   * Approves all absences that are in the current currentMonth. Approval is based on the loggedInUser
+   * Approves all absences that are in the current currentMonth. Approval is based on the loggedInEmployee
    */
   approveAbsencePeriod(){
     if(this.isEmployee){

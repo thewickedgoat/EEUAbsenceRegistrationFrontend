@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {Department} from '../../../entities/department';
 import {EmployeeRole} from '../../../entities/employeeRole.enum';
-import {Employee} from '../../../entities/employee';
+import {Employee} from '../../../entities/Employee';
 import {Router} from '@angular/router';
 
 @Component({

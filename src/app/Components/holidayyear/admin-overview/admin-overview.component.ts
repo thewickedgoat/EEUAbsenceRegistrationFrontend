@@ -2,7 +2,6 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {DepartmentService} from '../../../services/department.service';
 import {Department} from '../../../entities/department';
-import {HolidayYear} from '../../../entities/HolidayYear';
 
 @Component({
   selector: 'app-admin-overview',

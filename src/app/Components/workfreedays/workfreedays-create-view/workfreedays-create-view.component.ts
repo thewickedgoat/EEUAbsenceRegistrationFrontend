@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Inject, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {Employee} from '../../../entities/employee';
+import {Employee} from '../../../entities/Employee';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {WorkfreeDay} from '../../../entities/workfreeDay';

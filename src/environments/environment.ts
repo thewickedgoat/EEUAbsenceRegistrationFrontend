@@ -5,7 +5,7 @@
 
   export const environment = {
     production: false,
-    apiEndPoint: 'http://localhost:51017/api/',
+    apiEndPoint: 'http://eeudatabase20180621115928.azurewebsites.net/api/', //'http://localhost:51017/api/',
     jwt () {
         const token = sessionStorage.getItem('token');
         if(token != null && token.length > 0) {

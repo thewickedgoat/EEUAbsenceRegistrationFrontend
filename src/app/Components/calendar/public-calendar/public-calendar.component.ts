@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import {Employee} from '../../../entities/employee';
+import {Employee} from '../../../entities/Employee';
 import {ActivatedRoute, Router} from '@angular/router';
 import {DepartmentService} from '../../../services/department.service';
 import {DateformatingService} from '../../../services/dateformating.service';
@@ -7,8 +7,6 @@ import {HolidayYearSpecService} from '../../../services/holidayyearspec.service'
 import {EmployeeService} from '../../../services/employee.service';
 import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
 import {Department} from '../../../entities/department';
-import {Absence} from '../../../entities/absence';
-import {Month} from '../../../entities/month';
 
 @Component({
   selector: 'app-public-calendar',

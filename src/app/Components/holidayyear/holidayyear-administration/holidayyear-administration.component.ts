@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
 import {HolidayYearSpecService} from '../../../services/holidayyearspec.service';
-import {Employee} from '../../../entities/employee';
+import {Employee} from '../../../entities/Employee';
 import {EmployeeService} from '../../../services/employee.service';
 import {HolidayYear} from '../../../entities/HolidayYear';
 import {MatDialog} from '@angular/material';
-import {WorkfreedayCreateErrorComponent} from '../../Errors/workfreeday-create-error/workfreeday-create-error.component';
 import {UniversalErrorCatcherComponent} from '../../Errors/universal-error-catcher/universal-error-catcher.component';
 import {HolidayyearEmployeeCreateViewComponent} from '../holidayyear-employee-create-view/holidayyear-employee-create-view.component';
 import {HolidayyearService} from '../../../services/holidayyear.service';
