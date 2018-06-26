@@ -57,12 +57,15 @@ export class EmployeeStatisticsControllerComponent implements OnInit {
 
   employeeIsInCurrentHolidayYear(employee: Employee){
     const holidayYears = employee.HolidayYears;
-    if(holidayYears != null){
+    if(holidayYears != null && holidayYears.length > 0){
       const holidayYear = holidayYears.find(x => x.CurrentHolidayYear.Id === this.selectedHolidayYearSpec.Id);
       if(holidayYear === null){
         return false;
       }
       else return true;
+    }
+    else {
+      return false;
     }
   }
 

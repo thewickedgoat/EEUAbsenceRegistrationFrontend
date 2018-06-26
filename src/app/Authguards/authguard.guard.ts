@@ -9,24 +9,24 @@ export class AuthguardGuard implements CanActivate {
   constructor(private authenticationService: AuthenticationService, private router: Router){
 
   }
-
+  isAuthenticated(): boolean{
+    let loginToken = this.authenticationService.getToken();
+    if(loginToken === null || loginToken.length === 0){
+      return false;
+    }
+    else return true;
+  }
 
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-
-    /**
-     * If the current session has a token attached, authentication will be approved
-     * @type {string}
-     */
-    let isLoggedInWithToken = this.authenticationService.getToken();
-    if(isLoggedInWithToken === null || isLoggedInWithToken.length === 0){
+    if(!this.isAuthenticated()){
       this.router.navigate(['/login'], {queryParams: {returnUrl: state.url}});
       return false;
-
     }
     else {
       return true;
     }
   }
+
 }

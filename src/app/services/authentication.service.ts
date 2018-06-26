@@ -3,9 +3,9 @@ import {environment} from '../../environments/environment';
 import {Employee} from '../entities/employee';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {observableToBeFn} from 'rxjs/testing/TestScheduler';
 
 const url = environment.apiEndPoint + 'Account';
+const tokenEndpoint = environment.tokenEndpoint;
 
 @Injectable()
 export class AuthenticationService {
@@ -13,7 +13,7 @@ export class AuthenticationService {
   constructor(private http: HttpClient) { }
 
   getToken(){
-    return sessionStorage.getItem('token');
+    return JSON.parse(sessionStorage.getItem('token'));
   }
 
   logout(employee: Employee): Observable<any>{
@@ -27,7 +27,7 @@ export class AuthenticationService {
   login(username, password): Observable<string>{
     const requestString = "grant_type=password&username=" + username + "&password=" + password;
     console.log(sessionStorage.getItem('token'));
-    return this.http.post<string>('http://eeudatabase20180621115928.azurewebsites.net/token', requestString);
+    return this.http.post<string>(tokenEndpoint, requestString);
 
   }
 

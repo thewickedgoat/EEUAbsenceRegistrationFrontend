@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit {
           let employeeToLogin = employees.find(x => x.UserName === username);
           sessionStorage.setItem('currentEmployee', JSON.stringify(employeeToLogin));
           this.setSelectedHolidayYearSpec();
-          this.router.navigate(['employees']);
+          this.router.navigateByUrl(this.returnUrl);
         });
       }, 3000);
     }, error => {

@@ -27,7 +27,6 @@ export class MonthComponent implements OnInit {
   constructor() {
   }
   ngOnInit() {
-    console.log('im here');
     console.log(this.holidayYear);
   }
 

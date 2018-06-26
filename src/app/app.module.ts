@@ -12,7 +12,7 @@ import { EmployeeCreateComponent } from './Components/employee/employee-create/e
 import {DepartmentService} from './services/department.service';
 import { CalendarComponent } from './Components/calendar/calendar-view/calendar.component';
 import {AbsenceService} from './services/absence.service';
-import {AuthguardGuard} from './Authorization/authguard.guard';
+import {AuthguardGuard} from './Authguards/authguard.guard';
 import { LoginComponent } from './Components/login/login.component';
 import { EmployeeEditComponent } from './Components/employee/employee-edit/employee-edit.component';
 import { DepartmentCreateComponent } from './Components/department/department-create/department-create.component';
@@ -69,23 +69,24 @@ import {DateformatingService} from './services/dateformating.service';
 import { PublicCalendarComponent } from './Components/calendar/public-calendar/public-calendar.component';
 import { PublicCalendarViewComponent } from './Components/calendar/public-calendar/public-calendar-view.component';
 import { DepartmentDeleteDialogComponent } from './Components/department/department-delete-dialog/department-delete-dialog.component';
+import {AdminGuard} from './Authguards/admin.guard';
 
 
 const routes: Routes = [
-  {path: 'employee/:id', component: EmployeeComponent},
-  {path: 'employees', component: EmployeeListComponent},
-  {path: 'department/create', component: DepartmentCreateComponent},
-  {path: 'employees/create', component: EmployeeCreateComponent},
-  {path: 'employees/profile/:id', component: EmployeeEditComponent},
-  {path: 'calendar/:id/:year/:month', component: CalendarComponent},
-  {path: 'overview/:id', component: OverviewComponent},
-  {path: 'month/:month/:yearStart/:yearEnd', component: MonthComponent},
-  {path: 'public-calendar/:month', component: PublicCalendarComponent},
+  {path: 'employee/:id', component: EmployeeComponent, canActivate: [AuthguardGuard]},
+  {path: 'employees', component: EmployeeListComponent, canActivate: [AuthguardGuard]},
+  {path: 'department/create', component: DepartmentCreateComponent, canActivate: [AuthguardGuard, AdminGuard]},
+  {path: 'employees/create', component: EmployeeCreateComponent, canActivate: [AuthguardGuard]},
+  {path: 'employees/profile/:id', component: EmployeeEditComponent, canActivate: [AuthguardGuard]},
+  {path: 'calendar/:id/:year/:month', component: CalendarComponent, canActivate: [AuthguardGuard]},
+  //{path: 'overview/:id', component: OverviewComponent, canActivate: [AuthguardGuard]},
+  //{path: 'month/:month/:yearStart/:yearEnd', component: MonthComponent, canActivate: [AuthguardGuard]},
+  {path: 'public-calendar/:month', component: PublicCalendarComponent, canActivate: [AuthguardGuard]},
   {path: 'login', component: LoginComponent},
-  {path: 'holidayyears', component: HolidayyearAdministrationComponent},
-  {path: 'stats/:yearStart', component: AdminOverviewComponent},
-  {path: 'work', component: AdministrationComponent},
-  {path: ' ', redirectTo: 'login'},
+  {path: 'holidayyears', component: HolidayyearAdministrationComponent, canActivate: [AuthguardGuard, AdminGuard]},
+  {path: 'stats/:yearStart', component: AdminOverviewComponent, canActivate: [AuthguardGuard, AdminGuard]},
+  //{path: 'work', component: AdministrationComponent, canActivate: [AuthguardGuard]},
+  {path: '**', redirectTo: 'login'}
 
 ];
 
@@ -169,6 +170,7 @@ const routes: Routes = [
     DepartmentService,
     AbsenceService,
     AuthguardGuard,
+    AdminGuard,
     AuthenticationService,
     MonthService,
     HolidayyearService,
