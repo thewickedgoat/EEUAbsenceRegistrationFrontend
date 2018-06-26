@@ -93,7 +93,7 @@
             </div>
             <div *ngIf="monthView===true && monthSelected===true" class="col-md-12">
               <div *ngFor="let employee of department.Employees">
-                <app-employee-month-statistics *ngIf="employee.EmployeeRole != 2"
+                <app-employee-month-statistics *ngIf="employee.EmployeeRole != 2 && employeeIsInCurrentHolidayYear(employee)"
                                                [employee]="employee"
                                                [currentMonth]="getCurrentMonthForEmployee(employee, currentMonthNumber)"
                                                [statuses]="statuses"
