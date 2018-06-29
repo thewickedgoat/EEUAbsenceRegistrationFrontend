@@ -10,6 +10,7 @@ import {EmployeeDeleteDialogComponent} from '../employee-delete-dialog/employee-
 import {HolidayYearSpecService} from '../../../services/holidayyearspec.service';
 import {DepartmentDeleteDialogComponent} from '../../department/department-delete-dialog/department-delete-dialog.component';
 import {UniversalErrorCatcherComponent} from '../../Errors/universal-error-catcher/universal-error-catcher.component';
+import {AuthenticationService} from '../../../services/authentication.service';
 
 
 @Component({
@@ -27,6 +28,7 @@ export class EmployeeListComponent implements OnInit {
   constructor(private employeeService: EmployeeService,
               private departmentService: DepartmentService,
               private holidayYearSpecService: HolidayYearSpecService,
+              private authenticationService: AuthenticationService,
               private router: Router,
               private dialog: MatDialog) {
 
@@ -41,6 +43,7 @@ export class EmployeeListComponent implements OnInit {
    * @param id
    */
   deleteEmployeeFromList(id: number){
+    this.authenticationService.delete(id).subscribe(id => console.log(id));
     this.employeeService.delete(id).subscribe(()=> this.initData());
   }
 

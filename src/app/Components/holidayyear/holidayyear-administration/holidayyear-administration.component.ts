@@ -79,6 +79,7 @@ export class HolidayyearAdministrationComponent implements OnInit {
   getEmployees(){
     this.employeeService.getAll().subscribe(emps => {
       this.employees = emps;
+      console.log(emps);
     });
   }
 
@@ -101,7 +102,6 @@ export class HolidayyearAdministrationComponent implements OnInit {
 
   getEmployeeHolidayYear(){
     let holidayYear = this.selectedEmployee.HolidayYears.find(x => x.CurrentHolidayYear.Id === this.currentHolidayYearSpec.Id);
-    console.log(holidayYear);
     if(!holidayYear){
       let dialogRef = this.dialog.open(UniversalErrorCatcherComponent, {
         data: {
@@ -130,11 +130,9 @@ export class HolidayyearAdministrationComponent implements OnInit {
     else if(bool === false){
       this.currentlyEditing = true;
     }
-    console.log(this.currentlyEditing);
   }
 
   createEmployeeHolidayYear(){
-    console.log(this.currentHolidayYearSpec);
     let dialogRef = this.dialog.open(HolidayyearEmployeeCreateViewComponent, {
       data: {
         employee: this.selectedEmployee,
@@ -142,9 +140,7 @@ export class HolidayyearAdministrationComponent implements OnInit {
       }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
       if(result != null){
-        console.log(result);
         this.holidayyearService.post(result).subscribe(holidayYear => {
           this.selectedHolidayYear = holidayYear;
           this.initData();
@@ -175,7 +171,6 @@ export class HolidayyearAdministrationComponent implements OnInit {
         }
         else{
           this.holidayYearSpecService.post(result).subscribe(hys => {
-            console.log(hys);
             this.currentHolidayYearSpec = hys;
             sessionStorage.setItem('currentHolidayYearSpec', JSON.stringify(hys));
             location.reload();

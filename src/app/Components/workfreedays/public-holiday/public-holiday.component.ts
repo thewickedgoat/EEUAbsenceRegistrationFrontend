@@ -24,6 +24,7 @@ export class PublicHolidayComponent implements OnInit {
   @Input()
   currentHolidayYearSpec: HolidayYearSpec;
 
+  @Input()
   employees: Employee[];
 
   absencesInTotal: Absence[] = [];
@@ -46,14 +47,23 @@ export class PublicHolidayComponent implements OnInit {
   }
 
   ngOnChanges(){
-    console.log('omae wa mou shindeiru');
     if(this.currentHolidayYearSpec != null){
-      console.log(this.currentHolidayYearSpec.PublicHolidays);
     }
   }
 
   initData(){
-    //this.formatAbsenceDatesForAllEmployees();
+    this.formatAbsenceDatesForAllEmployees();
+  }
+
+  deletePublicHoliday(id){
+    this.publicHolidayService.delete(id).subscribe(result => {
+      let publicHolidayToDelete = this.currentHolidayYearSpec.PublicHolidays.find(x => x.Id === id);
+      const index = this.currentHolidayYearSpec.PublicHolidays.indexOf(publicHolidayToDelete);
+      console.log(index);
+      this.currentHolidayYearSpec.PublicHolidays.splice(index, 1);
+      sessionStorage.setItem('currentHolidayYearSpec', JSON.stringify(this.currentHolidayYearSpec));
+      this.updateView();
+    });
   }
 
   createPublicHoliday(){
@@ -72,7 +82,7 @@ export class PublicHolidayComponent implements OnInit {
             && x.Date.getMonth() === publicHoliday.Date.getMonth() && x.Date.getDate() === publicHoliday.Date.getDate());
           //If the public holiday isn't within the start- or enddate of the holidayYearSpec
           if(this.isPublicHolidayNotInYear(publicHoliday) === true){
-            this.publicHolidayError(absenceOnPublicHoliday, publicHoliday, 2);
+            this.publicHolidayError(null, publicHoliday, 2);
             return;
           }
           //If the public holiday is overlapping with absences already created
@@ -99,13 +109,17 @@ export class PublicHolidayComponent implements OnInit {
 
   formatAbsenceDatesForAllEmployees(){
     let absencesInTotal = [];
-    for(let employee of this.employees){
-      const absencesInEmployee = this.formatAbsenceDates(employee);
-      for(let absence of absencesInEmployee){
-        absencesInTotal.push(absence);
+    if(this.employees != null && this.employees.length > 0){
+      for(let employee of this.employees){
+        const absencesInEmployee = this.formatAbsenceDates(employee);
+        if(absencesInEmployee != null && absencesInEmployee.length > 0){
+          for(let absence of absencesInEmployee){
+            absencesInTotal.push(absence);
+          }
+        }
       }
+      this.absencesInTotal = absencesInTotal;
     }
-    this.absencesInTotal = absencesInTotal;
   }
 
   formatAbsenceDates(employee: Employee){
@@ -130,7 +144,9 @@ export class PublicHolidayComponent implements OnInit {
     if(publicHoliday.Date >= this.currentHolidayYearSpec.StartDate && publicHoliday.Date <= this.currentHolidayYearSpec.EndDate){
       return false;
     }
-    else return true;
+    else {
+      return true;
+    }
   }
 
   publicHolidayError(absences: Absence[], publicHoliday: PublicHoliday, errorNumber: number){

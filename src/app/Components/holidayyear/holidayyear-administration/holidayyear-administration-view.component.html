@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="employees != null">
   <div class="row">
     <div class="col-lg-12" style="text-align: center">
       <h1>Administration af ferieår</h1>
@@ -14,6 +14,7 @@
     <div>
       <app-public-holiday
         [currentHolidayYearSpec]="selectedHolidayYearSpec"
+        [employees]="employees"
         (emitter)="updateHolidayYearSpec()"
       ></app-public-holiday>
     </div>

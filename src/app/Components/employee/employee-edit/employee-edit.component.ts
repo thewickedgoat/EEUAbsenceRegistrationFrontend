@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators, AbstractControl} from '@angular/forms';
 import 'rxjs/add/operator/switchMap';
 import {Location} from '@angular/common';
 import {DepartmentService} from '../../../services/department.service';
@@ -9,6 +9,9 @@ import {EmployeeService} from '../../../services/employee.service';
 import {Employee} from '../../../entities/Employee';
 import {EmployeeRole} from '../../../entities/employeeRole.enum';
 import {AuthenticationService} from '../../../services/authentication.service';
+import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
+import {WorkfreeDay} from '../../../entities/workfreeDay';
+import {DateformatingService} from '../../../services/dateformating.service';
 
 @Component({
   selector: 'app-employee-edit',
@@ -17,6 +20,7 @@ import {AuthenticationService} from '../../../services/authentication.service';
   encapsulation: ViewEncapsulation.None
 })
 export class EmployeeEditComponent implements OnInit {
+  currentHolidayYearSpec: HolidayYearSpec;
   isNotEditable: boolean;
   employeeUpdated: boolean;
   employee: Employee;
@@ -25,8 +29,14 @@ export class EmployeeEditComponent implements OnInit {
   employeeRole = EmployeeRole;
   showPassword: boolean;
   loggedInUser: Employee;
-  constructor(private location: Location, private formBuilder: FormBuilder, private departmentService: DepartmentService,
-              private employeeService: EmployeeService, private authenticationService: AuthenticationService, private route: ActivatedRoute) {
+  employeeWorkfreeDaysInYear: WorkfreeDay[];
+  constructor(private location: Location,
+              private formBuilder: FormBuilder,
+              private departmentService: DepartmentService,
+              private employeeService: EmployeeService,
+              private authenticationService: AuthenticationService,
+              private dateformatingService: DateformatingService,
+              private route: ActivatedRoute) {
     this.showPassword = false;
     this.employeeUpdated = false;
     this.isNotEditable = true;
@@ -47,9 +57,11 @@ export class EmployeeEditComponent implements OnInit {
       userName: [{value: '', disabled: this.isNotEditable}, Validators.required],
       email: [{value: '', disabled: this.isNotEditable}, Validators.required],
       password: [{value: '', disabled: this.isNotEditable}, Validators.required],
+      passwordCheck: [{value: this.employee.Password, disabled: this.isNotEditable}, Validators.required],
       employeeRole:[{value: '', disabled: this.isNotEditable}, Validators.required],
       department: [{value: '', disabled: this.isNotEditable}, Validators.required]
-    });
+    }, {validator: this.matchPassword}
+    );
   }
 
   initData(){
@@ -57,10 +69,30 @@ export class EmployeeEditComponent implements OnInit {
       .subscribe(employee => {
         this.employee = employee;
         this.createFormgroup();
+        this.getHolidayYearSpec();
+        this.formatHolidayYearStartEnd();
+        this.formatWorkfreeDays();
+        this.getWorkfreeDaysInHolidayYear(this.employee.WorkfreeDays);
       });
     this.departmentService.getAll().subscribe(departments => this.departments = departments);
   }
 
+  matchPassword(AC: AbstractControl){
+    let password = AC.get('password').value;
+    let passwordCheck = AC.get('passwordCheck').value;
+    if(password != passwordCheck){
+      AC.get('passwordCheck').setErrors({MatchPassword: true})
+    }
+    else {
+      return null;
+    }
+  }
+
+  formatHolidayYearStartEnd(){
+    let holidayYearSpec = this.currentHolidayYearSpec;
+    holidayYearSpec.StartDate = this.dateformatingService.formatDate(holidayYearSpec.StartDate);
+    holidayYearSpec.EndDate = this.dateformatingService.formatDate(holidayYearSpec.EndDate);
+  }
   /**
    * Goes back to last visited page
    */
@@ -68,18 +100,35 @@ export class EmployeeEditComponent implements OnInit {
     this.location.back()
   }
 
-  test(){
-    console.log(this.employee.Department);
-    console.log(this.employee.EmployeeRole);
-  }
   /**
    * Updates the employee
    */
   updateEmployee(){
-    //this.authenticationService.update(this.employee).subscribe(() => {
-    //});
+    const values = this.employeeGroup.value;
+    let department = this.departments.find( x => x.Name === values.department);
+    if(department != null){
+      this.employee.Department = department;
+    }
+    this.authenticationService.update(this.employee).subscribe(() => {
+    });
     this.employeeService.put(this.employee).subscribe(() => {
     });
+  }
+
+  passwordIsInvalid(controlName: string){
+    const passwordCheck = this.employeeGroup.controls[controlName];
+    const password = this.employeeGroup.controls['password'];
+    if(passwordCheck.value != password.value){
+      return passwordCheck.invalid;
+    }
+  }
+
+  passwordIsValid(controlName: string){
+    const values = this.employeeGroup.value;
+    const passwordCheck = this.employeeGroup.controls[controlName];
+    if(passwordCheck.value === values.password){
+      return !passwordCheck.invalid;
+    }
   }
 
   /**
@@ -123,6 +172,7 @@ export class EmployeeEditComponent implements OnInit {
     this.employeeGroup.controls['lastName'].enable();
     this.employeeGroup.controls['email'].enable();
     this.employeeGroup.controls['password'].enable();
+    this.employeeGroup.controls['passwordCheck'].enable();
     if(this.isAdmin()){
       this.employeeGroup.controls['userName'].enable();
       this.employeeGroup.controls['employeeRole'].enable();
@@ -166,13 +216,36 @@ export class EmployeeEditComponent implements OnInit {
   }
 
   updateWorkfreeDaysList(){
-    let tempEmp = this.employee;
-    this.employee = new Employee();
-    this.route.paramMap.switchMap(params => this.employeeService.getById(+params.get('id')))
+    this.employeeService.getById(this.employee.Id)
       .subscribe(employee => {
-        this.employee = tempEmp;
-        this.employee.WorkfreeDays = employee.WorkfreeDays;
+        this.employee = employee;
+        this.formatWorkfreeDays();
+        this.getWorkfreeDaysInHolidayYear(this.employee.WorkfreeDays);
       });
   }
 
+  getHolidayYearSpec(){
+    this.currentHolidayYearSpec = JSON.parse(sessionStorage.getItem('currentHolidayYearSpec'));
+  }
+
+  getWorkfreeDaysInHolidayYear(workfreeDays: WorkfreeDay[]){
+    let currentWorkfreeDayList = new Array<WorkfreeDay>();
+    for(let workfreeDay of workfreeDays){
+      if(workfreeDay.Date >= this.currentHolidayYearSpec.StartDate && workfreeDay.Date <= this.currentHolidayYearSpec.EndDate){
+        currentWorkfreeDayList.push(workfreeDay);
+
+      }
+    }
+    this.employeeWorkfreeDaysInYear = currentWorkfreeDayList;
+  }
+
+  formatWorkfreeDays(){
+    if(this.employee){
+      if(this.employee.WorkfreeDays != null || this.employee.WorkfreeDays.length > 0) {
+        for (let workfreeDay of this.employee.WorkfreeDays) {
+          workfreeDay.Date = this.dateformatingService.formatDate(workfreeDay.Date);
+        }
+      }
+    }
+  }
 }

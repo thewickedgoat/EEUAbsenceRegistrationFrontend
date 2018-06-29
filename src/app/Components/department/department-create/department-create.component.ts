@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Department} from '../../../entities/department';
 import {DepartmentService} from '../../../services/department.service';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-department-create',
@@ -14,7 +15,9 @@ export class DepartmentCreateComponent implements OnInit {
   department: Department;
   departmentGroup: FormGroup;
 
-  constructor(private departmentService: DepartmentService, private formBuilder: FormBuilder) {
+  constructor(private departmentService: DepartmentService,
+              private formBuilder: FormBuilder,
+              private location: Location) {
     this.departmentGroup = this.formBuilder.group({
       name: ['', Validators.required],
 
@@ -29,6 +32,7 @@ export class DepartmentCreateComponent implements OnInit {
   }
 
   back(){
+    this.location.back()
   }
 
   createDepartment(){

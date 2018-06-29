@@ -29,7 +29,6 @@ export class HolidayyearEmployeeComponent implements OnInit {
   }
 
   toggleEditable(){
-    console.log('wut');
     let bool;
     if(this.isNotEditable === true){
       this.isNotEditable = false;
@@ -43,9 +42,7 @@ export class HolidayyearEmployeeComponent implements OnInit {
   }
 
   updateHolidayYear(holidayYear: HolidayYear){
-    console.log('dis be ther');
     this.holidayYearService.put(holidayYear).subscribe(res => {
-      console.log(res);
       this.isNotEditable = true;
     });
   }

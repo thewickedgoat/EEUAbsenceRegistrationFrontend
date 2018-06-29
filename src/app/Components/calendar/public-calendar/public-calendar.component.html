@@ -40,14 +40,16 @@
       </div>
       <div class="row" style="align-content: center">
         <div *ngFor="let employee of department.Employees; let i = index" class="col-lg-12">
-          <app-public-calendar-view *ngIf="employeeIsInCurrentHolidayYear(employee)"
-                                    (emitter)="goToCalendar($event)"
-                                    [powerOfTwo]="i"
-                                    [employee]="employee"
-                                    [publicHolidays]="currentHolidayYearSpec.PublicHolidays"
-                                    [absencesInCurrentMonth]="getAbsencesInCurrentMonth(employee)"
-                                    [daysInCurrentMonth]="daysInCurrentMonth"
-          ></app-public-calendar-view>
+          <div *ngIf="employeeIsInCurrentHolidayYear(employee)">
+            <app-public-calendar-view
+                                      (emitter)="goToCalendar($event)"
+                                      [powerOfTwo]="i"
+                                      [employee]="employee"
+                                      [publicHolidays]="currentHolidayYearSpec.PublicHolidays"
+                                      [absencesInCurrentMonth]="getAbsencesInCurrentMonth(employee)"
+                                      [daysInCurrentMonth]="daysInCurrentMonth"
+            ></app-public-calendar-view>
+          </div>
         </div>
       </div>
     </div>

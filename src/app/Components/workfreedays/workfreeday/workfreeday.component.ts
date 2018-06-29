@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, OnChanges, Output, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {Employee} from '../../../entities/Employee';
 import {WorkfreedaysCreateViewComponent} from '../workfreedays-create-view/workfreedays-create-view.component';
 import {MatDialog} from '@angular/material';
@@ -7,7 +7,6 @@ import {Absence} from '../../../entities/absence';
 import {WorkfreedayService} from '../../../services/workfreeday.service';
 import {Router} from '@angular/router';
 import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
-import {HolidayYearSpecService} from '../../../services/holidayyearspec.service';
 import {WorkfreeDay} from '../../../entities/workfreeDay';
 import {DateformatingService} from '../../../services/dateformating.service';
 
@@ -20,38 +19,31 @@ import {DateformatingService} from '../../../services/dateformating.service';
 })
 export class WorkfreedayComponent implements OnInit {
 
-  currentHolidayYearSpec: HolidayYearSpec = null;
-  holidayYearSpecs: HolidayYearSpec[];
-  currentWorkfreeDayList: WorkfreeDay[] = [];
-  currentIndex: number;
+  @Input()
+  currentHolidayYearSpec: HolidayYearSpec;
 
   @Input()
   employee: Employee;
+
+  @Input()
+  currentWorkfreeDayList: WorkfreeDay[];
 
   @Output()
   emitter = new EventEmitter();
 
   constructor( private dialog: MatDialog,
                private router: Router,
-               private holidayYearSpecService: HolidayYearSpecService,
                private dateformatingService: DateformatingService,
                private workfreedayService: WorkfreedayService) {
   }
 
   ngOnInit() {
-    if(this.currentHolidayYearSpec === null) {
-      this.getHolidayYearSpec();
-      this.formatWorkfreeDays();
-    }
   }
 
-  ngOnChanges(){
-    if(this.currentHolidayYearSpec != null){
-      this.formatWorkfreeDays();
-      this.selectHolidayYearSpec(this.currentIndex);
-    }
-  }
-
+  /**
+   * Deletes the selected workfreeDay
+   * @param {number} id
+   */
   delete(id: number){
     this.workfreedayService.delete(id).subscribe(() => {
       this.updateView();
@@ -60,38 +52,6 @@ export class WorkfreedayComponent implements OnInit {
 
   edit(){
 
-  }
-
-  selectHolidayYearSpec(id: number){
-    if(this.employee.WorkfreeDays != null) {
-      this.currentWorkfreeDayList = [];
-      let index = +id;
-      this.currentHolidayYearSpec = this.holidayYearSpecs.find(x => x.Id === index);
-      this.formatHolidayYearStartEnd(this.currentHolidayYearSpec);
-      const startDate = this.currentHolidayYearSpec.StartDate;
-      const endDate = this.currentHolidayYearSpec.EndDate;
-      this.currentWorkfreeDayList = this.employee.WorkfreeDays.filter(x => x.Date >= startDate && x.Date <= endDate);
-      this.currentIndex = index;
-    }
-  }
-
-  getHolidayYearSpec(){
-    this.holidayYearSpecService.getAll().subscribe(hys => {
-      this.holidayYearSpecs = hys;
-    })
-  }
-
-  formatWorkfreeDays(){
-    if(this.employee.WorkfreeDays != null) {
-      for (let workfreeDay of this.employee.WorkfreeDays) {
-        workfreeDay.Date = this.dateformatingService.formatDate(workfreeDay.Date);
-      }
-    }
-  }
-
-  formatHolidayYearStartEnd(holidayYearSpec: HolidayYearSpec){
-    holidayYearSpec.StartDate = this.dateformatingService.formatDate(holidayYearSpec.StartDate);
-    holidayYearSpec.EndDate = this.dateformatingService.formatDate(holidayYearSpec.EndDate);
   }
 
   formatAbsenceDates(employee: Employee){

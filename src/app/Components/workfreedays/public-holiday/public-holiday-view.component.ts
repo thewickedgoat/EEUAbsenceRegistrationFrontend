@@ -17,17 +17,20 @@ export class PublicHolidayViewComponent implements OnInit {
 
   @Output()
   emitter = new EventEmitter();
+  @Output()
+  deleteEmitter = new EventEmitter();
 
   constructor() { }
 
   ngOnInit() {
     if(this.currentHolidayYearSpec){
+      console.log('im here');
+      console.log(this.publicHolidays);
       this.publicHolidays = this.currentHolidayYearSpec.PublicHolidays;
     }
   }
 
   ngOnChanges(){
-    console.log('please work');
     if(this.currentHolidayYearSpec){
       this.publicHolidays = this.currentHolidayYearSpec.PublicHolidays;
     }
@@ -35,6 +38,10 @@ export class PublicHolidayViewComponent implements OnInit {
 
   createPublicHoliday(){
     this.emitter.emit()
+  }
+
+  delete(id: number){
+    this.deleteEmitter.emit(id);
   }
 
 }

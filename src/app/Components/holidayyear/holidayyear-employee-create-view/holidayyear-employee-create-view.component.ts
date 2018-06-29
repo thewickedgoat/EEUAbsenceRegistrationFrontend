@@ -30,9 +30,18 @@ export class HolidayyearEmployeeCreateViewComponent implements OnInit {
   create(){
     const values = this.holidayYearGroup.value;
     const months = this.createMonths();
-    const holidayAvailable = +values.holidayAvailable;
-    const holidayFreedaysAvailable = +values.holidayFreedaysAvailable;
-    const holidayTransfered = +values.holidayTransfered;
+    let tempHolidayAvailable = values.holidayAvailable.toString();
+    let holidayAvailable = tempHolidayAvailable.replace(',', '.');
+    holidayAvailable = +holidayAvailable;
+
+    let tempHolidayFreedaysAvailable = values.holidayFreedaysAvailable.toString();
+    let holidayFreedaysAvailable = tempHolidayFreedaysAvailable.replace(',', '.');
+    holidayFreedaysAvailable = +holidayFreedaysAvailable;
+
+    let tempHolidayTransfered = values.holidayTransfered.toString();
+    let holidayTransfered = tempHolidayTransfered.replace(',', '.');
+    holidayTransfered = +holidayTransfered;
+
     const holidayUsed = 0;
     const holidayFreedaysUsed = 0;
     const employee = this.data.employee;

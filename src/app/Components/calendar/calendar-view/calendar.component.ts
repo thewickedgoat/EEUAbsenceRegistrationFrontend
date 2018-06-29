@@ -352,28 +352,52 @@ export class CalendarComponent implements OnInit {
     this.isDepartmentChief = false;
     this.isEmployee = false;
     const loggedInEmployee = this.loggedInUser;
+    //If you are the employee, with no higher permissions
     if(loggedInEmployee.Id === this.employee.Id && loggedInEmployee.EmployeeRole != EmployeeRole.Afdelingsleder
-      || loggedInEmployee.Id === this.employee.Id && loggedInEmployee.EmployeeRole != EmployeeRole.CEO){
+      && loggedInEmployee.Id === this.employee.Id && loggedInEmployee.EmployeeRole != EmployeeRole.CEO){
       this.isEmployee = true;
+      console.log('1');
+      return;
     }
     if(loggedInEmployee.Id === this.employee.Id && loggedInEmployee.EmployeeRole === EmployeeRole.Afdelingsleder){
       this.isEmployee = true;
       this.isDepartmentChief = true;
+      console.log('2');
+      return;
     }
     if(loggedInEmployee.EmployeeRole === EmployeeRole.Afdelingsleder
       && loggedInEmployee.Id != this.employee.Id
       && this.employee.Department.Id === loggedInEmployee.Department.Id){
       this.isDepartmentChief = true;
+      console.log('3');
+      return;
     }
+    //If your are the CEO confirming your own absence
     if(loggedInEmployee.EmployeeRole === EmployeeRole.CEO && loggedInEmployee.Id === this.employee.Id){
       this.isEmployee = true;
       this.isCEO = true;
+      console.log('4');
+      return;
     }
+    //If you are the CEO confirming the DepartmentCheifs absence
     if(loggedInEmployee.EmployeeRole === EmployeeRole.CEO && this.employee.EmployeeRole === EmployeeRole.Afdelingsleder){
       this.isCEO = true;
+      console.log('5');
+      return;
     }
+    //If you are the CEO but want to have the same permission to confirm absence as a departmentChief of the given department
+    if(loggedInEmployee.EmployeeRole === EmployeeRole.CEO
+      && this.employee.Department.Id === loggedInEmployee.Department.Id
+      && this.employee.EmployeeRole != EmployeeRole.Afdelingsleder){
+      this.isDepartmentChief = true;
+      console.log('6');
+      return;
+    }
+    //If you are admin, you can confirm all users absence
     if(loggedInEmployee.EmployeeRole === EmployeeRole.Administrator){
       this.isAdmin = true;
+      console.log('7');
+      return;
     }
   }
 

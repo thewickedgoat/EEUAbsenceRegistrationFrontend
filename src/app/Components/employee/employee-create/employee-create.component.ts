@@ -54,7 +54,6 @@ export class EmployeeCreateComponent implements OnInit {
   createEmployee() {
     const values = this.employeeGroup.value;
     const department = this.getDepartment(this.employeeGroup.controls['department'].value);
-    console.log(department);
     const employee: Employee = {FirstName: values.firstName, LastName: values.lastName,
       UserName: values.userName, Email: values.email, Password: values.password,
       EmployeeRole: values.employeeRole, Department: department};
@@ -81,12 +80,10 @@ export class EmployeeCreateComponent implements OnInit {
       // but if nothing is selected it will be an empty string
       // the first department Id will always be 1, so therefore its defaulted here.
       const department = this.departments.find(dep => dep.Id === 1);
-      console.log(department);
       return department;
     }
     else{
       const department = this.departments.find(dep => dep.Name === departmentName);
-      console.log(department);
       return department;
     }
 

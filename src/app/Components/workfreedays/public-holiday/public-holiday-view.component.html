@@ -2,7 +2,10 @@
   <div class="col-sm-12" style="text-align: center"><h3><strong>Helligdage</strong></h3></div>
   <nav style="background-color: white; height: 650px; width: 300px; overflow-y: scroll">
     <ul *ngIf="currentHolidayYearSpec != null">
-      <li *ngFor="let publicHoliday of publicHolidays">{{publicHoliday.Name}} - {{publicHoliday.Date | date: 'dd/MM/yyyy'}}</li>
+      <li *ngFor="let publicHoliday of publicHolidays">{{publicHoliday.Name}} - {{publicHoliday.Date | date: 'dd/MM/yyyy'}}
+        <!--<button class="btn btn-warning btn-sm" (click)="edit(publicHoliday)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>-->
+        <button class="btn btn-danger btn-sm" (click)="delete(publicHoliday.Id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
+      </li>
     </ul>
   </nav>
   <div *ngIf="currentHolidayYearSpec">

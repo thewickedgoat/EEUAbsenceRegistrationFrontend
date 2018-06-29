@@ -72,10 +72,10 @@
                     [ngClass]="{'is-invalid': nameIsInvalid('employeeRole'), 'is-valid': nameIsValid('employeeRole')}"
                     formControlName="employeeRole">
               <option disabled selected value="">-- Vælg en Rolle --</option>
-              <option>Medarbejder</option>
-              <option>Afdelingsleder</option>
-              <option>Administrator</option>
-              <option>Direktør</option>
+              <option [ngValue]="0">Medarbejder</option>
+              <option [ngValue]="1">Afdelingschef</option>
+              <option [ngValue]="2">Administrator</option>
+              <option [ngValue]="3">Direktør</option>
             </select>
             <div *ngIf="nameIsInvalid('employeeRole')" class="invalid-feedback">
               <div *ngIf="employeeGroup.controls['employeeRole'].errors">

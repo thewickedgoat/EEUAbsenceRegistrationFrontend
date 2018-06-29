@@ -72,26 +72,44 @@
                 </div>
               </label>
             </div>
-            <div class="row">
+            <div class="row" >
               <label class="center-block col-md-12">Adgangskode:
-                <div *ngIf="showPassword === false">
-                  <input class="form-control"
+                  <input *ngIf="showPassword === false" class="form-control"
                          type="password"
+                         [ngClass]="{'is-invalid': nameIsInvalid('password'), 'is-valid': nameIsValid('password')}"
                          placeholder="Adgangskode her"
                          formControlName="password"
                          [(ngModel)]="employee.Password">
-                  <a *ngIf="isAdmin() || employee.Id === loggedInUser.Id" class="btn btn-outline-info" (click)="hideShowPassword()">Vis adgangskode</a>
-                </div>
-                <div *ngIf="showPassword === true">
-                  <input class="form-control"
+                  <a *ngIf="isNotEditable && showPassword === false" class="btn btn-outline-info" (click)="hideShowPassword()">Vis adgangskode</a>
+                  <input *ngIf="showPassword === true" class="form-control"
                          placeholder="Adgangskode her"
+                         [ngClass]="{'is-invalid': nameIsInvalid('password'), 'is-valid': nameIsValid('password')}"
                          formControlName="password"
                          [(ngModel)]="employee.Password">
-                  <a class="btn btn-info" (click)="hideShowPassword()">skjul adgangskode</a>
-                </div>
+                  <a *ngIf="isNotEditable && showPassword === true" class="btn btn-info" (click)="hideShowPassword()">Skjul adgangskode</a>
                 <div *ngIf="nameIsInvalid('password')" class="invalid-feedback">
-                  <div *ngIf="employeeGroup.controls['password'].errors.required">
+                  <div *ngIf="employeeGroup.controls['password'].errors">
                     Du skal angive en adgangskode.
+                  </div>
+                </div>
+              </label>
+            </div>
+            <div class="row" *ngIf="!isNotEditable">
+              <label class="center-block col-md-12">Skriv adgangskode igen:
+                <input *ngIf="showPassword === false" class="form-control"
+                         type="password"
+                         [ngClass]="{'is-invalid': passwordIsInvalid('passwordCheck'), 'is-valid': passwordIsValid('passwordCheck')}"
+                         placeholder="Skriv adgangskode igen"
+                         formControlName="passwordCheck">
+                  <a *ngIf="!isNotEditable && showPassword === false" class="btn btn-outline-info" (click)="hideShowPassword()">Vis adgangskode</a>
+                  <input *ngIf="showPassword === true" class="form-control"
+                         placeholder="Skriv adgangskode igen"
+                         [ngClass]="{'is-invalid': passwordIsInvalid('passwordCheck'), 'is-valid': passwordIsValid('passwordCheck')}"
+                         formControlName="passwordCheck">
+                  <a *ngIf="!isNotEditable && showPassword === true" class="btn btn-info" (click)="hideShowPassword()">Skjul adgangskode</a>
+                <div *ngIf="passwordIsInvalid('passwordCheck')" class="invalid-feedback">
+                  <div >
+                    Adgangskoderne skal matche
                   </div>
                 </div>
               </label>
@@ -114,18 +132,30 @@
                 </div>
               </label>
             </div>
-            <div class="row" >
+            <div class="row" *ngIf="!isNotEditable">
               <label class="center-block col-md-12">Afdeling:
                 <select class="form-control" *ngIf="employee.Department != null"
                         placeholder="Vælg afdeling"
                         [ngClass]="{'is-invalid': nameIsInvalid('department'), 'is-valid': nameIsValid('department')}"
                         formControlName="department"
                         [(ngModel)]="employee.Department">
-                  <option *ngFor="let department of departments" [ngValue]="department">{{department.Name}}</option>
+                  <option *ngFor="let department of departments" [selected]="department.Id === employee.Department.Id">{{department.Name}}</option>
                 </select>
                 <div *ngIf="nameIsInvalid('department')" class="invalid-feedback">
                   <div *ngIf="employeeGroup.controls['department'].errors">
                     Du skal angive en afdeling.
+                  </div>
+                </div>
+              </label>
+            </div>
+            <div class="row" *ngIf="isNotEditable">
+              <label class="center-block col-md-12">Afdeling:
+                <input class="form-control"
+                       formControlName="department"
+                       [(ngModel)]="employee.Department.Name">
+                <div *ngIf="nameIsInvalid('userName')" class="invalid-feedback">
+                  <div *ngIf="employeeGroup.controls['userName'].errors">
+                    Du skal angive et brugernavn.
                   </div>
                 </div>
               </label>
@@ -136,7 +166,6 @@
             <button class="btn btn-info" [disabled]="employeeGroup.invalid || isNotEditable" type="submit" (click)="stopEdit()">
               <i class="fa fa-floppy-o" aria-hidden="true">Gem</i>
             </button>
-            <button class="btn btn-info" type="button" (click)="test()">Test</button>
             <hr>
             <button type="button" class="btn btn-info" (click)="back()">Tilbage</button>
             <hr>
@@ -147,7 +176,10 @@
     <div *ngIf="isAdmin()">
       <app-workfreeday
         [employee]="employee"
-      (emitter)="updateWorkfreeDaysList()"></app-workfreeday>
+        [currentWorkfreeDayList]="employeeWorkfreeDaysInYear"
+        [currentHolidayYearSpec]="currentHolidayYearSpec"
+      (emitter)="updateWorkfreeDaysList()"
+      ></app-workfreeday>
     </div>
   </div>
   <ngb-alert *ngIf="employeeUpdated" (close)="close()" type="success">Ændringer gemt</ngb-alert>

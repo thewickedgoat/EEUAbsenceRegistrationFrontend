@@ -30,7 +30,7 @@
             </div>
             <hr>
         </div>
-        <div *ngIf="isAdmin || isDepartmentChief && loggedInUser.Department.Name === employee.Department.Name || loggedInUser.Id === employee.Id">
+        <div *ngIf="isAdmin || isDepartmentChief && loggedInUser.Department.Id === employee.Department.Id || loggedInUser.Id === employee.Id">
           <h3>Fraværsoversigt:</h3>
           <app-absence-overview-controller
             [employee]="employee"

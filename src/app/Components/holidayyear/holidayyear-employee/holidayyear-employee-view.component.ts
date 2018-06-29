@@ -52,16 +52,28 @@ export class HolidayyearEmployeeViewComponent implements OnInit {
       name:[{value: '', disabled: true}, Validators.required],
     });
     const values = this.formGroup.value;
-    console.log(this.selectedHolidayYear.HolidayTransfered);
-    console.log('ded');
-    console.log(values.holidayTransfered);
   }
 
   updateHolidayYear(){
+    const values = this.formGroup.value;
     let holidayYearToUpdate = this.selectedHolidayYear;
-    holidayYearToUpdate.HolidayAvailable = +holidayYearToUpdate.HolidayAvailable;
-    holidayYearToUpdate.HolidayFreedayAvailable = +holidayYearToUpdate.HolidayFreedayAvailable;
-    holidayYearToUpdate.HolidayTransfered = +holidayYearToUpdate.HolidayTransfered;
+
+    let tempHolidayAvailable = values.holidayAvailable.toString();
+    console.log(tempHolidayAvailable);
+    let holidayAvailable = tempHolidayAvailable.replace(',', '.');
+    holidayAvailable = +holidayAvailable;
+    holidayYearToUpdate.HolidayAvailable = holidayAvailable;
+
+    let tempHolidayFreedayAvailable = values.holidayFreedaysAvailable.toString();
+    let holidayFreedayAvailable = tempHolidayFreedayAvailable.replace(',', '.');
+    holidayFreedayAvailable = +holidayFreedayAvailable;
+    holidayYearToUpdate.HolidayFreedayAvailable = holidayFreedayAvailable;
+
+    let tempHolidayTransfered = values.holidayTransfered.toString();
+    let holidayTransfered = tempHolidayTransfered.replace(',', '.');
+    holidayTransfered = +holidayTransfered;
+    holidayYearToUpdate.HolidayTransfered = +holidayTransfered;
+
     this.updateHolidayYearEmitter.emit(holidayYearToUpdate);
     this.toggleEditable()
   }

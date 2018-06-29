@@ -16,6 +16,10 @@ export class AuthenticationService {
     return JSON.parse(sessionStorage.getItem('token'));
   }
 
+  delete(id): Observable<any>{
+    return this.http.delete<any>(url + '/' + 'Remove' + '/' + id,{headers: new HttpHeaders().set('Authorization', 'Bearer ' + environment.jwt())})
+  }
+
   logout(employee: Employee): Observable<any>{
     sessionStorage.setItem('token', null);
     sessionStorage.setItem('currentEmployee', null);
