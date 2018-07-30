@@ -36,6 +36,8 @@ export class AbsenceConfirmationComponent implements OnInit {
   isMonthApprovedByCEO: boolean;
   isMonthApprovedByAdmin: boolean;
 
+  closingOrOpening = false;
+
 
   constructor(private monthService: MonthService) {
 
@@ -56,12 +58,14 @@ export class AbsenceConfirmationComponent implements OnInit {
   approveAbsencePeriod(){
     if(this.isEmployee){
       this.currentMonth.IsLockedByEmployee = true;
+      this.currentMonth.MonthDate.setHours(12,0,0);
       this.monthService.put(this.currentMonth).subscribe(() =>
         this.isMonthApprovedByEmployee = true);
     }
     else if(this.isDepartmentChief && !this.isEmployee){
       this.currentMonth.IsLockedByEmployee = true;
       this.currentMonth.IsLockedByChief = true;
+      this.currentMonth.MonthDate.setHours(12,0,0);
       this.monthService.put(this.currentMonth).subscribe(() => {
         this.isMonthApprovedByEmployee = true;
         this.isMonthApprovedByChief = true;
@@ -70,6 +74,7 @@ export class AbsenceConfirmationComponent implements OnInit {
     else if(this.isCEO && !this.isEmployee){
       this.currentMonth.IsLockedByEmployee = true;
       this.currentMonth.IsLockedByCEO = true;
+      this.currentMonth.MonthDate.setHours(12,0,0);
       this.monthService.put(this.currentMonth).subscribe(() => {
         this.isMonthApprovedByEmployee = true;
         this.isMonthApprovedByCEO = true;
@@ -80,6 +85,7 @@ export class AbsenceConfirmationComponent implements OnInit {
       this.currentMonth.IsLockedByChief = true;
       this.currentMonth.IsLockedByCEO = true;
       this.currentMonth.IsLockedByAdmin = true;
+      this.currentMonth.MonthDate.setHours(12,0,0);
       this.monthService.put(this.currentMonth).subscribe(() => {
         this.isMonthApprovedByEmployee = true;
         this.isMonthApprovedByChief = true;
@@ -118,14 +124,57 @@ export class AbsenceConfirmationComponent implements OnInit {
   }
 
   /**
-   * Unlocks all absences in the current month
+   * Reopens the month for the Employee to edit again, as long as
+   * it isn't approved by the admin or chief
    */
-  reopenMonth(){
+  reopenMonthAsEmployee(){
+    if(this.currentMonth.IsLockedByEmployee && !this.currentMonth.IsLockedByChief && !this.currentMonth.IsLockedByAdmin){
+      this.currentMonth.IsLockedByEmployee = false;
+      this.currentMonth.MonthDate.setHours(12,0,0);
+      this.monthService.put(this.currentMonth).subscribe(result => {
+        this.isMonthApprovedByEmployee = false;
+        this.emitterToReopen.emit();
+      });
+    }
+  }
+
+  /**
+   * Reopens the month for the Chief to edit again as long as
+   * it isn't approved by the admin
+   */
+  reopenMonthAsChief(){
+    if(this.currentMonth.IsLockedByChief && !this.currentMonth.IsLockedByAdmin){
+      this.currentMonth.IsLockedByChief = false;
+      this.currentMonth.MonthDate.setHours(12,0,0);
+      this.monthService.put(this.currentMonth).subscribe(result => {
+        this.isMonthApprovedByChief = false;
+        this.emitterToReopen.emit();
+      });
+    }
+  }
+
+  reopenMonthAsCEO(){
+    if(this.currentMonth.IsLockedByCEO && !this.currentMonth.IsLockedByAdmin){
+      this.currentMonth.IsLockedByCEO = false;
+      this.currentMonth.MonthDate.setHours(12,0,0);
+      this.monthService.put(this.currentMonth).subscribe(result => {
+        this.isMonthApprovedByCEO = false;
+        this.emitterToReopen.emit();
+      });
+    }
+  }
+
+  /**
+   * Reopens the month for all roles to edit once again.
+   */
+  reopenMonthAsAdmin(){
+    console.log('nani');
     this.currentMonth.IsLockedByEmployee = false;
     this.currentMonth.IsLockedByChief = false;
     this.currentMonth.IsLockedByCEO = false;
     this.currentMonth.IsLockedByAdmin = false;
-    this.monthService.put(this.currentMonth).subscribe(() => {
+    this.currentMonth.MonthDate.setHours(12,0,0);
+    this.monthService.put(this.currentMonth).subscribe(result => {
       this.isMonthApprovedByAdmin = false;
       this.isMonthApprovedByCEO = false;
       this.isMonthApprovedByChief = false;

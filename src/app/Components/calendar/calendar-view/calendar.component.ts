@@ -34,9 +34,10 @@ export class CalendarComponent implements OnInit {
 
   status: Status;
 
+  lockDay: boolean = null;
   initHasBeenRun: boolean = false;
   isEmployee: boolean;
-  isDepartmentChief: boolean;
+  isChief: boolean;
   isCEO: boolean;
   isAdmin: boolean;
   isMonthLocked: boolean;
@@ -71,7 +72,6 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit() {
     //call back hell - aaaaaaaahhhhhhhhh
-    console.log('ok');
     this.route.paramMap.subscribe(params => {
       this.employeeService.getById(+params.get('id')).subscribe( employee => {
         this.employee = employee;
@@ -123,12 +123,26 @@ export class CalendarComponent implements OnInit {
 
   //skal flyttes til controlleren for alle componenterne i kalender-viewet
   setStatus(status){
-    this.status = status;
+    if(status != null && status != false && status != true){
+      this.status = status;
+      this.lockDay = null;
+    }
+    else if(status === null){
+      this.status = null;
+      this.lockDay = null;
+    }
+    else if(status === true){
+      this.status = null;
+      this.lockDay = true;
+    }
+    else if(status === false){
+      this.status = null;
+      this.lockDay = false;
+    }
   }
 
   //skal flyttes til controlleren for alle componenterne i kalender-viewet
   getCurrentMonth(month: number){
-    console.log(this.currentHolidayYear);
     let months = this.currentHolidayYear.Months;
     if(months != null){
       for(let month of months){
@@ -171,7 +185,7 @@ export class CalendarComponent implements OnInit {
 
 
   /**
-   * Selects the current holidayYearSpec and redicects to the first month in that year.
+   * Selects the current holidayYearSpec and redirects to the first month in that year.
    * @param {number} id
    */
   selectHolidayYear(id: number){
@@ -193,11 +207,11 @@ export class CalendarComponent implements OnInit {
   checkForApprovalPermission(){
     if(this.isEmployee && this.currentMonth.IsLockedByEmployee === true
       || this.isCEO && this.currentMonth.IsLockedByCEO === true
-      || this.isDepartmentChief && this.currentMonth.IsLockedByChief === true
+      || this.isChief && this.currentMonth.IsLockedByChief === true
       || this.isAdmin && this.currentMonth.IsLockedByAdmin === true){
       this.isMonthLocked = true;
     }
-    else if(!this.isDepartmentChief && !this.isCEO && !this.isEmployee && !this.isAdmin){
+    else if(!this.isChief && !this.isCEO && !this.isEmployee && !this.isAdmin){
       this.isMonthLocked = true;
     }
     else{
@@ -349,54 +363,47 @@ export class CalendarComponent implements OnInit {
   validateApprovalPermissions(){
     this.isAdmin = false;
     this.isCEO = false;
-    this.isDepartmentChief = false;
+    this.isChief = false;
     this.isEmployee = false;
     const loggedInEmployee = this.loggedInUser;
     //If you are the employee, with no higher permissions
     if(loggedInEmployee.Id === this.employee.Id && loggedInEmployee.EmployeeRole != EmployeeRole.Afdelingsleder
       && loggedInEmployee.Id === this.employee.Id && loggedInEmployee.EmployeeRole != EmployeeRole.CEO){
       this.isEmployee = true;
-      console.log('1');
       return;
     }
     if(loggedInEmployee.Id === this.employee.Id && loggedInEmployee.EmployeeRole === EmployeeRole.Afdelingsleder){
       this.isEmployee = true;
-      this.isDepartmentChief = true;
-      console.log('2');
+      this.isChief = true;
       return;
     }
     if(loggedInEmployee.EmployeeRole === EmployeeRole.Afdelingsleder
       && loggedInEmployee.Id != this.employee.Id
       && this.employee.Department.Id === loggedInEmployee.Department.Id){
-      this.isDepartmentChief = true;
-      console.log('3');
+      this.isChief = true;
       return;
     }
     //If your are the CEO confirming your own absence
     if(loggedInEmployee.EmployeeRole === EmployeeRole.CEO && loggedInEmployee.Id === this.employee.Id){
       this.isEmployee = true;
       this.isCEO = true;
-      console.log('4');
       return;
     }
     //If you are the CEO confirming the DepartmentCheifs absence
     if(loggedInEmployee.EmployeeRole === EmployeeRole.CEO && this.employee.EmployeeRole === EmployeeRole.Afdelingsleder){
       this.isCEO = true;
-      console.log('5');
       return;
     }
     //If you are the CEO but want to have the same permission to confirm absence as a departmentChief of the given department
     if(loggedInEmployee.EmployeeRole === EmployeeRole.CEO
       && this.employee.Department.Id === loggedInEmployee.Department.Id
       && this.employee.EmployeeRole != EmployeeRole.Afdelingsleder){
-      this.isDepartmentChief = true;
-      console.log('6');
+      this.isChief = true;
       return;
     }
     //If you are admin, you can confirm all users absence
     if(loggedInEmployee.EmployeeRole === EmployeeRole.Administrator){
       this.isAdmin = true;
-      console.log('7');
       return;
     }
   }

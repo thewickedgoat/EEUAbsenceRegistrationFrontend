@@ -1,6 +1,9 @@
 <app-absence-confirmation-view
   (emitter)="approveAbsencePeriod()"
-  (emitterToReopen)="reopenMonth()"
+  (reopenAsEmployee)="reopenMonthAsEmployee()"
+  (reopenAsChief)="reopenMonthAsChief()"
+  (reopenAsCEO)="reopenMonthAsCEO()"
+  (reopenAsAdmin)="reopenMonthAsAdmin()"
   [loggedInUser]="loggedInEmployee"
   [employee]="employee"
   [isAdmin]="isAdmin"

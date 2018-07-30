@@ -14,6 +14,7 @@ export class Employee {
   EmployeeRole: EmployeeRole;
   WorkfreeDays?: WorkfreeDay[];
   Note?: string;
+  PasswordReset: boolean;
 }
 
 

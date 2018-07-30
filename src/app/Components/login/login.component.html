@@ -2,9 +2,11 @@
   <div class="col-md-12 mainblock">
     <div class="row">
       <div class="col-md-12" style="text-align: center">
-        <h4><strong>Login</strong></h4>
+        <h4 *ngIf="forgotPassword === false && changingPassword === false"><strong>Login</strong></h4>
+        <h4 *ngIf="forgotPassword === true"><strong>Glemt password</strong></h4>
+        <h4 *ngIf="changingPassword === true"><strong>Skift adgangskode</strong></h4>
       </div>
-      <div class="col-md-12">
+      <div class="col-md-12" *ngIf="forgotPassword === false && changingPassword === false">
         <form [formGroup]="loginGroup" (ngSubmit)="loginEmployee($event)" novalidate>
           <div class="form-group">
             <label class="center-block col-md-12"><b>Brugernavn:</b>
@@ -38,12 +40,71 @@
             </div>
           </div>
         </form>
+        <div *ngIf="forgotPassword === false" class="col-sm-12" style="text-align: center">
+          <button class="btn btn-info" type="button" (click)="toggleForgotPassword()">Glemt dit password?</button>
+        </div>
       </div>
+      <div *ngIf="forgotPassword === true" class="col-md-12">
+        <form [formGroup]="forgotPasswordGroup" (ngSubmit)="resetPassword($event)" novalidate>
+          <div class="form-group">
+            <label class="center-block col-md-12"><b>Angiv email:</b>
+              <input class="form-control textfield"
+                placeholder="Email her"
+                formControlName="email">
+            </label>
+            <div style="text-align: center">
+              <button class="btn btn-info" type="submit">Send</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div *ngIf="changingPassword === true" class="col-md-12">
+      <form [formGroup]="changePasswordGroup" (ngSumbit)="changePassword($event)" novalidate>
+        <div class="form-group">
+          <div class="row">
+            <label class="center-block col-md-12">Ny adgangskode:
+              <input class="form-control"
+                     type="password"
+                     [ngClass]="{'is-invalid': passwordIsInvalid('password'), 'is-valid': passwordIsValid('password')}"
+                     placeholder="Adgangskode her"
+                     formControlName="password">
+              <div *ngIf="passwordIsInvalid('password')" class="invalid-feedback">
+                <div *ngIf="changePasswordGroup.controls['password'].errors['MinimumLength']">
+                  Adgangskoden skal mindst være 12 tegn.
+                </div>
+                <div *ngIf="changePasswordGroup.controls['password'].errors['NotEntered']">
+                  Du skal angive en adgangskode.
+                </div>
+              </div>
+            </label>
+          </div>
+          <div class="row">
+            <label class="center-block col-md-12">Gentag adgangskode:
+              <input class="form-control"
+                     type="password"
+                     [ngClass]="{'is-invalid': passwordIsInvalid('passwordCheck'), 'is-valid': passwordIsValid('passwordCheck')}"
+                     placeholder="Adgangskode her"
+                     formControlName="passwordCheck">
+              <div *ngIf="passwordIsInvalid('passwordCheck')" class="invalid-feedback">
+                <div *ngIf="changePasswordGroup.controls['passwordCheck'].errors['MatchPassword']">
+                  Adgangskoderne skal matche
+                </div>
+                <div *ngIf="changePasswordGroup.controls['passwordCheck'].errors['NotEntered']">
+                  Du skal skrive adgangskoden igen
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+        <button [disabled]="changePasswordGroup.invalid" class="btn btn-info" (click)="changePassword()">Ændre adgangskode</button>
+      </form>
     </div>
     <div *ngIf="loggingIn" class="col-lg-12" style="text-align: center">
       <i class="fa fa-spinner fa-spin"></i>
       Logger ind...
     </div>
     <ngb-alert *ngIf="loginError" (close)="close()" type="danger">Forkert adgangskode eller password</ngb-alert>
+    <ngb-alert *ngIf="passwordIsSent" (close)="close()" type="success">Nyt password sendt</ngb-alert>
   </div>
 </div>

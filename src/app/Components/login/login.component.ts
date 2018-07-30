@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EmployeeService} from '../../services/employee.service';
 import {Employee} from '../../entities/Employee';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -17,10 +17,15 @@ export class LoginComponent implements OnInit {
 
   loginError: boolean = false;
   loginGroup: FormGroup;
+  changePasswordGroup: FormGroup;
+  forgotPasswordGroup: FormGroup;
   employees: Employee[];
   employeeToLogin: Employee;
+  changingPassword: boolean = false;
   loggingIn: boolean = false;
   returnUrl : string;
+  forgotPassword: boolean = false;
+  passwordIsSent: boolean;
 
   constructor(private router: Router,
               private authenticationService: AuthenticationService,
@@ -29,15 +34,66 @@ export class LoginComponent implements OnInit {
               private dateFormatingService: DateformatingService,
               private formBuilder: FormBuilder,
               private route: ActivatedRoute) {
-      this.loginGroup = this.formBuilder.group({
+    this.loginGroup = this.formBuilder.group({
       userName: ['', Validators.required],
       password: ['', Validators.required]
     });
-    console.log(this.authenticationService.getToken());
+    this.forgotPasswordGroup = this.formBuilder.group({
+      email: ['', Validators.required]
+    });
+    this.changePasswordGroup = this.formBuilder.group({
+      password: ['', Validators.required],
+      passwordCheck: ['', Validators.required]
+    }, {validator: this.matchPassword});
   }
 
   ngOnInit() {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl']||'/employees';
+  }
+
+  matchPassword(AC: AbstractControl){
+    let minimumPasswordLength = 12;
+    let password = AC.get('password').value;
+    let passwordCheck = AC.get('passwordCheck').value;
+    if(password != passwordCheck){
+      AC.get('passwordCheck').setErrors({MatchPassword: true});
+    }
+    if(password.length < minimumPasswordLength){
+      AC.get('passwordCheck').setErrors({MinimumLength: true});
+      AC.get('password').setErrors({MinimumLength: true});
+    }
+    if(password.length === 0){
+      AC.get('password').setErrors({NotEntered: true});
+    }
+    else {
+      return null;
+    }
+  }
+
+  /**
+   * Resets the password
+   */
+  resetPassword(){
+    let email = this.forgotPasswordGroup.controls['email'].value;
+    this.authenticationService.resetPassword(email).subscribe( result => {
+      this.toggleForgotPassword();
+        if(result === true){
+          this.passwordIsSent = true;
+          setTimeout(() => {this.passwordIsSent = false}, 3000)
+        }
+    });
+  }
+
+  /**
+   * Toggles the boolean depending on if the view should be login or forgotPassword
+   */
+  toggleForgotPassword(){
+    if(this.forgotPassword === false){
+      this.forgotPassword = true;
+    }
+    else if(this.forgotPassword === true){
+      this.forgotPassword = false;
+    }
   }
 
   /**
@@ -48,22 +104,46 @@ export class LoginComponent implements OnInit {
     let username = this.loginGroup.controls['userName'].value;
     let password = this.loginGroup.controls['password'].value;
     this.authenticationService.login(username, password).subscribe(data => {
-      console.log(data);
       this.validateLogin($event, data);
       this.loggingIn = true;
       setTimeout(() => {
         this.employeeService.getAll().subscribe(employees => {
           let employeeToLogin = employees.find(x => x.UserName === username);
-          sessionStorage.setItem('currentEmployee', JSON.stringify(employeeToLogin));
-          this.setSelectedHolidayYearSpec();
-          this.router.navigateByUrl(this.returnUrl);
+          if(employeeToLogin.PasswordReset === true){
+            this.changingPassword = true;
+            this.employeeToLogin = employeeToLogin;
+            this.loggingIn = false;
+          }
+          else {
+            sessionStorage.setItem('currentEmployee', JSON.stringify(employeeToLogin));
+            this.setSelectedHolidayYearSpec();
+            this.router.navigateByUrl(this.returnUrl);
+          }
         });
-      }, 3000);
+      }, 1500);
     }, error => {
       if(error.status.toString() === '400'){
         this.loginFailed();
       }
     });
+  }
+
+  changePassword(){
+    this.employeeToLogin.Password = this.changePasswordGroup.controls['password'].value;
+    this.employeeToLogin.PasswordReset = false;
+    this.authenticationService.update(this.employeeToLogin).subscribe(() => {
+      this.loggingIn = true;
+      sessionStorage.setItem('currentEmployee', JSON.stringify(this.employeeToLogin));
+      setTimeout(() => {
+        this.employeeService.put(this.employeeToLogin).subscribe(employee => {
+          this.setSelectedHolidayYearSpec();
+          this.router.navigateByUrl(this.returnUrl);
+          this.loggingIn = false;
+          return;
+        });
+      }, 1500)
+    });
+
   }
 
   setSelectedHolidayYearSpec(){
@@ -74,10 +154,7 @@ export class LoginComponent implements OnInit {
         spec.EndDate = this.dateFormatingService.formatDate(spec.EndDate);
       }
       const spec = specs.find(x => x.StartDate <= date && x.EndDate >= date);
-      console.log('ayyy');
       sessionStorage.setItem('currentHolidayYearSpec', JSON.stringify(spec));
-      console.log(JSON.parse(sessionStorage.getItem('currentHolidayYearSpec')));
-      console.log(spec);
     });
   }
 
@@ -96,7 +173,6 @@ export class LoginComponent implements OnInit {
     let bearerToken = token.access_token;
     if(bearerToken != null && bearerToken.length > 0)
     {
-      sessionStorage.setItem('employee', JSON.stringify(this.employeeToLogin));
       sessionStorage.setItem('token', JSON.stringify(bearerToken));
     }
   }
@@ -119,6 +195,26 @@ export class LoginComponent implements OnInit {
   nameIsValid(controlName: string) {
     const control = this.loginGroup.controls[controlName];
     return !control.invalid && (control.dirty || control.touched);
+  }
+
+  /**
+   * Checks for input validation
+   * @param controlName
+   * @returns {boolean}
+   */
+  passwordIsValid(controlName: string){
+    const control = this.changePasswordGroup.controls[controlName];
+    return !control.invalid && (control.dirty || control.touched);
+  }
+
+  /**
+   * Checks for input validation
+   * @param controlName
+   * @returns {boolean}
+   */
+  passwordIsInvalid(controlName: string) {
+    const control = this.changePasswordGroup.controls[controlName];
+    return control.invalid && (control.dirty || control.touched);
   }
 
   close(){

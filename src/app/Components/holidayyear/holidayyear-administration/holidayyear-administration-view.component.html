@@ -8,21 +8,22 @@
   <div class="row">
     <div class="col-lg-12" style="text-align: center">
       <button class="btn btn-success" (click)="createHolidayYearSpec()">Opret ferieår</button>
+      <button class="btn btn-danger" (click)="deleteHolidayYearSpec()">Slet nuværende ferieår</button>
     </div>
   </div>
   <div class="row">
-    <div>
+    <div class="col-xl-4">
       <app-public-holiday
         [currentHolidayYearSpec]="selectedHolidayYearSpec"
         [employees]="employees"
         (emitter)="updateHolidayYearSpec()"
       ></app-public-holiday>
     </div>
-    <div>
+    <div class="col-xl-4">
       <div class="container">
         <div class="col-sm-12" style="text-align: center"><h3><strong>Medarbejdere</strong></h3></div>
        <div>
-         <nav style="background-color: white; height: 650px; width: 300px; overflow-y: scroll">
+         <nav style="background-color: white; height: 650px; width: 100%; overflow-y: scroll">
            <ul class="menu" *ngIf="employees != null">
              <li class="menu" *ngFor="let employee of employees" (click)="selectEmployee(employee.Id)">{{employee.FirstName}} {{employee.LastName}}</li>
            </ul>
@@ -30,16 +31,15 @@
        </div>
       </div>
     </div>
-    <div>
-      <div class="container">
-        <div class="col-sm-12" style="text-align: center"><h3><strong>Medarbejders Specifikationer</strong></h3></div>
+    <div class="col-xl-4">
+        <div class="col-sm-12" style="text-align: center"><h3><strong>Medarbejders Ferie:</strong></h3></div>
         <app-holidayyear-employee
           [selectedEmployee]="selectedEmployee"
           [selectedHolidayYear]="selectedHolidayYear"
           (toggleEditEmitter)="toggleEdit($event)"
+          (updateEmitter)="updateHolidayYearSpec()"
         ></app-holidayyear-employee>
       </div>
-    </div>
   </div>
   <hr>
 </div>

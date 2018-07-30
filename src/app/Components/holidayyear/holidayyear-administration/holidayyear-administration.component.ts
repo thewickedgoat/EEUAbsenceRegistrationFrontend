@@ -10,6 +10,9 @@ import {HolidayyearEmployeeCreateViewComponent} from '../holidayyear-employee-cr
 import {HolidayyearService} from '../../../services/holidayyear.service';
 import {HolidayyearCreateViewComponent} from '../holidayyear-create/holidayyear-create-view.component';
 import {DateformatingService} from '../../../services/dateformating.service';
+import {EmployeeRole} from '../../../entities/employeeRole.enum';
+import {HolidayyearDeleteDialogComponent} from '../holidayyear-delete-dialog/holidayyear-delete-dialog.component';
+import {PublicHoliday} from '../../../entities/publicholiday';
 
 @Component({
   selector: 'app-holidayyear-administration',
@@ -41,7 +44,6 @@ export class HolidayyearAdministrationComponent implements OnInit {
     this.getHolidayYearSpecs();
     this.getCurrentHolidayYearSpec();
     this.getEmployees();
-
   }
 
   getHolidayYearSpecs(){
@@ -71,15 +73,29 @@ export class HolidayyearAdministrationComponent implements OnInit {
     let tempHys = this.currentHolidayYearSpec;
     this.currentHolidayYearSpec = new HolidayYearSpec();
     this.holidayYearSpecService.getById(tempHys.Id).subscribe(hys => {
-      tempHys = hys;
+      tempHys.PublicHolidays = hys.PublicHolidays;
+      tempHys.HolidayYears = hys.HolidayYears;
+      tempHys.PublicHolidays.sort(this.sortPublicHolidays);
       this.currentHolidayYearSpec = tempHys;
+      sessionStorage.setItem('currentHolidayYearSpec', JSON.stringify(this.currentHolidayYearSpec));
     });
+  }
+
+  sortPublicHolidays(a: PublicHoliday, b: PublicHoliday) {
+    let dateOfA = a.Date;
+    let dateOfB = b.Date;
+    return dateOfA > dateOfB ? 1 : (dateOfA < dateOfB ? -1 : 0);
   }
 
   getEmployees(){
     this.employeeService.getAll().subscribe(emps => {
+      let admins = emps.filter(x => x.EmployeeRole === EmployeeRole.Administrator);
+      for(let emp of emps){
+        if(emp.EmployeeRole === EmployeeRole.Administrator){
+          emps.splice(emps.indexOf(emp), admins.length);
+        }
+      }
       this.employees = emps;
-      console.log(emps);
     });
   }
 
@@ -95,13 +111,12 @@ export class HolidayyearAdministrationComponent implements OnInit {
     }
     else {
       let selectedEmployee = this.employees.find(x => x.Id === id);
-      this.selectedEmployee = selectedEmployee;
-      this.getEmployeeHolidayYear();
+      this.getEmployeeHolidayYear(selectedEmployee);
     }
   }
 
-  getEmployeeHolidayYear(){
-    let holidayYear = this.selectedEmployee.HolidayYears.find(x => x.CurrentHolidayYear.Id === this.currentHolidayYearSpec.Id);
+  getEmployeeHolidayYear(selectedEmployee: Employee){
+    let holidayYear = selectedEmployee.HolidayYears.find(x => x.CurrentHolidayYear.Id === this.currentHolidayYearSpec.Id);
     if(!holidayYear){
       let dialogRef = this.dialog.open(UniversalErrorCatcherComponent, {
         data: {
@@ -112,12 +127,14 @@ export class HolidayyearAdministrationComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(result => {
         if(result === true){
-          this.createEmployeeHolidayYear();
+          this.createEmployeeHolidayYear(selectedEmployee);
+          return;
         }
         else return;
       });
     }
     else{
+      this.selectedEmployee = selectedEmployee;
       this.selectedHolidayYear = holidayYear;
     }
 
@@ -132,23 +149,75 @@ export class HolidayyearAdministrationComponent implements OnInit {
     }
   }
 
-  createEmployeeHolidayYear(){
+  createEmployeeHolidayYear(selectedEmployee: Employee){
+    const holidayYearSpec = this.currentHolidayYearSpec;
+    console.log(this.currentHolidayYearSpec.StartDate);
     let dialogRef = this.dialog.open(HolidayyearEmployeeCreateViewComponent, {
       data: {
-        employee: this.selectedEmployee,
-        holidayYearSpec: this.currentHolidayYearSpec
+        employee: selectedEmployee,
+        holidayYearSpec: holidayYearSpec
       }
     });
     dialogRef.afterClosed().subscribe(result => {
       if(result != null){
+        console.log(this.currentHolidayYearSpec);
+        this.selectedEmployee = selectedEmployee;
         this.holidayyearService.post(result).subscribe(holidayYear => {
           this.selectedHolidayYear = holidayYear;
+          this.updateHolidayYearSpec();
           this.initData();
         })
       }
     });
   }
 
+  deleteCurrentHolidayYearSpec(){
+    let hasData: boolean;
+    if(this.currentHolidayYearSpec.HolidayYears.length > 0){
+      hasData = true;
+    }
+    else{
+      hasData = false;
+    }
+
+    let dialogRef = this.dialog.open(HolidayyearDeleteDialogComponent, {
+      data: {
+        holidayYears: this.currentHolidayYearSpec.HolidayYears,
+        hasData: hasData,
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result === true){
+        if(this.holidayYearSpecs.length === 1){
+          let dialogError = this.dialog.open(UniversalErrorCatcherComponent, {
+            data: {
+              errorMessage: '  Du kan ikke slette dette ferieår, da det er det eneste i databasen.  ',
+              errorHandler: '  Opret et nyt ferieår og prøv igen.',
+              multipleOptions: false
+            }
+          });
+        }
+        else {
+          this.holidayYearSpecService.delete(this.currentHolidayYearSpec.Id).subscribe(() => {
+            this.setNewHolidayYearSpec();
+          });
+        }
+      }
+    });
+  }
+
+
+  setNewHolidayYearSpec(){
+    let newHolidayYearSpec = this.holidayYearSpecs[0];
+    this.currentHolidayYearSpec = newHolidayYearSpec;
+    sessionStorage.setItem('currentHolidayYearSpec', JSON.stringify(newHolidayYearSpec));
+    location.reload();
+    return;
+  }
+
+  /**
+   * Creates a holidayYearSpec if it has the required parameters
+   */
   createHolidayYearSpec(){
     let dialogRef = this.dialog.open(HolidayyearCreateViewComponent, {
       data: {

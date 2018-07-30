@@ -59,7 +59,6 @@ export class PublicHolidayComponent implements OnInit {
     this.publicHolidayService.delete(id).subscribe(result => {
       let publicHolidayToDelete = this.currentHolidayYearSpec.PublicHolidays.find(x => x.Id === id);
       const index = this.currentHolidayYearSpec.PublicHolidays.indexOf(publicHolidayToDelete);
-      console.log(index);
       this.currentHolidayYearSpec.PublicHolidays.splice(index, 1);
       sessionStorage.setItem('currentHolidayYearSpec', JSON.stringify(this.currentHolidayYearSpec));
       this.updateView();
@@ -92,6 +91,7 @@ export class PublicHolidayComponent implements OnInit {
           }
           else {
             this.updateCurrentHolidayYearSpec(publicHoliday);
+            return;
           }
         }
       }
@@ -141,6 +141,9 @@ export class PublicHolidayComponent implements OnInit {
   }
 
   isPublicHolidayNotInYear(publicHoliday: PublicHoliday){
+    console.log(publicHoliday.Date);
+    console.log(this.currentHolidayYearSpec.StartDate);
+    console.log(this.currentHolidayYearSpec.EndDate);
     if(publicHoliday.Date >= this.currentHolidayYearSpec.StartDate && publicHoliday.Date <= this.currentHolidayYearSpec.EndDate){
       return false;
     }

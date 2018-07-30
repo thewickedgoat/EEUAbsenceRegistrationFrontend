@@ -18,8 +18,8 @@
         <div *ngIf="monthView" class="row">
           <select #t (change)="selectMonth(t.value)">
             <option disabled selected> -- Angiv måned --</option>
-            <option *ngFor="let monthName of monthNames; let i = index" [value]="i">
-              {{monthName.valueOf()}}
+            <option *ngFor="let month of months;" [value]="month.getMonth()">
+              {{monthNames[month.getMonth()]}}
             </option>
           </select>
         </div>
@@ -28,7 +28,10 @@
         <div class="col-md-12">
           <div class="row titleHeader">
             <div class="col-md-3"><b><strong>Afdeling/Navn</strong></b></div>
-            <div class="col-md-5"><b><strong>Total dage holdt til dato/Fraværskoder</strong></b></div>
+            <div *ngIf="monthView" class="col-md-3"><b><strong>Fravær i {{monthNames[currentMonthNumber]}} måned</strong></b></div>
+            <div *ngIf="!monthView" class="col-md-3"><b><strong>Fravær total i ferieåret</strong></b></div>
+            <div *ngIf="monthView" class="col-md-2" style="text-align: center"><b>Rest</b></div>
+            <div *ngIf="!monthView" class="col-md-2"></div>
             <div class="col-md-4">
               <div *ngIf="!monthView" class="row">
                 <div class="col-md-4"><b><strong>Overført</strong></b></div>
@@ -54,7 +57,9 @@
                 <div class="col-md-1"><b>BS</b></div>
                 <div class="col-md-1"><b>K</b></div>
                 <div class="col-md-1"><b>B</b></div>
-                <div class="col-md-1"><b>SN</b></div>
+                <div class="col-md-2"><b>SN</b></div>
+                <div *ngIf="monthView" class="col-md-2"><b>F</b></div>
+                <div *ngIf="monthView" class="col-md-2"><b>FF</b></div>
               </div>
             </div>
             <div class="col-md-4">
@@ -79,7 +84,14 @@
       <div class="col-md-12">
         <div class="row" *ngFor="let department of departments">
           <div class="col-md-12 department">
-            <b><strong>{{department.Name}}</strong></b>
+            <div class="row">
+              <div class="col-md-8">
+                <b><strong>{{department.Name}}</strong></b>
+              </div>
+              <div *ngIf="monthView && isPermitted(department) && monthSelected" class="col-md-4" style="text-align: right">
+                <button class="btn btn-info" (click)="approveMonthForDepartment(department)">Godkend afdeling</button>
+              </div>
+            </div>
             <div *ngIf="monthView===false" class="col-md-12">
               <div *ngFor="let employee of department.Employees">
                 <div class="empStats" *ngIf="employee.EmployeeRole != 2 && employeeIsInCurrentHolidayYear(employee)">
@@ -101,14 +113,12 @@
               </div>
             </div>
             <div class="col-md-12 filler">
-
             </div>
           </div>
         </div>
       </div>
     </div>
     <div class="col-md-12 innerFiller">
-
     </div>
   </div>
 </div>

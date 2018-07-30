@@ -1,0 +1,20 @@
+<div class="container">
+  <div class="row">
+    <h2>Rediger navn på: {{data.department.Name}}</h2>
+  </div>
+  <hr>
+  <form [formGroup]="formGroup" (submit)="create()" novalidate>
+    <div class="row"></div>
+    <div class="row">
+      <div class="col-sm-12">
+        <label><b>Nyt navn: </b>
+          <input type="text"
+                 placeholder="Indtast navn her"
+                 formControlName="changeName">
+        </label>
+      </div>
+    </div>
+    <button class="btn btn-success" type="submit">Gem</button>
+    <button class="btn btn-danger" type="button" (click)="close()">Annuller</button>
+  </form>
+</div>

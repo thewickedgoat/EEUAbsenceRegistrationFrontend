@@ -1,5 +1,5 @@
 .name{
-  background: #D3D3D3;
+  background: white;
   border: 2px;
   border-style: solid;
   border-color: #020203;
@@ -58,7 +58,7 @@
 
 .weekDayBox{
   text-align: center;
-  background: #D3D3D3;
+  background: white;
   border: 2px;
   border-style: solid;
   border-color: #020203;

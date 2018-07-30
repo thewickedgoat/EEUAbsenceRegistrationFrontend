@@ -88,7 +88,10 @@
                          [(ngModel)]="employee.Password">
                   <a *ngIf="isNotEditable && showPassword === true" class="btn btn-info" (click)="hideShowPassword()">Skjul adgangskode</a>
                 <div *ngIf="nameIsInvalid('password')" class="invalid-feedback">
-                  <div *ngIf="employeeGroup.controls['password'].errors">
+                  <div *ngIf="employeeGroup.controls['password'].errors['MinimumLength']">
+                    Adgangskoden skal mindst være 12 tegn.
+                  </div>
+                  <div *ngIf="employeeGroup.controls['password'].errors['NotEntered']">
                     Du skal angive en adgangskode.
                   </div>
                 </div>
@@ -98,16 +101,16 @@
               <label class="center-block col-md-12">Skriv adgangskode igen:
                 <input *ngIf="showPassword === false" class="form-control"
                          type="password"
-                         [ngClass]="{'is-invalid': passwordIsInvalid('passwordCheck'), 'is-valid': passwordIsValid('passwordCheck')}"
+                         [ngClass]="{'is-invalid': passwordCheckIsInvalid('passwordCheck'), 'is-valid': passwordCheckIsValid('passwordCheck')}"
                          placeholder="Skriv adgangskode igen"
                          formControlName="passwordCheck">
                   <a *ngIf="!isNotEditable && showPassword === false" class="btn btn-outline-info" (click)="hideShowPassword()">Vis adgangskode</a>
                   <input *ngIf="showPassword === true" class="form-control"
                          placeholder="Skriv adgangskode igen"
-                         [ngClass]="{'is-invalid': passwordIsInvalid('passwordCheck'), 'is-valid': passwordIsValid('passwordCheck')}"
+                         [ngClass]="{'is-invalid': passwordCheckIsInvalid('passwordCheck'), 'is-valid': passwordCheckIsValid('passwordCheck')}"
                          formControlName="passwordCheck">
                   <a *ngIf="!isNotEditable && showPassword === true" class="btn btn-info" (click)="hideShowPassword()">Skjul adgangskode</a>
-                <div *ngIf="passwordIsInvalid('passwordCheck')" class="invalid-feedback">
+                <div *ngIf="passwordCheckIsInvalid('passwordCheck')" class="invalid-feedback">
                   <div >
                     Adgangskoderne skal matche
                   </div>
@@ -163,7 +166,7 @@
             <button class="btn btn-warning" [disabled]="!isNotEditable" (click)="edit()">
               <i class="fa fa-pencil-square-o">Rediger</i>
             </button>
-            <button class="btn btn-info" [disabled]="employeeGroup.invalid || isNotEditable" type="submit" (click)="stopEdit()">
+            <button class="btn btn-info" [disabled]="employeeGroup.invalid || isNotEditable" type="submit">
               <i class="fa fa-floppy-o" aria-hidden="true">Gem</i>
             </button>
             <hr>
@@ -173,7 +176,7 @@
         </form>
       </div>
     </div>
-    <div *ngIf="isAdmin()">
+    <div *ngIf="isAdmin() && employee.Id != loggedInUser.Id">
       <app-workfreeday
         [employee]="employee"
         [currentWorkfreeDayList]="employeeWorkfreeDaysInYear"

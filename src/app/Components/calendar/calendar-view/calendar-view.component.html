@@ -1,16 +1,19 @@
 <div *ngIf="initHasBeenRun">
   <div *ngIf="!isMonthLocked">
     <div class="row" *ngFor="let week of amountOfWeeksInCurrentMonth; let i = index">
+
+      <!--Sunday-->
       <div *ngIf="!isDayEditable(i, 0)" class="weekendSquare col-sm-1">
         {{getDateNumbersForCalendar(i, 0)}}
       </div>
       <div *ngIf="isDayEditable(i, 0)" class="weekendSquare col-sm-1">
         {{getDateNumbersForCalendar(i, 0)}}
       </div>
-      <div *ngIf="!isDayEditable(i, 1)" class="weekendSquare col-sm-2">
+      <!--Monday-->
+      <div *ngIf="!isDayEditable(i, 1) && !dayIsLockedBySuperior(i, 1) && !dayIsLocked(i, 1)" class="weekendSquare col-sm-2">
         {{getDateNumbersForCalendar(i, 1)}}
       </div>
-      <div *ngIf="isDayEditable(i, 1)" class="weekdaySquare col-sm-2">
+      <div *ngIf="isDayEditable(i, 1) && !dayIsLockedBySuperior(i, 1) && !dayIsLocked(i, 1)" class="weekdaySquare col-sm-2">
         {{getDateNumbersForCalendar(i, 1)}}
         <div>
           <div style="text-align: center"
@@ -18,10 +21,30 @@
           </div>
         </div>
       </div>
-      <div *ngIf="!isDayEditable(i, 2)" class="weekendSquare col-sm-2">
+        <!--Day is locked and cannot be edited-->
+      <div *ngIf="isDayEditable(i, 1) && dayIsLockedBySuperior(i, 1) && dayIsLocked(i, 1)" class="lockedSquare col-sm-2">
+        {{getDateNumbersForCalendar(i, 1)}}
+        <div>
+          <div *ngIf="getStatusForDate(i, 1) != '+'" style="text-align: center"
+               class="btn btn-outline-info btn-circle btn-xl disabled">{{getStatusForDate(i, 1)}}
+          </div>
+        </div>
+      </div>
+        <!--Day is locked but can be edited-->
+      <div *ngIf="isDayEditable(i, 1) && !dayIsLockedBySuperior(i, 1) && dayIsLocked(i, 1)" class="lockedSquare col-sm-2">
+        {{getDateNumbersForCalendar(i, 1)}}
+        <div>
+          <div *ngIf="getStatusForDate(i, 1) != '+'" style="text-align: center"
+               (click)="changeAbsence(i, 1)" class="btn btn-outline-info btn-circle btn-xl">{{getStatusForDate(i, 1)}}
+          </div>
+        </div>
+      </div>
+      <!--Tuesday-->
+      <div *ngIf="!isDayEditable(i, 2) && !dayIsLockedBySuperior(i, 2) && !dayIsLocked(i, 2)" class="weekendSquare col-sm-2">
         {{getDateNumbersForCalendar(i, 2)}}
       </div>
-      <div *ngIf="isDayEditable(i, 2)" class="weekdaySquare col-sm-2">
+
+      <div *ngIf="isDayEditable(i, 2) && !dayIsLockedBySuperior(i, 2) && !dayIsLocked(i, 2)" class="weekdaySquare col-sm-2">
         {{getDateNumbersForCalendar(i, 2)}}
         <div>
           <div style="text-align: center"
@@ -29,10 +52,29 @@
           </div>
         </div>
       </div>
-      <div *ngIf="!isDayEditable(i, 3)" class="weekendSquare col-sm-2">
+        <!--Day is locked and cannot be edited-->
+      <div *ngIf="isDayEditable(i, 2) && dayIsLockedBySuperior(i, 2) && dayIsLocked(i, 2)" class="lockedSquare col-sm-2">
+        {{getDateNumbersForCalendar(i, 2)}}
+        <div>
+          <div *ngIf="getStatusForDate(i, 2) != '+'" style="text-align: center"
+               class="btn btn-outline-info btn-circle btn-xl disabled">{{getStatusForDate(i, 2)}}
+          </div>
+        </div>
+      </div>
+        <!--Day is locked but can be edited-->
+      <div *ngIf="isDayEditable(i, 2) && !dayIsLockedBySuperior(i, 2) && dayIsLocked(i, 2)" class="lockedSquare col-sm-2">
+        {{getDateNumbersForCalendar(i, 2)}}
+        <div>
+          <div *ngIf="getStatusForDate(i, 2) != '+'" style="text-align: center"
+               (click)="changeAbsence(i, 2)" class="btn btn-outline-info btn-circle btn-xl">{{getStatusForDate(i, 2)}}
+          </div>
+        </div>
+      </div>
+      <!--Wednesday-->
+      <div *ngIf="!isDayEditable(i, 3) && !dayIsLockedBySuperior(i, 3) && !dayIsLocked(i, 3)" class="weekendSquare col-sm-2">
         {{getDateNumbersForCalendar(i, 3)}}
       </div>
-      <div *ngIf="isDayEditable(i, 3)" class="weekdaySquare col-sm-2">
+      <div *ngIf="isDayEditable(i, 3) && !dayIsLockedBySuperior(i, 3) && !dayIsLocked(i, 3)" class="weekdaySquare col-sm-2">
         {{getDateNumbersForCalendar(i, 3)}}
         <div>
           <div style="text-align: center"
@@ -40,10 +82,29 @@
           </div>
         </div>
       </div>
-      <div *ngIf="!isDayEditable(i, 4)" class="weekendSquare col-sm-2">
+        <!--Day is locked and cannot be edited-->
+      <div *ngIf="isDayEditable(i, 3) && dayIsLockedBySuperior(i, 3) && dayIsLocked(i, 3)" class="lockedSquare col-sm-2">
+        {{getDateNumbersForCalendar(i, 3)}}
+        <div>
+          <div *ngIf="getStatusForDate(i, 3) != '+'" style="text-align: center"
+               class="btn btn-outline-info btn-circle btn-xl disabled">{{getStatusForDate(i, 3)}}
+          </div>
+        </div>
+      </div>
+        <!--Day is locked but can be edited-->
+      <div *ngIf="isDayEditable(i, 3) && !dayIsLockedBySuperior(i, 3) && dayIsLocked(i, 3)" class="lockedSquare col-sm-2">
+        {{getDateNumbersForCalendar(i, 3)}}
+        <div>
+          <div *ngIf="getStatusForDate(i, 3) != '+'" style="text-align: center"
+               (click)="changeAbsence(i, 3)" class="btn btn-outline-info btn-circle btn-xl">{{getStatusForDate(i, 3)}}
+          </div>
+        </div>
+      </div>
+      <!--Thursday-->
+      <div *ngIf="!isDayEditable(i, 4) && !dayIsLockedBySuperior(i, 4) && !dayIsLocked(i, 4)" class="weekendSquare col-sm-2">
         {{getDateNumbersForCalendar(i, 4)}}
       </div>
-      <div *ngIf="isDayEditable(i, 4)" class="weekdaySquare col-sm-2">
+      <div *ngIf="isDayEditable(i, 4) && !dayIsLockedBySuperior(i, 4) && !dayIsLocked(i, 4)" class="weekdaySquare col-sm-2">
         {{getDateNumbersForCalendar(i, 4)}}
         <div>
           <div style="text-align: center"
@@ -51,17 +112,55 @@
           </div>
         </div>
       </div>
-      <div *ngIf="!isDayEditable(i, 5)" class="weekendSquare col-sm-2">
-        {{getDateNumbersForCalendar(i, 5)}}
-      </div>
-      <div *ngIf="isDayEditable(i, 5)" class="weekdaySquare col-sm-2">
-        {{getDateNumbersForCalendar(i, 5)}}
+        <!--Day is locked and cannot be edited-->
+      <div *ngIf="isDayEditable(i, 4) && dayIsLockedBySuperior(i, 4) && dayIsLocked(i, 4)" class="lockedSquare col-sm-2">
+        {{getDateNumbersForCalendar(i, 4)}}
         <div>
-          <div style="text-align: center"
-               (click)="changeAbsence(i,5)" class="btn btn-outline-info btn-circle btn-xl">{{getStatusForDate(i, 5)}}
+          <div *ngIf="getStatusForDate(i, 4) != '+'" style="text-align: center"
+               class="btn btn-outline-info btn-circle btn-xl disabled">{{getStatusForDate(i, 4)}}
           </div>
         </div>
       </div>
+        <!--Day is locked but can be edited-->
+      <div *ngIf="isDayEditable(i, 4) && !dayIsLockedBySuperior(i, 4) && dayIsLocked(i, 4)" class="lockedSquare col-sm-2">
+        {{getDateNumbersForCalendar(i, 4)}}
+        <div>
+          <div *ngIf="getStatusForDate(i, 4) != '+'" style="text-align: center"
+               (click)="changeAbsence(i, 4)" class="btn btn-outline-info btn-circle btn-xl">{{getStatusForDate(i, 4)}}
+          </div>
+        </div>
+      </div>
+      <!--Friday-->
+      <div *ngIf="!isDayEditable(i, 5) && !dayIsLockedBySuperior(i, 5) && !dayIsLocked(i, 5)" class="weekendSquare col-sm-2">
+        {{getDateNumbersForCalendar(i, 5)}}
+      </div>
+      <div *ngIf="isDayEditable(i, 5) && !dayIsLockedBySuperior(i, 5) && !dayIsLocked(i, 5)" class="weekdaySquare col-sm-2">
+        {{getDateNumbersForCalendar(i, 5)}}
+        <div>
+          <div style="text-align: center"
+               (click)="changeAbsence(i, 5)" class="btn btn-outline-info btn-circle btn-xl">{{getStatusForDate(i, 5)}}
+          </div>
+        </div>
+      </div>
+        <!--Day is locked and cannot be edited-->
+      <div *ngIf="isDayEditable(i, 5) && dayIsLockedBySuperior(i, 5) && dayIsLocked(i, 5)" class="lockedSquare col-sm-2">
+        {{getDateNumbersForCalendar(i, 5)}}
+        <div>
+          <div *ngIf="getStatusForDate(i, 5) != '+'" style="text-align: center"
+               class="btn btn-outline-info btn-circle btn-xl disabled">{{getStatusForDate(i, 5)}}
+          </div>
+        </div>
+      </div>
+        <!--Day is locked but can be edited-->
+      <div *ngIf="isDayEditable(i, 5) && !dayIsLockedBySuperior(i, 5) && dayIsLocked(i, 5)" class="lockedSquare col-sm-2">
+        {{getDateNumbersForCalendar(i, 5)}}
+        <div>
+          <div *ngIf="getStatusForDate(i, 5) != '+'" style="text-align: center"
+               (click)="changeAbsence(i, 5)" class="btn btn-outline-info btn-circle btn-xl">{{getStatusForDate(i, 5)}}
+          </div>
+        </div>
+      </div>
+      <!--Saturday-->
       <div *ngIf="!isDayEditable(i, 6)" class="weekendSquare col-sm-1">
         {{getDateNumbersForCalendar(i, 6)}}
       </div>
@@ -71,7 +170,7 @@
     </div>
   </div>
 
-  <!-- this div runs if the currentMonthonth is locked for approval -->
+  <!-- this div runs if the currentMonth is locked for approval -->
   <div *ngIf="isMonthLocked">
     <div class="row" *ngFor="let week of amountOfWeeksInCurrentMonth; let i = index">
       <div *ngIf="!isDayEditable(i, 0)" class="weekendSquare col-sm-1">

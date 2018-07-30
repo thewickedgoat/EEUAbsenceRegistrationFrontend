@@ -35,12 +35,15 @@ export class WorkfreedaysCreateViewComponent implements OnInit {
     const values = this.workfreedayGroup.value;
     const startDate = new Date(values.dateStart);
     const endDate = new Date(values.dateEnd);
+    endDate.setHours(3,0,0)
+    console.log(endDate);
     const name = this.dayNames[this.dayNumber];
-    console.log('start');
-    console.log(this.employee);
     let dateToCreate = startDate;
+    console.log(dateToCreate);
+    console.log('start');
     let datesToCreate = new Array<Date>();
     do{
+      console.log(dateToCreate);
       if(dateToCreate.getDay() === this.dayNumber){
         const workfreeDayDate = new Date(dateToCreate);
         datesToCreate.push(workfreeDayDate);
@@ -48,6 +51,8 @@ export class WorkfreedaysCreateViewComponent implements OnInit {
       dateToCreate.setDate(dateToCreate.getDate()+1);
     }
     while (dateToCreate <= endDate);
+    console.log('end');
+    console.log(dateToCreate);
     let workfreeDays = new Array<WorkfreeDay>();
     const employee: Employee = {
       Id: this.employee.Id,
@@ -60,17 +65,13 @@ export class WorkfreedaysCreateViewComponent implements OnInit {
       EmployeeRole: EmployeeRole.Medarbejder,
       Department: null,
       WorkfreeDays: null,
-      Note: ' '
+      Note: ' ',
+      PasswordReset: false
     }
-    console.log('start');
-    console.log(this.employee);
     for(let workfreeDate of datesToCreate){
       const workfreeDay: WorkfreeDay = {Date: workfreeDate, Name: name, Employee: employee};
       workfreeDays.push(workfreeDay);
     }
-
-    console.log(this.employee);
-    console.log(workfreeDays);
     this.dialogRef.close(workfreeDays);
   }
 

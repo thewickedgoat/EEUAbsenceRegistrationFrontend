@@ -27,6 +27,8 @@ export class HolidayyearEmployeeViewComponent implements OnInit {
   updateHolidayYearEmitter = new EventEmitter();
   @Output()
   toggleEmitter = new EventEmitter();
+  @Output()
+  deleteHolidayYearEmitter = new EventEmitter();
 
   constructor(private formBuilder: FormBuilder) { }
 
@@ -54,12 +56,15 @@ export class HolidayyearEmployeeViewComponent implements OnInit {
     const values = this.formGroup.value;
   }
 
+  deleteHolidayYear(){
+    this.deleteHolidayYearEmitter.emit();
+  }
+
   updateHolidayYear(){
     const values = this.formGroup.value;
     let holidayYearToUpdate = this.selectedHolidayYear;
 
     let tempHolidayAvailable = values.holidayAvailable.toString();
-    console.log(tempHolidayAvailable);
     let holidayAvailable = tempHolidayAvailable.replace(',', '.');
     holidayAvailable = +holidayAvailable;
     holidayYearToUpdate.HolidayAvailable = holidayAvailable;

@@ -31,6 +31,7 @@ export class PublicCalendarViewComponent implements OnInit {
 
   ngOnInit() {
     this.formatWorkfreeDays();
+    console.log(this.powerOfTwo);
   }
 
 

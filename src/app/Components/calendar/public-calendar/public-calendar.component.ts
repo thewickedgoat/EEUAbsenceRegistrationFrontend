@@ -8,6 +8,7 @@ import {EmployeeService} from '../../../services/employee.service';
 import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
 import {Department} from '../../../entities/department';
 import {EmployeeRole} from '../../../entities/employeeRole.enum';
+import {PublicHoliday} from '../../../entities/publicholiday';
 
 @Component({
   selector: 'app-public-calendar',
@@ -49,18 +50,29 @@ export class PublicCalendarComponent implements OnInit {
     this.daysInMonth();
     this.getNumberOfMonthsInHolidayYear();
     this.departmentService.getAll().subscribe(departments => {
+      for(let department of departments){
+        department.Employees.sort(this.sortEmployeesByName)
+      }
       this.departments = departments;
     });
+  }
+
+  sortEmployeesByName(a: Employee, b: Employee) {
+    let firstNameOfA = a.FirstName;
+    let firstNameOfB = b.FirstName;
+    return firstNameOfA > firstNameOfB ? 1 : (firstNameOfA < firstNameOfB ? -1 : 0);
   }
 
   getNumberOfMonthsInHolidayYear(){
     this.monthsInHolidayYear = [];
     const startDate = this.currentHolidayYearSpec.StartDate;
+    console.log(startDate);
     let dateToIterate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     const endDate = this.currentHolidayYearSpec.EndDate;
     do{
       this.monthsInHolidayYear.push(dateToIterate.getMonth());
       dateToIterate.setMonth(dateToIterate.getMonth()+1);
+      console.log('nep');
     }
     while(dateToIterate < endDate);
   }
@@ -150,6 +162,7 @@ export class PublicCalendarComponent implements OnInit {
 
   getCurrentHolidayYearSpec(){
     const currentHolidayYearSpec = JSON.parse(sessionStorage.getItem('currentHolidayYearSpec'));
+    console.log(currentHolidayYearSpec);
     currentHolidayYearSpec.StartDate = this.dateformatingService.formatDate(currentHolidayYearSpec.StartDate);
     currentHolidayYearSpec.EndDate = this.dateformatingService.formatDate(currentHolidayYearSpec.EndDate);
     this.currentHolidayYearSpec = currentHolidayYearSpec;

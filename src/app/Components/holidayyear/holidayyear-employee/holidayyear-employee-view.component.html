@@ -11,21 +11,29 @@
           </label>
         </div>
         <div class="row">
-          <label>Ferie til rådighed (total):
+          <label>Ferie overført fra sidste år:
             <input class="form-control"
-                   formControlName="total"
-                   [(ngModel)]="total">
+                   formControlName="holidayTransfered"
+                   [(ngModel)]="selectedHolidayYear.HolidayTransfered">
+
           </label>
         </div>
         <div class="row">
-          <label>Ferie til optjent:
+          <label>Feriedage optjent:
             <input class="form-control"
                    formControlName="holidayAvailable"
                    [(ngModel)]="selectedHolidayYear.HolidayAvailable">
           </label>
         </div>
         <div class="row">
-          <label>Ferie brugt:
+          <label>Feriedage til rådighed (total):
+            <input class="form-control"
+                   formControlName="total"
+                   [(ngModel)]="total">
+          </label>
+        </div>
+        <div class="row">
+          <label>Feriedage brugt:
             <input class="form-control"
                    formControlName="holidayUsed"
                    [(ngModel)]="selectedHolidayYear.HolidaysUsed">
@@ -45,17 +53,10 @@
                    [(ngModel)]="selectedHolidayYear.HolidayFreedaysUsed">
           </label>
         </div>
-        <div class="row">
-          <label>Ferie overført fra sidste år:
-            <input class="form-control"
-                   formControlName="holidayTransfered"
-                   [(ngModel)]="selectedHolidayYear.HolidayTransfered">
-
-          </label>
-        </div>
         <div>
-          <button class="btn-info" (click)="toggleEditable()" *ngIf="isNotEditable">Rediger</button>
-          <button class="btn-success" type="submit" *ngIf="!isNotEditable">Gem Ændringer</button>
+          <button class="btn btn-info" (click)="toggleEditable()" *ngIf="isNotEditable">Rediger</button>
+          <button class="btn btn-success" type="submit" *ngIf="!isNotEditable">Gem Ændringer</button>
+          <button class="btn btn-danger" (click)="deleteHolidayYear()">Slet</button>
         </div>
       </div>
     </form>

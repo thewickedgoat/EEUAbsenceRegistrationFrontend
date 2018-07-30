@@ -30,7 +30,7 @@
             </div>
             <hr>
         </div>
-        <div *ngIf="isAdmin || isDepartmentChief && loggedInUser.Department.Id === employee.Department.Id || loggedInUser.Id === employee.Id">
+        <div *ngIf="isAdmin || isChief && loggedInUser.Department.Id === employee.Department.Id || loggedInUser.Id === employee.Id">
           <h3>Fraværsoversigt:</h3>
           <app-absence-overview-controller
             [employee]="employee"
@@ -88,7 +88,13 @@
       [vacationLimitReached]="vacationLimitReached"
       [publicHolidays]="currentHolidayYearSpec.PublicHolidays"
       [employee]="employee"
+      [loggedInUser]="loggedInUser"
       [initHasBeenRun]="initHasBeenRun"
+      [isEmployee]="isEmployee"
+      [isChief]="isChief"
+      [isCEO]="isCEO"
+      [isAdmin]="isAdmin"
+      [lockDay]="lockDay"
       (deleteHoliday)="deleteHoliday($event)"
       (updateHoliday)="updateHoliday($event)"
       (emitter)="reloadHolidayYearAndMonth()"
@@ -97,15 +103,17 @@
         <ngb-alert *ngIf="vacationLimitReachedError" (close)="close()" type="danger">OBS: Du har tilføjet mere ferie end du har optjent!</ngb-alert>
       </div>
     <div class="absenceTypes col-sm-2">
-      <app-status-controller (emitter)="setStatus($event)"
-      [isLockedForEdit]="isMonthLocked"></app-status-controller>
+      <app-status-controller
+        (emitter)="setStatus($event)"
+      [isLockedForEdit]="isMonthLocked"
+      ></app-status-controller>
       <div *ngIf="currentMonth">
-        <app-absence-confirmation *ngIf="isAdmin || isDepartmentChief || isCEO || isEmployee"
+        <app-absence-confirmation *ngIf="isAdmin || isChief || isCEO || isEmployee"
           [loggedInEmployee]="loggedInUser"
           [employee]="employee"
           [currentMonth]="currentMonth"
           [isEmployee]="isEmployee"
-          [isDepartmentChief]="isDepartmentChief"
+          [isDepartmentChief]="isChief"
           [isCEO]="isCEO"
           [isAdmin]="isAdmin"
           (emitterToReopen)="refreshCalendar()"

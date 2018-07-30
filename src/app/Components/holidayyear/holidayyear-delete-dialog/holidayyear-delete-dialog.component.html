@@ -1,0 +1,31 @@
+<div class="container">
+  <div *ngIf="hasData">
+    <div class="row" style="text-align: center">
+      <label><b>OBS!: Dette ferieår indeholder medarbejder specifikationer.</b></label>
+    </div>
+    <div class="row">
+      <label>Liste over medarbejdere:</label>
+    </div>
+    <nav style="background-color: white; height: 200px; width: 90%; overflow-y: scroll">
+      <ul>
+        <li *ngFor="let holidayYear of data.holidayYears">{{holidayYear.Employee.FirstName}} {{holidayYear.Employee.LastName}}</li>
+      </ul>
+    </nav>
+    <div class="row">
+      <label><b>Vil du slette alligevel?</b></label>
+    </div>
+    <div class="row">
+      <button class="btn btn-danger" (click)="delete()">Slet</button>
+      <button class="btn btn-success" (click)="cancel()">Annuller</button>
+    </div>
+  </div>
+  <div *ngIf="!hasData">
+    <div class="row">
+      <label><b>Er du sikker på du vil slette ferieåret?</b></label>
+    </div>
+    <div class="row">
+      <button class="btn btn-danger" (click)="delete()">Slet</button>
+      <button class="btn btn-success" (click)="cancel()">Annuller</button>
+    </div>
+  </div>
+</div>

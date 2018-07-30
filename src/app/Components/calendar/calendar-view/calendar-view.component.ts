@@ -6,6 +6,7 @@ import {Status} from '../../../entities/status';
 import {MonthService} from '../../../services/month.service';
 import {PublicHoliday} from '../../../entities/publicholiday';
 import {Employee} from '../../../entities/Employee';
+import {EmployeeRole} from '../../../entities/employeeRole.enum';
 
 @Component({
   selector: 'app-calendar-view',
@@ -35,7 +36,19 @@ export class CalendarViewComponent implements OnInit {
   @Input()
   employee: Employee;
   @Input()
+  loggedInUser: Employee;
+  @Input()
   initHasBeenRun: boolean;
+  @Input()
+  isEmployee: boolean;
+  @Input()
+  isChief: boolean;
+  @Input()
+  isCEO: boolean;
+  @Input()
+  isAdmin: boolean;
+  @Input()
+  lockDay: boolean;
 
   @Output()
   emitter = new EventEmitter();
@@ -48,9 +61,15 @@ export class CalendarViewComponent implements OnInit {
   @Output()
   updateHoliday = new EventEmitter();
 
+  creatingAbsence = false;
+
   constructor(private absenceService: AbsenceService, private monthService: MonthService) { }
 
   ngOnInit() {
+  }
+
+  ngOnChanges(){
+    this.creatingAbsence = false;
   }
 
   /**
@@ -68,6 +87,74 @@ export class CalendarViewComponent implements OnInit {
       return false;
     }
     else return true;
+  }
+
+  dayIsLocked(week: number, day: number){
+    let currentDate = this.convertToDate(week, day);
+    if(currentDate != null){
+      let absence = this.absencesInCurrentMonth.find(x => x.Date.toDateString() === currentDate.toDateString());
+      if(absence != null){
+        const isLockedByEmployee = absence.IsLockedByEmployee;
+        const isLockedByChief = absence.IsLockedByChief;
+        const isLockedByCEO = absence.IsLockedByCEO;
+        const isLockedByAdmin = absence.IsLockedByAdmin;
+        if(isLockedByEmployee || isLockedByChief || isLockedByCEO || isLockedByAdmin){
+          return true;
+        }
+        else return false;
+      }
+    }
+    else return false;
+  }
+
+  dayIsLockedBySuperior(week: number, day: number){
+    let currentDate = this.convertToDate(week, day);
+    if(currentDate != null){
+      let absence = this.absencesInCurrentMonth.find(x => x.Date.toDateString() === currentDate.toDateString());
+      if(absence != null){
+        const isLockedByEmployee = absence.IsLockedByEmployee;
+        const isLockedByChief = absence.IsLockedByChief;
+        const isLockedByCEO = absence.IsLockedByCEO;
+        const isLockedByAdmin = absence.IsLockedByAdmin;
+        if(this.isEmployee){
+          if(this.isChief){
+            if(!isLockedByCEO && !isLockedByAdmin){
+              return false;
+            }
+            else return true;
+          }
+          if(this.isCEO){
+            if(!isLockedByAdmin){
+              return false;
+            }
+            else return true;
+          }
+          else {
+            if(!isLockedByChief && !isLockedByCEO && !isLockedByAdmin){
+              return false;
+            }
+            else return true;
+          }
+        }
+        else if(this.isChief && !this.isEmployee){
+          if(!isLockedByCEO && !isLockedByAdmin){
+            return false;
+          }
+          else return true;
+        }
+        else if(this.isCEO && !this.isEmployee){
+          if(!isLockedByAdmin){
+            return false;
+          }
+          else return true;
+        }
+        else if(this.isAdmin){
+          return false;
+        }
+      }
+      else return false;
+    }
+    else return false;
   }
 
   /**
@@ -140,7 +227,9 @@ export class CalendarViewComponent implements OnInit {
    * @param week
    * @param day
     */
-   changeAbsence(week: number, day: number){
+  changeAbsence(week: number, day: number){
+    if(this.creatingAbsence != true){
+      this.creatingAbsence = true;
       let absencesInCurrentMonth = this.currentMonth.AbsencesInMonth;
       let currentDate = this.convertToDate(week, day);
       if(currentDate != null)
@@ -148,7 +237,7 @@ export class CalendarViewComponent implements OnInit {
         let currentAbsence = absencesInCurrentMonth.find(x => x.Date.toDateString() === currentDate.toDateString());
         if(this.status != null){
           let statusCode = this.status.StatusCode;
-          if(currentAbsence != null)
+          if(currentAbsence != null && !this.lockDay)
           {
             this.resetVacationLimit();
             this.updateRemainingVacation(currentAbsence, false, statusCode);
@@ -158,12 +247,22 @@ export class CalendarViewComponent implements OnInit {
               }
               else{
                 this.updateAbsence(currentAbsence);
+                return;
               }
             }, 100);
           }
+          else if(currentAbsence != null && this.lockDay){
+            currentAbsence.IsLockedByEmployee = this.isEmployee;
+            currentAbsence.IsLockedByChief = this.isChief;
+            currentAbsence.IsLockedByCEO = this.isCEO;
+            currentAbsence.IsLockedByAdmin = this.isAdmin;
+            this.updateAbsence(currentAbsence);
+            return;
+          }
           else{
             this.resetVacationLimit();
-            let absenceToCreate = ({Date: currentDate, Status: this.status, Month: this.currentMonth});
+            let absenceToCreate = ({Date: currentDate, Status: this.status, Month: this.currentMonth,
+              IsLockedByEmployee: false, IsLockedByChief: false, IsLockedByCEO: false, IsLockedByAdmin: false});
             this.updateRemainingVacation(absenceToCreate, true, statusCode);
             setTimeout(() => {
               if(this.vacationLimit(statusCode)){
@@ -171,23 +270,46 @@ export class CalendarViewComponent implements OnInit {
               }
               else{
                 this.createAbsence(absenceToCreate);
+                return;
               }
             }, 100);
           }
         }
         else {
-          if(currentAbsence != null){
+          if(currentAbsence != null && this.lockDay === null){
             let absenceStatusCode = currentAbsence.Status.StatusCode;
             if(this.isStatusVacationRelated(absenceStatusCode)){
               this.updateRemainingVacation(currentAbsence, false,null);
               this.deleteAbsence(currentAbsence);
+              return;
             }
             else{
               this.deleteAbsence(currentAbsence);
+              return;
             }
+          }
+          else if(currentAbsence != null && this.lockDay){
+            currentAbsence.IsLockedByEmployee = this.isEmployee;
+            currentAbsence.IsLockedByChief = this.isChief;
+            currentAbsence.IsLockedByCEO = this.isCEO;
+            currentAbsence.IsLockedByAdmin = this.isAdmin;
+            this.updateAbsence(currentAbsence);
+            return;
+          }
+          else if(currentAbsence != null && !this.lockDay){
+            if(!this.dayIsLockedBySuperior(week, day)){
+              currentAbsence.IsLockedByEmployee = false;
+              currentAbsence.IsLockedByChief = false;
+              currentAbsence.IsLockedByCEO = false;
+              currentAbsence.IsLockedByAdmin = false;
+              this.updateAbsence(currentAbsence);
+              return;
+            }
+            else return;
           }
         }
       }
+    }
   }
 
   deleteAbsence(absence: Absence){
@@ -205,7 +327,9 @@ export class CalendarViewComponent implements OnInit {
   }
 
   updateAbsence(absence: Absence){
-    absence.Status = this.status;
+    if(this.status != null){
+      absence.Status = this.status;
+    }
     this.monthService.getById(this.currentMonth.Id).subscribe(month=> {
       absence.Month = month;
       this.absenceService.put(absence).subscribe(() => {

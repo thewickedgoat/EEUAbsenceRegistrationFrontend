@@ -31,10 +31,16 @@ export class HolidayyearAdministrationViewComponent implements OnInit {
   toggleEditEmitter = new EventEmitter();
   @Output()
   createHolidayYearSpecEmitter = new EventEmitter();
+  @Output()
+  deleteHolidayYearSpecEmitter = new EventEmitter();
 
   constructor(private dialog: MatDialog,) { }
 
   ngOnInit() {
+  }
+
+  deleteHolidayYearSpec(){
+    this.deleteHolidayYearSpecEmitter.emit();
   }
 
 
@@ -43,6 +49,7 @@ export class HolidayyearAdministrationViewComponent implements OnInit {
   }
 
   selectEmployee(id: number){
+    console.log(id);
     this.selectEmployeeEmitter.emit(id);
   }
 

@@ -4,8 +4,17 @@
   <div class="menu-list">
 
     <ul id="menu-content" class="menu-content collapse out">
+      <li *ngIf="!isAdmin()" (click)="toCalendar()">
+        <a><i class="fa fa-calendar fa-lg"></i> Min Fraværskalender </a>
+      </li>
       <li (click)="toPublicCalendar()">
-        <a><i class="fa fa-home fa-lg"></i> Månedsoversigt</a>
+        <a><i class="fa fa-home fa-lg"></i> Månedskalender</a>
+      </li>
+      <li (click)="toStats()">
+        <a ><i class="fa fa-bar-chart fa-lg"></i> Oversigter </a>
+      </li>
+      <li (click)="toEmployees()">
+        <a ><i class="fa fa-users fa-lg"></i> Medarbejdere </a>
       </li>
       <li *ngIf="!isAdmin()" (click)="toEmployeeProfile()">
         <a><i class="fa fa-id-card-o" aria-hidden="true"></i> Min Profil </a>
@@ -13,8 +22,11 @@
       <li *ngIf="isAdmin()" (click)="toEmployeeProfile()">
         <a><i class="fa fa-id-card-o" aria-hidden="true"></i> Admin Profil </a>
       </li>
-      <li *ngIf="!isAdmin()" (click)="toCalendar()">
-        <a><i class="fa fa-calendar fa-lg"></i> Kalender </a>
+      <li *ngIf="isAdmin()" (click)="toHolidayYearAdministration()">
+        <a ><i class="fa fa-wrench fa-lg"></i> Ferieårsadministration </a>
+      </li>
+      <li *ngIf="isAdmin()" (click)="toStatusAdministration()">
+        <a><i class="fa fa-barcode fa-lg"></i> Fraværskodeoversigt </a>
       </li>
       <li>
         <a><i class="fa fa-list-alt fa-lg"></i> Valgte Ferieår </a>
@@ -24,18 +36,6 @@
             <option *ngFor="let holidayYearSpec of holidayYearSpecs" [value]="holidayYearSpec.Id" [selected]="isCurrentHolidayYearSpec(holidayYearSpec.Id)" >{{holidayYearSpec.Name}}</option>
           </select>
         </div>
-      </li>
-      <li *ngIf="isAdmin()" (click)="toEmployees()">
-        <a ><i class="fa fa-users fa-lg"></i> Medarbejdere </a>
-      </li>
-      <li *ngIf="isAdmin()" (click)="toHolidayYearAdministration()">
-        <a ><i class="fa fa-wrench fa-lg"></i> Ferieårs Administration </a>
-      </li>
-      <li *ngIf="isAdmin()" (click)="toStats()">
-        <a ><i class="fa fa-bar-chart fa-lg"></i> Statistikker </a>
-      </li>
-      <li *ngIf="!isAdmin()" (click)="toEmployees()">
-        <a ><i class="fa fa-users fa-lg"></i> Kollegaer </a>
       </li>
       <li (click)="logOut()">
         <a><i class="fa fa-sign-out fa-lg"></i> Logud </a>

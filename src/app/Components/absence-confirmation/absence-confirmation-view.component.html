@@ -23,7 +23,11 @@
     <div *ngIf="!isMonthApprovedByAdmin">
       Admin: <input type="checkbox" [disabled]="true">
     </div>
+    <div *ngIf="isMonthApprovedByEmployee && !isMonthApprovedByChief && !isMonthApprovedByAdmin">
+      <button class="btn btn-info" (click)="reopenMonthAsEmployee()">Fortryd godkendelse</button>
+    </div>
   </div>
+
   <!--Godkend for dig selv som Afdelingsleder-->
   <div *ngIf="isEmployee && isDepartmentChief">
     <div>
@@ -44,7 +48,11 @@
     <div *ngIf="!isMonthApprovedByAdmin">
       Admin: <input type="checkbox" [disabled]="true">
     </div>
+    <div *ngIf="isMonthApprovedByEmployee && !isMonthApprovedByCEO">
+      <button class="btn btn-info" (click)="reopenMonthAsEmployee()">Fortryd godkendelse</button>
+    </div>
   </div>
+
   <!--Godkend for dig selv som CEO-->
   <div *ngIf="isEmployee && isCEO">
     <div>
@@ -81,6 +89,9 @@
     <div *ngIf="!isMonthApprovedByAdmin">
       Admin: <input type="checkbox" [disabled]="true">
     </div>
+    <div *ngIf="isMonthApprovedByChief && !isMonthApprovedByAdmin">
+      <button class="btn btn-info" (click)="reopenMonthAsChief()">Fortryd godkendelse</button>
+    </div>
   </div>
 
   <!--Godkend som CEO-->
@@ -103,9 +114,13 @@
     <div *ngIf="!isMonthApprovedByAdmin">
       Admin: <input type="checkbox" [disabled]="true">
     </div>
+    <div *ngIf="isMonthApprovedByEmployee && isMonthApprovedByCEO && !isMonthApprovedByAdmin">
+      <button class="btn btn-info" (click)="reopenMonthAsCEO()">Fortryd godkendelse</button>
+    </div>
   </div>
 
   <!--Godkend som Admin-->
+
   <!--Godkend medarbejder-->
   <div *ngIf="isAdmin && employee.EmployeeRole === 0">
     <div *ngIf="isMonthApprovedByEmployee">
@@ -129,7 +144,7 @@
     <div>
       <button *ngIf="isMonthApprovedByAdmin
       && isMonthApprovedByChief
-      && isMonthApprovedByEmployee" class="btn btn-info" (click)="reopenMonth()">Genåben måned</button>
+      && isMonthApprovedByEmployee" class="btn btn-info" (click)="reopenMonthAsAdmin()">Genåben måned</button>
     </div>
   </div>
   <!--Godkend afdelingsledere-->
@@ -155,7 +170,7 @@
     <div>
       <button *ngIf="isMonthApprovedByAdmin
       && isMonthApprovedByCEO
-      && isMonthApprovedByEmployee" class="btn btn-info" (click)="reopenMonth()">Genåben måned</button>
+      && isMonthApprovedByEmployee" class="btn btn-info" (click)="reopenMonthAsAdmin()">Genåben måned</button>
     </div>
   </div>
   <!--Godkend CEO-->
@@ -174,7 +189,7 @@
     </div>
     <div>
       <button *ngIf="isMonthApprovedByAdmin
-      && isMonthApprovedByEmployee" class="btn btn-info" (click)="reopenMonth()">Genåben måned</button>
+      && isMonthApprovedByEmployee" class="btn btn-info" (click)="reopenMonthAsAdmin()">Genåben måned</button>
     </div>
   </div>
 </div>

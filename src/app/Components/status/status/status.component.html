@@ -1,0 +1,8 @@
+<div>
+  <div class="row">
+    <div class="col-sm-4">Navn: <b>{{status.StatusName}}</b></div>
+    <div class="col-sm-4">Fraværskode: <b>{{status.StatusCode}}</b></div>
+    <div *ngIf="!status.IsDisabled" class="col-sm-4">Status:  <b>Aktiveret</b></div>
+    <div *ngIf="status.IsDisabled" class="col-sm-4">Status:  <b>Deaktiveret</b></div>
+  </div>
+</div>

@@ -3,6 +3,9 @@ import {Department} from '../../../entities/department';
 import {EmployeeRole} from '../../../entities/employeeRole.enum';
 import {Employee} from '../../../entities/Employee';
 import {Router} from '@angular/router';
+import {MatDialog} from '@angular/material';
+import {UniversalErrorCatcherComponent} from '../../Errors/universal-error-catcher/universal-error-catcher.component';
+import {DepartmentEditDialogComponent} from '../department-edit-dialog/department-edit-dialog.component';
 
 @Component({
   selector: 'app-department',
@@ -18,10 +21,13 @@ export class DepartmentComponent implements OnInit {
   deleteDepartmentEmitter = new EventEmitter();
   @Output()
   deleteEmployeeEmitter = new EventEmitter();
+  @Output()
+  updateDepartmentEmitter = new EventEmitter();
 
   loggedInUser: Employee;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router,
+              private dialog: MatDialog) { }
 
   ngOnInit() {
     this.loggedInUser = JSON.parse(sessionStorage.getItem('currentEmployee'));
@@ -32,11 +38,20 @@ export class DepartmentComponent implements OnInit {
    * Page navigation to edit department
    * @param $event
    */
-  edit($event){
-    $event.stopPropagation();
-    this.router
-      .navigateByUrl('department/edit/' + this.department.Id);
-
+  edit(){
+    let dialogRef = this.dialog.open(DepartmentEditDialogComponent, {
+      data: {
+        department: this.department,
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result != null){
+        let newName = '';
+        newName = result;
+        this.department.Name = newName;
+        this.updateDepartmentEmitter.emit(this.department);
+      }
+    });
   }
 
   deleteDepartment(){

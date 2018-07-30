@@ -12,6 +12,8 @@ import {AuthenticationService} from '../../../services/authentication.service';
 import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
 import {WorkfreeDay} from '../../../entities/workfreeDay';
 import {DateformatingService} from '../../../services/dateformating.service';
+import {MatDialog} from '@angular/material';
+import {UniversalErrorCatcherComponent} from '../../Errors/universal-error-catcher/universal-error-catcher.component';
 
 @Component({
   selector: 'app-employee-edit',
@@ -30,13 +32,18 @@ export class EmployeeEditComponent implements OnInit {
   showPassword: boolean;
   loggedInUser: Employee;
   employeeWorkfreeDaysInYear: WorkfreeDay[];
+  emails: string[] = [];
+  currentEmail: string;
+  currentRole: number;
+  employees: Employee[];
   constructor(private location: Location,
               private formBuilder: FormBuilder,
               private departmentService: DepartmentService,
               private employeeService: EmployeeService,
               private authenticationService: AuthenticationService,
               private dateformatingService: DateformatingService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private dialog: MatDialog) {
     this.showPassword = false;
     this.employeeUpdated = false;
     this.isNotEditable = true;
@@ -68,20 +75,47 @@ export class EmployeeEditComponent implements OnInit {
     this.route.paramMap.switchMap(params => this.employeeService.getById(+params.get('id')))
       .subscribe(employee => {
         this.employee = employee;
+        this.currentEmail = employee.Email;
+        this.currentRole = EmployeeRole.Administrator;
         this.createFormgroup();
         this.getHolidayYearSpec();
         this.formatHolidayYearStartEnd();
         this.formatWorkfreeDays();
         this.getWorkfreeDaysInHolidayYear(this.employee.WorkfreeDays);
+        this.getAlreadyExistingEmails();
       });
-    this.departmentService.getAll().subscribe(departments => this.departments = departments);
+    this.departmentService.getAll().subscribe(departments => {
+      this.departments = departments;
+    });
+  }
+
+  /**
+   * Creates a list of all emails created in the employees
+   */
+  getAlreadyExistingEmails(){
+    let alreadyExistingEmails = new Array<string>();
+    this.employeeService.getAll().subscribe(emps => {
+      this.employees = emps;
+      for(let emp of emps){
+        alreadyExistingEmails.push(emp.Email);
+      }
+      this.emails = alreadyExistingEmails;
+    });
   }
 
   matchPassword(AC: AbstractControl){
+    let minimumPasswordLength = 12;
     let password = AC.get('password').value;
     let passwordCheck = AC.get('passwordCheck').value;
     if(password != passwordCheck){
-      AC.get('passwordCheck').setErrors({MatchPassword: true})
+      AC.get('passwordCheck').setErrors({MatchPassword: true});
+    }
+    if(password.length < minimumPasswordLength){
+      AC.get('passwordCheck').setErrors({MinimumLength: true});
+      AC.get('password').setErrors({MinimumLength: true});
+    }
+    if(password.length === 0){
+      AC.get('password').setErrors({NotEntered: true});
     }
     else {
       return null;
@@ -101,6 +135,21 @@ export class EmployeeEditComponent implements OnInit {
   }
 
   /**
+   * Checks if the email is a duplicate in the system
+   * The database requires unique emails for authentication
+   */
+  doesEmailAlreadyExist(email: string) {
+    if(email === this.currentEmail){
+      return false;
+    }
+    let emailDuplicate = this.emails.find(x => x === email);
+    if(emailDuplicate != null){
+      return true;
+    }
+    else return false;
+  }
+
+  /**
    * Updates the employee
    */
   updateEmployee(){
@@ -109,13 +158,53 @@ export class EmployeeEditComponent implements OnInit {
     if(department != null){
       this.employee.Department = department;
     }
-    this.authenticationService.update(this.employee).subscribe(() => {
-    });
-    this.employeeService.put(this.employee).subscribe(() => {
-    });
+    if(this.doesEmailAlreadyExist(values.email)){
+      let dialogRef = this.dialog.open(UniversalErrorCatcherComponent, {
+        data: {
+          errorMessage: 'Den angivne email eksisterer allerede på en anden bruger.',
+          errorHandler: 'Angiv en unik email.',
+          multipleOptions: false
+        }
+      });
+    }
+    if(this.isLastAdmin()){
+      let dialogRef = this.dialog.open(UniversalErrorCatcherComponent, {
+        data: {
+          errorMessage: 'Denne bruger er i øjeblikket den eneste aktive Administrator.',
+          errorHandler: 'Der skal være mindst en anden administrator for at kunne ændre dette.',
+          multipleOptions: false
+        }
+      });
+    }
+    else{
+      this.authenticationService.update(this.employee).subscribe(() => {
+      });
+      this.employeeService.put(this.employee).subscribe(employee => {
+        this.stopEdit();
+      });
+    }
   }
 
-  passwordIsInvalid(controlName: string){
+  /**
+   * The system can't operate without an Admin
+   * this method returns true or false depending on the length
+   * of the Administrator list being more than one
+   */
+  isLastAdmin(){
+    let role = this.employeeGroup.controls['employeeRole'].value;
+    role = +role;
+    if(this.currentRole === EmployeeRole.Administrator && role != EmployeeRole.Administrator && this.employee.Id === this.loggedInUser.Id){
+      console.log(role);
+      let admins = this.employees.filter(x => x.EmployeeRole === EmployeeRole.Administrator);
+      if(admins.length <= 1){
+        return true;
+      }
+      else return false;
+    }
+    else return false;
+  }
+
+  passwordCheckIsInvalid(controlName: string){
     const passwordCheck = this.employeeGroup.controls[controlName];
     const password = this.employeeGroup.controls['password'];
     if(passwordCheck.value != password.value){
@@ -123,7 +212,7 @@ export class EmployeeEditComponent implements OnInit {
     }
   }
 
-  passwordIsValid(controlName: string){
+  passwordCheckIsValid(controlName: string){
     const values = this.employeeGroup.value;
     const passwordCheck = this.employeeGroup.controls[controlName];
     if(passwordCheck.value === values.password){
@@ -233,10 +322,16 @@ export class EmployeeEditComponent implements OnInit {
     for(let workfreeDay of workfreeDays){
       if(workfreeDay.Date >= this.currentHolidayYearSpec.StartDate && workfreeDay.Date <= this.currentHolidayYearSpec.EndDate){
         currentWorkfreeDayList.push(workfreeDay);
-
       }
     }
+    currentWorkfreeDayList.sort(this.sortWorkfreedaysByDate);
     this.employeeWorkfreeDaysInYear = currentWorkfreeDayList;
+  }
+
+  sortWorkfreedaysByDate(a: WorkfreeDay, b: WorkfreeDay ) {
+    let dateOfA = a.Date;
+    let dateOfB = b.Date;
+    return dateOfA > dateOfB ? 1 : (dateOfA < dateOfB ? -1 : 0);
   }
 
   formatWorkfreeDays(){

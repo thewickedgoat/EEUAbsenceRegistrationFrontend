@@ -6,6 +6,7 @@ import {Router} from '@angular/router';
 import {HolidayYearSpec} from '../../entities/holidayYearSpec';
 import {HolidayYearSpecService} from '../../services/holidayyearspec.service';
 import {DateformatingService} from '../../services/dateformating.service';
+import {Status} from '../../entities/status';
 
 @Component({
   selector: 'app-toolbar',
@@ -72,6 +73,7 @@ export class ToolbarComponent implements OnInit {
     const holidayYearsInUser = this.loggedInUser.HolidayYears;
     let holidayYearSpecsMatched = new Array<HolidayYearSpec>();
     if(this.isAdmin()){
+      holidayYearSpecs.sort(this.sortHolidayYearSpec);
       this.holidayYearSpecs = holidayYearSpecs;
     }
     else {
@@ -81,8 +83,15 @@ export class ToolbarComponent implements OnInit {
           holidayYearSpecsMatched.push(holidayYearSpec);
         }
       }
+      holidayYearSpecsMatched.sort(this.sortHolidayYearSpec);
       this.holidayYearSpecs = holidayYearSpecsMatched;
     }
+  }
+
+  sortHolidayYearSpec(a: HolidayYearSpec, b: HolidayYearSpec) {
+    let idOfA = a.Id;
+    let idOfB = b.Id;
+    return idOfA > idOfB ? 1 : (idOfA < idOfB ? -1 : 0);
   }
 
   isCurrentHolidayYearSpec(id: number){
@@ -107,6 +116,10 @@ export class ToolbarComponent implements OnInit {
 
   toStats(){
     this.router.navigateByUrl('stats/' + this.currentHolidayYearSpec.StartDate.getFullYear());
+  }
+
+  toStatusAdministration(){
+    this.router.navigateByUrl('status');
   }
 
   /**

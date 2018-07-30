@@ -70,6 +70,14 @@ import { PublicCalendarComponent } from './Components/calendar/public-calendar/p
 import { PublicCalendarViewComponent } from './Components/calendar/public-calendar/public-calendar-view.component';
 import { DepartmentDeleteDialogComponent } from './Components/department/department-delete-dialog/department-delete-dialog.component';
 import {AdminGuard} from './Authguards/admin.guard';
+import { DepartmentEditDialogComponent } from './Components/department/department-edit-dialog/department-edit-dialog.component';
+import { HolidayyearDeleteDialogComponent } from './Components/holidayyear/holidayyear-delete-dialog/holidayyear-delete-dialog.component';
+import { StatusComponent } from './Components/status/status/status.component';
+import { StatusListComponent } from './Components/status/status-list/status-list.component';
+import { EmployeeApprovalComponent } from './Components/employee/employee-approval/employee-approval.component';
+import { EmployeeApprovalViewComponent } from './Components/employee/employee-approval/employee-approval-view.component';
+import { StatusCreateComponent } from './Components/status/status-create/status-create.component';
+import { StatusDeleteComponent } from './Components/status/status-delete/status-delete.component';
 
 
 const routes: Routes = [
@@ -84,7 +92,8 @@ const routes: Routes = [
   {path: 'public-calendar/:month', component: PublicCalendarComponent, canActivate: [AuthguardGuard]},
   {path: 'login', component: LoginComponent},
   {path: 'holidayyears', component: HolidayyearAdministrationComponent, canActivate: [AuthguardGuard, AdminGuard]},
-  {path: 'stats/:yearStart', component: AdminOverviewComponent, canActivate: [AuthguardGuard, AdminGuard]},
+  {path: 'status', component: StatusListComponent, canActivate: [AuthguardGuard, AdminGuard]},
+  {path: 'stats/:yearStart', component: AdminOverviewComponent, canActivate: [AuthguardGuard]},
   //{path: 'work', component: AdministrationComponent, canActivate: [AuthguardGuard]},
   {path: '**', redirectTo: 'login'}
 
@@ -141,6 +150,14 @@ const routes: Routes = [
     PublicCalendarComponent,
     PublicCalendarViewComponent,
     DepartmentDeleteDialogComponent,
+    DepartmentEditDialogComponent,
+    HolidayyearDeleteDialogComponent,
+    StatusComponent,
+    StatusListComponent,
+    EmployeeApprovalComponent,
+    EmployeeApprovalViewComponent,
+    StatusCreateComponent,
+    StatusDeleteComponent,
   ],
   imports: [
     BrowserModule,
@@ -163,7 +180,11 @@ const routes: Routes = [
     WorkfreedayCreateErrorComponent,
     PublicholidayCreateErrorComponent,
     HolidayyearCreateViewComponent,
-    HolidayyearEmployeeCreateViewComponent
+    HolidayyearEmployeeCreateViewComponent,
+    DepartmentEditDialogComponent,
+    HolidayyearDeleteDialogComponent,
+    StatusCreateComponent,
+    StatusDeleteComponent
   ],
   providers: [
     EmployeeService,

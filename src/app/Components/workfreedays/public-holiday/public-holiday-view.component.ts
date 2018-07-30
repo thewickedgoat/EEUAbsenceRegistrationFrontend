@@ -24,8 +24,6 @@ export class PublicHolidayViewComponent implements OnInit {
 
   ngOnInit() {
     if(this.currentHolidayYearSpec){
-      console.log('im here');
-      console.log(this.publicHolidays);
       this.publicHolidays = this.currentHolidayYearSpec.PublicHolidays;
     }
   }
@@ -35,6 +33,8 @@ export class PublicHolidayViewComponent implements OnInit {
       this.publicHolidays = this.currentHolidayYearSpec.PublicHolidays;
     }
   }
+
+
 
   createPublicHoliday(){
     this.emitter.emit()

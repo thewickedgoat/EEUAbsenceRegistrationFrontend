@@ -2,6 +2,8 @@ import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from 
 import {Router} from '@angular/router';
 import {EmployeeRole} from '../../../entities/employeeRole.enum';
 import {Employee} from '../../../entities/Employee';
+import {MatDialog} from '@angular/material';
+import {UniversalErrorCatcherComponent} from '../../Errors/universal-error-catcher/universal-error-catcher.component';
 
 @Component({
   selector: 'app-employee',
@@ -19,7 +21,8 @@ export class EmployeeComponent implements OnInit {
   @Output()
   emitter = new EventEmitter();
 
-  constructor(private router: Router) {
+  constructor(private router: Router,
+              private dialog: MatDialog) {
 
   }
 
@@ -50,8 +53,45 @@ export class EmployeeComponent implements OnInit {
    */
   goToCalendar(){
     const date = new Date();
-    this.router
-      .navigateByUrl('calendar/' + this.employee.Id + '/' + date.getFullYear() + '/' + date.getMonth());
+    if(this.isEmployeeInHolidayYear()){
+      this.router
+        .navigateByUrl('calendar/' + this.employee.Id + '/' + date.getFullYear() + '/' + date.getMonth());
+    }
+    else {
+      if(this.loggedInUser.EmployeeRole === EmployeeRole.Administrator){
+        let dialogRef = this.dialog.open(UniversalErrorCatcherComponent, {
+          data: {
+            errorMessage: '  Denne medarbejder er endnu ikke tilføjet til ferieåret  ',
+            errorHandler: '  For at tilføje medarbejderen gå til: "Ferieårsadministration."  ',
+            multipleOptions: false
+          }
+        });
+      }
+      else {
+        let dialogRef = this.dialog.open(UniversalErrorCatcherComponent, {
+          data: {
+            errorMessage: '  Denne medarbejder er endnu ikke tilføjet til ferieåret.  ',
+            errorHandler: '  Administrator tilføjer medarbejderen senere.  ',
+            multipleOptions: false
+          }
+        });
+      }
+    }
+  }
+
+  /**
+   * Checks if the employee has a holidayYear that matches the current HolidayYearSpec
+   */
+  isEmployeeInHolidayYear(): boolean{
+    const currentHolidayYear = JSON.parse(sessionStorage.getItem('currentHolidayYearSpec'));
+    if(this.employee.HolidayYears != null){
+      const holidayYear = this.employee.HolidayYears.find(x => x.CurrentHolidayYear.Id === currentHolidayYear.Id);
+      if(holidayYear != null){
+        return true;
+      }
+      else return false;
+    }
+    else return false;
   }
 
   /**

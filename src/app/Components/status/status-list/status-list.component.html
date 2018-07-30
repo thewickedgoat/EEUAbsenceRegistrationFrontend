@@ -1,0 +1,21 @@
+<app-toolbar></app-toolbar>
+<div class="container">
+  <div style="text-align: center">
+    <h1><b>Fraværskodeoversigt</b></h1>
+    <hr>
+    <button class="btn btn-success" (click)="createStatus()">Opret fraværskode</button>
+    <button class="btn btn-danger" (click)="deleteStatus()">Slet fraværskode</button>
+    <hr>
+  </div>
+  <div *ngIf="statusList != null">
+    <div class="row" *ngFor="let status of statusList" style="margin: 5px">
+      <button class="col-sm-1 btn btn-success" *ngIf="status.IsDisabled" (click)="activateStatus(status)">Aktiver</button>
+      <button class="col-sm-1 btn btn-warning" *ngIf="!status.IsDisabled" (click)="disableStatus(status)">Deaktiver</button>
+      <div class="col-sm-10" style="border-width: 1.5px; border-style: solid; background-color: antiquewhite">
+        <app-status [status]="status"
+        ></app-status>
+      </div>
+      <button class="col-sm-1 btn btn-danger" (click)="deleteStatus(status)">Slet</button>
+    </div>
+  </div>
+</div>

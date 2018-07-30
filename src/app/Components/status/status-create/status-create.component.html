@@ -1,0 +1,41 @@
+<div class="container" style="width: 400px;">
+  <div class="row">
+    <h2>Opret en fraværskode</h2>
+  </div>
+  <hr>
+  <form [formGroup]="statusGroup" (submit)="createStatus()" novalidate>
+    <label class="center-block col-md-12"><b>Angiv navn: </b>
+      <input class="form-control"
+             formControlName="statusName"
+             [ngClass]="{'is-invalid': nameIsInvalid('statusName'), 'is-valid': nameIsValid('statusName')}">
+      <div *ngIf="nameIsInvalid('statusName')" class="invalid-feedback">
+        <div *ngIf="statusGroup.controls['statusName'].errors">
+          Du skal angive et navn
+        </div>
+      </div>
+      <div *ngIf="statusNameIsInvalid('statusName')" class="invalid-feedback">
+        Der eksisterer allerede en fraværskode med dette navn
+      </div>
+    </label>
+    <label class="center-block col-md-12"><b>Angiv fraværskode: </b>
+      <input class="form-control"
+             formControlName="statusCode"
+             [ngClass]="{'is-invalid': nameIsInvalid('statusCode'), 'is-valid': nameIsValid('statusCode')}">
+      <div *ngIf="nameIsInvalid('statusCode')" class="invalid-feedback">
+        <div *ngIf="statusGroup.controls['statusCode'].errors">
+          Du skal angive et kode
+        </div>
+      </div>
+      <div *ngIf="statusCodeIsInvalid('statusCode')" class="invalid-feedback">
+        Der eksisterer allerede en fraværskode med denne kode
+      </div>
+      <div *ngIf="statusCodeLengthIsInvalid('statusCode')" class="invalid-feedback">
+        Fraværskoder må ikke være længere end 3 tegn
+      </div>
+    </label>
+    <div class="row">
+      <button [disabled]="statusGroup.invalid" class="btn btn-success" type="submit">Opret</button>
+      <button class="btn btn-danger" type="button" (click)="close()">Afbryd</button>
+    </div>
+  </form>
+</div>

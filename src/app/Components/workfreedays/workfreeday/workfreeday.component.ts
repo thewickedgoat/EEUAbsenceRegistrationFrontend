@@ -144,7 +144,7 @@ export class WorkfreedayComponent implements OnInit {
     if(workfreeDays.length > 0){
       const endDate = this.currentHolidayYearSpec.EndDate;
       for(let workfreeDay of workfreeDays){
-        const workfreeDayNotInRange = workfreeDays.find(x=> x.Date.getDate() > endDate.getDate());
+        const workfreeDayNotInRange = workfreeDays.find(x=> x.Date > endDate);
         if(workfreeDayNotInRange != null){
           workfreeDaysNotInRange.push(workfreeDayNotInRange);
         }

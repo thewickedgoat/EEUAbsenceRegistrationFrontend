@@ -31,4 +31,7 @@ export class StatusViewComponent implements OnInit {
     this.emitter.emit(null);
   }
 
+  setStatusLockOpenDay(lockDay: boolean){
+    this.emitter.emit(lockDay);
+  }
 }

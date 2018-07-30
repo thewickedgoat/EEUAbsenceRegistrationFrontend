@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, OnChanges, Output, ViewEncapsulation} from '@angular/core';
 import {Employee} from '../../entities/Employee';
 
 @Component({
@@ -37,20 +37,58 @@ export class AbsenceConfirmationViewComponent implements OnInit {
   emitter = new EventEmitter();
 
   @Output()
-  emitterToReopen = new EventEmitter();
+  reopenAsEmployee = new EventEmitter();
+  @Output()
+  reopenAsChief = new EventEmitter();
+  @Output()
+  reopenAsCEO = new EventEmitter();
+  @Output()
+  reopenAsAdmin = new EventEmitter();
+
+  approvingReopening = false;
 
   constructor() { }
 
   ngOnInit() {
+  }
 
+  ngOnChanges(){
+    this.approvingReopening = false;
   }
 
   approveMonth(){
-    this.emitter.emit();
+    if(this.approvingReopening != true){
+      this.approvingReopening = true;
+      this.emitter.emit();
+    }
   }
 
-  reopenMonth(){
-    this.emitterToReopen.emit()
+  reopenMonthAsEmployee(){
+    if(this.approvingReopening != true){
+      this.approvingReopening = true;
+      this.reopenAsEmployee.emit();
+    }
+  }
+
+  reopenMonthAsChief(){
+    if(this.approvingReopening != true){
+      this.approvingReopening = true;
+      this.reopenAsChief.emit();
+    }
+  }
+
+  reopenMonthAsCEO(){
+    if(this.approvingReopening != true){
+      this.approvingReopening = true;
+      this.reopenAsCEO.emit();
+    }
+  }
+
+  reopenMonthAsAdmin(){
+    if(this.approvingReopening != true){
+      this.approvingReopening = true;
+      this.reopenAsAdmin.emit();
+    }
   }
 
 }

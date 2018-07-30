@@ -16,8 +16,12 @@ export class AuthenticationService {
     return JSON.parse(sessionStorage.getItem('token'));
   }
 
-  delete(id): Observable<any>{
+  delete(id: number): Observable<any>{
     return this.http.delete<any>(url + '/' + 'Remove' + '/' + id,{headers: new HttpHeaders().set('Authorization', 'Bearer ' + environment.jwt())})
+  }
+
+  resetPassword(email: string): Observable<any>{
+    return this.http.post<any>(url + '/' + 'ForgotPassword' + '?email=' + email, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + environment.jwt())})
   }
 
   logout(employee: Employee): Observable<any>{

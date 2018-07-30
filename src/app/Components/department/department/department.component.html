@@ -1,6 +1,6 @@
 <div class="col-md-12">
   <div class="row">
-    <div *ngIf="isAdmin()">
+    <div style="margin-bottom: 3px; margin-top: 3px; text-align: center" *ngIf="isAdmin()">
       <button class="btn btn-sm btn-danger" (click)="deleteDepartment($event)">
         <i class="fa fa-trash-o" aria-hidden="true"></i>
       </button>
@@ -8,13 +8,18 @@
         <i class="fa fa-pencil" aria-hidden="true"></i>
       </button>
     </div>
-    <i class="fa fa-building-o" aria-hidden="true"></i><b><strong> {{department.Name}}</strong></b>
+    <i class="fa fa-building-o" aria-hidden="true"></i>
+    <b><strong> {{department.Name}}</strong></b>
 
   </div>
-  <div class="row" *ngFor="let employee of department.Employees">
-    <div *ngIf="employee.EmployeeRole != admin()">
-      <app-employee [employee]="employee"
-      (emitter)="delete($event)"></app-employee>
-    </div>
+  <div class="row">
+    <nav style="overflow-y: auto; overflow-x: hidden; background: linear-gradient(to bottom, #2980b9, #6dd5fa, #ffffff); border-style: solid; border-width: 1px; height: 300px; width: 300px;">
+      <div class="row" *ngFor="let employee of department.Employees">
+        <div  class="employeeDiv" *ngIf="employee.EmployeeRole != admin()">
+          <app-employee [employee]="employee"
+                        (emitter)="delete($event)"></app-employee>
+        </div>
+      </div>
+    </nav>
   </div>
 </div>

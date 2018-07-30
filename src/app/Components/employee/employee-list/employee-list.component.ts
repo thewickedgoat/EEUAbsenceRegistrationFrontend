@@ -43,7 +43,7 @@ export class EmployeeListComponent implements OnInit {
    * @param id
    */
   deleteEmployeeFromList(id: number){
-    this.authenticationService.delete(id).subscribe(id => console.log(id));
+    this.authenticationService.delete(id).subscribe();
     this.employeeService.delete(id).subscribe(()=> this.initData());
   }
 
@@ -90,20 +90,20 @@ export class EmployeeListComponent implements OnInit {
     });
   }
 
+  updateDepartment(department: Department){
+    let newDepartment: Department = {Id: department.Id, Name: department.Name, Employees: new Array<Employee>()};
+    this.departmentService.put(newDepartment).subscribe(result => {
+    });
+  }
+
   /**
    * Inits the list
    */
   initData(){
-    this.employeeService.getAll().subscribe(employees => {
-      this.employees = employees;
-      console.log(employees);
-    });
     this.departmentService.getAll().subscribe(departments => {
       this.departments = departments;
+      this.loggedInUser = JSON.parse(sessionStorage.getItem('currentEmployee'));
     });
-    this.loggedInUser = JSON.parse(sessionStorage.getItem('currentEmployee'));
-
-    console.log(sessionStorage.getItem("token"));
 
   }
 

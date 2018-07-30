@@ -23,16 +23,30 @@ export class StatusControllerComponent implements OnInit {
   }
 
   importStatuses(){
-    this.statusService.getAll().subscribe(statuses => this.statusList = statuses);
+    this.statusService.getAll().subscribe(statuses => {
+      const activeStatuses = statuses.filter(x => x.IsDisabled === false);
+      this.statusList = activeStatuses;
+    });
   }
 
+  /**
+   * Sets the selected status
+   * @param status
+   */
   setStatus(status){
-    if(status != null){
+    if(status != null && status != true && status != false){
+      console.log('test');
       this.emitter.emit(status);
     }
     else  {
       this.emitter.emit(null);
     }
-
+    if(status === true){
+      this.emitter.emit(true);
+    }
+    if(status === false){
+      this.emitter.emit(false);
+    }
   }
+
 }
