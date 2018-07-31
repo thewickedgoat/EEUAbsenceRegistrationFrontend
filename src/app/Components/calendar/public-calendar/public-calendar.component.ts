@@ -66,13 +66,11 @@ export class PublicCalendarComponent implements OnInit {
   getNumberOfMonthsInHolidayYear(){
     this.monthsInHolidayYear = [];
     const startDate = this.currentHolidayYearSpec.StartDate;
-    console.log(startDate);
     let dateToIterate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     const endDate = this.currentHolidayYearSpec.EndDate;
     do{
       this.monthsInHolidayYear.push(dateToIterate.getMonth());
       dateToIterate.setMonth(dateToIterate.getMonth()+1);
-      console.log('nep');
     }
     while(dateToIterate < endDate);
   }
@@ -162,7 +160,6 @@ export class PublicCalendarComponent implements OnInit {
 
   getCurrentHolidayYearSpec(){
     const currentHolidayYearSpec = JSON.parse(sessionStorage.getItem('currentHolidayYearSpec'));
-    console.log(currentHolidayYearSpec);
     currentHolidayYearSpec.StartDate = this.dateformatingService.formatDate(currentHolidayYearSpec.StartDate);
     currentHolidayYearSpec.EndDate = this.dateformatingService.formatDate(currentHolidayYearSpec.EndDate);
     this.currentHolidayYearSpec = currentHolidayYearSpec;

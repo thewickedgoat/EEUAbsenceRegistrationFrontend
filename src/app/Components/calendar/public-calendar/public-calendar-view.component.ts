@@ -31,7 +31,6 @@ export class PublicCalendarViewComponent implements OnInit {
 
   ngOnInit() {
     this.formatWorkfreeDays();
-    console.log(this.powerOfTwo);
   }
 
 
@@ -63,7 +62,7 @@ export class PublicCalendarViewComponent implements OnInit {
    */
   isPowerOfTwo(){
     const x = this.powerOfTwo+1;
-    for (let i = 0; i < 50;)
+    for (let i = 0; i < 150;)
     {
       i = i + 2;
       if (x === i)

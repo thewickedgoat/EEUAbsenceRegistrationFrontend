@@ -101,7 +101,7 @@ export class LoginComponent implements OnInit {
    * @param $event
    */
   loginEmployee($event){
-    let username = this.loginGroup.controls['userName'].value;
+    let username = this.loginGroup.controls['userName'].value.toLowerCase();
     let password = this.loginGroup.controls['password'].value;
     this.authenticationService.login(username, password).subscribe(data => {
       this.validateLogin($event, data);

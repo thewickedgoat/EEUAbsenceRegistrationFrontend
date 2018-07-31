@@ -31,6 +31,13 @@ export class DepartmentComponent implements OnInit {
 
   ngOnInit() {
     this.loggedInUser = JSON.parse(sessionStorage.getItem('currentEmployee'));
+    this.department.Employees.sort(this.sortEmployeesByName);
+  }
+
+  sortEmployeesByName(a: Employee, b: Employee) {
+    let nameOfA = a.FirstName;
+    let nameOfB = b.FirstName;
+    return nameOfA > nameOfB ? 1 : (nameOfA < nameOfB ? -1 : 0);
   }
 
 

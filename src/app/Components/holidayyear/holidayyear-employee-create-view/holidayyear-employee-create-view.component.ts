@@ -68,7 +68,6 @@ export class HolidayyearEmployeeCreateViewComponent implements OnInit {
     startDate.setMonth(this.data.holidayYearSpec.StartDate.getMonth());
     startDate.setDate(this.data.holidayYearSpec.StartDate.getDate());
     startDate.setHours(this.data.holidayYearSpec.StartDate.getHours());
-    console.log(this.data.holidayYearSpec.StartDate);
     const endDate = this.data.holidayYearSpec.EndDate;
     do{
       let monthDate = new Date();
@@ -87,7 +86,6 @@ export class HolidayyearEmployeeCreateViewComponent implements OnInit {
       startDate.setMonth(startDate.getMonth()+1);
     }
     while(startDate < endDate);
-    console.log(this.data.holidayYearSpec.StartDate);
     return months;
   }
 

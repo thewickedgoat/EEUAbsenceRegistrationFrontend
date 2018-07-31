@@ -168,7 +168,6 @@ export class AbsenceConfirmationComponent implements OnInit {
    * Reopens the month for all roles to edit once again.
    */
   reopenMonthAsAdmin(){
-    console.log('nani');
     this.currentMonth.IsLockedByEmployee = false;
     this.currentMonth.IsLockedByChief = false;
     this.currentMonth.IsLockedByCEO = false;

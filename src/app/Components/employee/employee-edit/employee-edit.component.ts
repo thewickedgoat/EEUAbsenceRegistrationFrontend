@@ -154,6 +154,7 @@ export class EmployeeEditComponent implements OnInit {
    */
   updateEmployee(){
     const values = this.employeeGroup.value;
+    this.employee.UserName = this.employee.UserName.toLowerCase();
     let department = this.departments.find( x => x.Name === values.department);
     if(department != null){
       this.employee.Department = department;
@@ -194,7 +195,6 @@ export class EmployeeEditComponent implements OnInit {
     let role = this.employeeGroup.controls['employeeRole'].value;
     role = +role;
     if(this.currentRole === EmployeeRole.Administrator && role != EmployeeRole.Administrator && this.employee.Id === this.loggedInUser.Id){
-      console.log(role);
       let admins = this.employees.filter(x => x.EmployeeRole === EmployeeRole.Administrator);
       if(admins.length <= 1){
         return true;

@@ -23,7 +23,7 @@
       <div class="container">
         <div class="col-sm-12" style="text-align: center"><h3><strong>Medarbejdere</strong></h3></div>
        <div>
-         <nav style="background-color: white; height: 650px; width: 100%; overflow-y: scroll">
+         <nav style="background-color: white; height: 650px; width: 100%; overflow-y: auto">
            <ul class="menu" *ngIf="employees != null">
              <li class="menu" *ngFor="let employee of employees" (click)="selectEmployee(employee.Id)">{{employee.FirstName}} {{employee.LastName}}</li>
            </ul>
@@ -32,7 +32,8 @@
       </div>
     </div>
     <div class="col-xl-4">
-        <div class="col-sm-12" style="text-align: center"><h3><strong>Medarbejders Ferie:</strong></h3></div>
+      <div *ngIf="selectedEmployee" class="col-sm-12" style="text-align: center"><h3><strong>Medarbejders Ferie:</strong></h3></div>
+      <div *ngIf="!selectedEmployee" class="col-sm-12" style="text-align: center"><h3><strong><i class="fa fa-arrow-left"></i> Vælg medarbejder</strong></h3></div>
         <app-holidayyear-employee
           [selectedEmployee]="selectedEmployee"
           [selectedHolidayYear]="selectedHolidayYear"

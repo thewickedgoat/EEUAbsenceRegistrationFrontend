@@ -1,4 +1,23 @@
+h1 { color: #111;
+  font-family: 'Open Sans Condensed', sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 32px;
+  margin: 0 0 0;
+  padding: 20px 30px;
+  text-align: center;
+  text-transform: uppercase; }
 
+h2 {
+  font-family: Impact, Charcoal, sans-serif;
+  font-size: 3vw;
+  margin-left: -1%;
+}
+h3 {
+  font-family: Impact, Charcoal, sans-serif;
+  font-size: 2vw;
+  margin-left: -1%;
+}
 
 .menu li {
   position: relative;

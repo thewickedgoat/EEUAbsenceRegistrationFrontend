@@ -7,6 +7,8 @@ import {HolidayYearSpec} from '../../entities/holidayYearSpec';
 import {HolidayYearSpecService} from '../../services/holidayyearspec.service';
 import {DateformatingService} from '../../services/dateformating.service';
 import {Status} from '../../entities/status';
+import {MatDialog} from '@angular/material';
+import {UniversalErrorCatcherComponent} from '../Errors/universal-error-catcher/universal-error-catcher.component';
 
 @Component({
   selector: 'app-toolbar',
@@ -25,7 +27,8 @@ export class ToolbarComponent implements OnInit {
     private router: Router,
     private authenticationService: AuthenticationService,
     private holidayYearSpecService: HolidayYearSpecService,
-    private dateformatingService: DateformatingService) { }
+    private dateformatingService: DateformatingService,
+    private dialog: MatDialog) { }
 
   ngOnInit() {
     this.loggedInUser = JSON.parse(sessionStorage.getItem('currentEmployee'));
@@ -52,7 +55,6 @@ export class ToolbarComponent implements OnInit {
     currentHolidayYearSpec.StartDate = this.dateformatingService.formatDate(currentHolidayYearSpec.StartDate);
     currentHolidayYearSpec.EndDate = this.dateformatingService.formatDate(currentHolidayYearSpec.EndDate);
     this.currentHolidayYearSpec = currentHolidayYearSpec;
-    console.log(this.currentHolidayYearSpec);
   }
 
   formatHolidayYearSpecs(holidayYearSpecs: HolidayYearSpec[]){
@@ -148,7 +150,20 @@ export class ToolbarComponent implements OnInit {
    * Page navigation
    */
   toCalendar(){
-    this.router.navigateByUrl('calendar/' + this.loggedInUser.Id + '/' + this.currentDate.getFullYear() + '/' + this.currentDate.getMonth());
+    const currentHolidayYearSpec = JSON.parse(sessionStorage.getItem('currentHolidayYearSpec'));
+    const employeeHolidayYear = this.loggedInUser.HolidayYears.find(x => x.CurrentHolidayYear.Id === currentHolidayYearSpec.Id);
+    if(!employeeHolidayYear){
+      this.dialog.open(UniversalErrorCatcherComponent, {
+        data: {
+          errorMessage: '  Du er i øjeblikket ikke oprettet i det valgte ferieår.  ',
+          errorHandler: '  Kontakt administratoren for at blive tilføjet.  ',
+          multipleOptions: false
+        }
+      });
+    }
+    else{
+      this.router.navigateByUrl('calendar/' + this.loggedInUser.Id + '/' + this.currentDate.getFullYear() + '/' + this.currentDate.getMonth());
+    }
   }
 
   /**

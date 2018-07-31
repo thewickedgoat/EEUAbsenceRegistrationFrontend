@@ -11,6 +11,7 @@ import {HolidayYearSpecService} from '../../../services/holidayyearspec.service'
 import {DepartmentDeleteDialogComponent} from '../../department/department-delete-dialog/department-delete-dialog.component';
 import {UniversalErrorCatcherComponent} from '../../Errors/universal-error-catcher/universal-error-catcher.component';
 import {AuthenticationService} from '../../../services/authentication.service';
+import {PublicHoliday} from '../../../entities/publicholiday';
 
 
 @Component({
@@ -101,10 +102,17 @@ export class EmployeeListComponent implements OnInit {
    */
   initData(){
     this.departmentService.getAll().subscribe(departments => {
+      departments.sort(this.sortDepartmentsByName);
       this.departments = departments;
       this.loggedInUser = JSON.parse(sessionStorage.getItem('currentEmployee'));
     });
 
+  }
+
+  sortDepartmentsByName(a: Department, b: Department) {
+    let nameOfA = a.Name;
+    let nameOfB = b.Name;
+    return nameOfA > nameOfB ? 1 : (nameOfA < nameOfB ? -1 : 0);
   }
 
   /**

@@ -27,14 +27,12 @@ export class AuthenticationService {
   logout(employee: Employee): Observable<any>{
     sessionStorage.setItem('token', null);
     sessionStorage.setItem('currentEmployee', null);
-    console.log(this.getToken());
     return this.http.post<any>(url + '/' + 'Logout', employee);
 
   }
 
   login(username, password): Observable<string>{
     const requestString = "grant_type=password&username=" + username + "&password=" + password;
-    console.log(sessionStorage.getItem('token'));
     return this.http.post<string>(tokenEndpoint, requestString);
 
   }

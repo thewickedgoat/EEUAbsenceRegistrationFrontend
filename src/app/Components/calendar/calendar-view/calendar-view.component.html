@@ -30,8 +30,17 @@
           </div>
         </div>
       </div>
-        <!--Day is locked but can be edited-->
-      <div *ngIf="isDayEditable(i, 1) && !dayIsLockedBySuperior(i, 1) && dayIsLocked(i, 1)" class="lockedSquare col-sm-2">
+        <!--Day is locked at a lower level but can be edited-->
+      <div *ngIf="isDayEditable(i, 1) && !dayIsLockedBySuperior(i, 1) && dayIsLocked(i, 1) && !dayLockedByCurrentRole(i, 1)" class="openForSuperiorSquare col-sm-2">
+        {{getDateNumbersForCalendar(i, 1)}}
+        <div>
+          <div *ngIf="getStatusForDate(i, 1) != '+'" style="text-align: center"
+               (click)="changeAbsence(i, 1)" class="btn btn-outline-info btn-circle btn-xl">{{getStatusForDate(i, 1)}}
+          </div>
+        </div>
+      </div>
+        <!--Day is locked by the user, but editable-->
+      <div *ngIf="isDayEditable(i, 1) && !dayIsLockedBySuperior(i, 1) && dayIsLocked(i, 1) && dayLockedByCurrentRole(i, 1)" class="lockedSquare col-sm-2">
         {{getDateNumbersForCalendar(i, 1)}}
         <div>
           <div *ngIf="getStatusForDate(i, 1) != '+'" style="text-align: center"
@@ -61,8 +70,17 @@
           </div>
         </div>
       </div>
-        <!--Day is locked but can be edited-->
-      <div *ngIf="isDayEditable(i, 2) && !dayIsLockedBySuperior(i, 2) && dayIsLocked(i, 2)" class="lockedSquare col-sm-2">
+      <!--Day is locked at a lower level but can be edited-->
+      <div *ngIf="isDayEditable(i, 2) && !dayIsLockedBySuperior(i, 2) && dayIsLocked(i, 2) && !dayLockedByCurrentRole(i, 2)" class="openForSuperiorSquare col-sm-2">
+        {{getDateNumbersForCalendar(i, 2)}}
+        <div>
+          <div *ngIf="getStatusForDate(i, 2) != '+'" style="text-align: center"
+               (click)="changeAbsence(i, 2)" class="btn btn-outline-info btn-circle btn-xl">{{getStatusForDate(i, 2)}}
+          </div>
+        </div>
+      </div>
+      <!--Day is locked by the user, but editable-->
+      <div *ngIf="isDayEditable(i, 2) && !dayIsLockedBySuperior(i, 2) && dayIsLocked(i, 2) && dayLockedByCurrentRole(i, 2)" class="lockedSquare col-sm-2">
         {{getDateNumbersForCalendar(i, 2)}}
         <div>
           <div *ngIf="getStatusForDate(i, 2) != '+'" style="text-align: center"
@@ -91,8 +109,17 @@
           </div>
         </div>
       </div>
-        <!--Day is locked but can be edited-->
-      <div *ngIf="isDayEditable(i, 3) && !dayIsLockedBySuperior(i, 3) && dayIsLocked(i, 3)" class="lockedSquare col-sm-2">
+      <!--Day is locked at a lower level but can be edited-->
+      <div *ngIf="isDayEditable(i, 3) && !dayIsLockedBySuperior(i, 3) && dayIsLocked(i, 3) && !dayLockedByCurrentRole(i, 3)" class="openForSuperiorSquare col-sm-2">
+        {{getDateNumbersForCalendar(i, 3)}}
+        <div>
+          <div *ngIf="getStatusForDate(i, 3) != '+'" style="text-align: center"
+               (click)="changeAbsence(i, 3)" class="btn btn-outline-info btn-circle btn-xl">{{getStatusForDate(i, 3)}}
+          </div>
+        </div>
+      </div>
+      <!--Day is locked by the user, but editable-->
+      <div *ngIf="isDayEditable(i, 3) && !dayIsLockedBySuperior(i, 3) && dayIsLocked(i, 3) && dayLockedByCurrentRole(i, 3)" class="lockedSquare col-sm-2">
         {{getDateNumbersForCalendar(i, 3)}}
         <div>
           <div *ngIf="getStatusForDate(i, 3) != '+'" style="text-align: center"
@@ -121,8 +148,17 @@
           </div>
         </div>
       </div>
-        <!--Day is locked but can be edited-->
-      <div *ngIf="isDayEditable(i, 4) && !dayIsLockedBySuperior(i, 4) && dayIsLocked(i, 4)" class="lockedSquare col-sm-2">
+      <!--Day is locked at a lower level but can be edited-->
+      <div *ngIf="isDayEditable(i, 4) && !dayIsLockedBySuperior(i, 4) && dayIsLocked(i, 4) && !dayLockedByCurrentRole(i, 4)" class="openForSuperiorSquare col-sm-2">
+        {{getDateNumbersForCalendar(i, 4)}}
+        <div>
+          <div *ngIf="getStatusForDate(i, 4) != '+'" style="text-align: center"
+               (click)="changeAbsence(i, 4)" class="btn btn-outline-info btn-circle btn-xl">{{getStatusForDate(i, 4)}}
+          </div>
+        </div>
+      </div>
+      <!--Day is locked by the user, but editable-->
+      <div *ngIf="isDayEditable(i, 4) && !dayIsLockedBySuperior(i, 4) && dayIsLocked(i, 4) && dayLockedByCurrentRole(i, 4)" class="lockedSquare col-sm-2">
         {{getDateNumbersForCalendar(i, 4)}}
         <div>
           <div *ngIf="getStatusForDate(i, 4) != '+'" style="text-align: center"
@@ -151,8 +187,17 @@
           </div>
         </div>
       </div>
-        <!--Day is locked but can be edited-->
-      <div *ngIf="isDayEditable(i, 5) && !dayIsLockedBySuperior(i, 5) && dayIsLocked(i, 5)" class="lockedSquare col-sm-2">
+      <!--Day is locked at a lower level but can be edited-->
+      <div *ngIf="isDayEditable(i, 5) && !dayIsLockedBySuperior(i, 5) && dayIsLocked(i, 5) && !dayLockedByCurrentRole(i, 5)" class="openForSuperiorSquare col-sm-2">
+        {{getDateNumbersForCalendar(i, 5)}}
+        <div>
+          <div *ngIf="getStatusForDate(i, 5) != '+'" style="text-align: center"
+               (click)="changeAbsence(i, 5)" class="btn btn-outline-info btn-circle btn-xl">{{getStatusForDate(i, 5)}}
+          </div>
+        </div>
+      </div>
+      <!--Day is locked by the user, but editable-->
+      <div *ngIf="isDayEditable(i, 5) && !dayIsLockedBySuperior(i, 5) && dayIsLocked(i, 5) && dayLockedByCurrentRole(i, 5)" class="lockedSquare col-sm-2">
         {{getDateNumbersForCalendar(i, 5)}}
         <div>
           <div *ngIf="getStatusForDate(i, 5) != '+'" style="text-align: center"

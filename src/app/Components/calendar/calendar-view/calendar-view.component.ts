@@ -89,6 +89,13 @@ export class CalendarViewComponent implements OnInit {
     else return true;
   }
 
+  /**
+   * If the day (absence is locked) returns true, otherwise false.
+   * Helper method for the UI.
+   * @param {number} week
+   * @param {number} day
+   * @returns {boolean}
+   */
   dayIsLocked(week: number, day: number){
     let currentDate = this.convertToDate(week, day);
     if(currentDate != null){
@@ -107,12 +114,69 @@ export class CalendarViewComponent implements OnInit {
     else return false;
   }
 
+  dayLockedByCurrentRole(week: number, day: number){
+    let currentDate = this.convertToDate(week, day);
+    if(currentDate != null){
+      let absence = this.absencesInCurrentMonth.find(x => x.Date.toDateString() === currentDate.toDateString());
+      if(absence != null) {
+        const isLockedByEmployee = absence.IsLockedByEmployee;
+        const isLockedByChief = absence.IsLockedByChief;
+        const isLockedByCEO = absence.IsLockedByCEO;
+        const isLockedByAdmin = absence.IsLockedByAdmin;
+        if(this.isEmployee){
+          if(this.isChief){
+            if(isLockedByChief && !isLockedByCEO && !isLockedByAdmin){
+              return true;
+            }
+            else return false;
+          }
+          else if(this.isCEO){
+            if(isLockedByCEO && !isLockedByAdmin){
+              return true;
+            }
+            else return false;
+          }
+          else {
+            if(isLockedByEmployee && !isLockedByChief && !isLockedByCEO && !isLockedByAdmin){
+              return true;
+            }
+            else return false;
+          }
+        }
+        else if(this.isChief && !this.isEmployee){
+          if(isLockedByChief && !isLockedByCEO && !isLockedByAdmin){
+            return true;
+          }
+          else return false;
+        }
+        else if(this.isCEO && !this.isEmployee){
+          if(isLockedByCEO && !isLockedByAdmin){
+            return true;
+          }
+          else return false;
+        }
+        if(this.isAdmin){
+          if(isLockedByAdmin){
+            return true;
+          }
+        }
+        else return false;
+      }
+    }
+  }
+
+  /**
+   * The day (absence) is locked if a superior (Employee < Chief < CEO < Admin) has locked it.
+   * Helper method for the UI.
+   * @param {number} week
+   * @param {number} day
+   * @returns {boolean}
+   */
   dayIsLockedBySuperior(week: number, day: number){
     let currentDate = this.convertToDate(week, day);
     if(currentDate != null){
       let absence = this.absencesInCurrentMonth.find(x => x.Date.toDateString() === currentDate.toDateString());
       if(absence != null){
-        const isLockedByEmployee = absence.IsLockedByEmployee;
         const isLockedByChief = absence.IsLockedByChief;
         const isLockedByCEO = absence.IsLockedByCEO;
         const isLockedByAdmin = absence.IsLockedByAdmin;

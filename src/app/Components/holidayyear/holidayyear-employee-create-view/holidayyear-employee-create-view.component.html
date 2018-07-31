@@ -5,26 +5,6 @@
     </div>
   </div>
   <hr>
-  <div class="row" style="text-align: center">
-    <div class="col-lg-12">
-      <h3><b>Resterende ferie/feriefridage fra sidste år</b></h3>
-    </div>
-  </div>
-  <div class="row">
-   <div class="col-sm-12">
-     <label>
-       <b>Ferie:</b> <!--<strong>{{data.selectedHolidayYear.HolidayAvailable-data.selectedHolidayYear.HolidaysUsed}}</strong>-->
-     </label>
-   </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-12">
-      <label>
-        <b>Feriefridage: </b><!--<strong>{{data.selectedHolidayYear.HolidayFreedayAvailable-data.selectedHolidayYear.HolidayFreedaysUsed}}</strong>-->
-      </label>
-    </div>
-  </div>
-  <hr>
   <form [formGroup]="holidayYearGroup" (submit)="create()" novalidate>
     <div class="row">
       <div class="col-sm-3">

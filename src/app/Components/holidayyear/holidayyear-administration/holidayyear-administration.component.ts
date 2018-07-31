@@ -95,8 +95,15 @@ export class HolidayyearAdministrationComponent implements OnInit {
           emps.splice(emps.indexOf(emp), admins.length);
         }
       }
+      emps.sort(this.sortEmployeesByName);
       this.employees = emps;
     });
+  }
+
+  sortEmployeesByName(a: Employee, b: Employee) {
+    let nameOfA = a.FirstName;
+    let nameOfB = b.FirstName;
+    return nameOfA > nameOfB ? 1 : (nameOfA < nameOfB ? -1 : 0);
   }
 
   selectEmployee(id: number){
@@ -151,7 +158,6 @@ export class HolidayyearAdministrationComponent implements OnInit {
 
   createEmployeeHolidayYear(selectedEmployee: Employee){
     const holidayYearSpec = this.currentHolidayYearSpec;
-    console.log(this.currentHolidayYearSpec.StartDate);
     let dialogRef = this.dialog.open(HolidayyearEmployeeCreateViewComponent, {
       data: {
         employee: selectedEmployee,
@@ -160,7 +166,6 @@ export class HolidayyearAdministrationComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if(result != null){
-        console.log(this.currentHolidayYearSpec);
         this.selectedEmployee = selectedEmployee;
         this.holidayyearService.post(result).subscribe(holidayYear => {
           this.selectedHolidayYear = holidayYear;

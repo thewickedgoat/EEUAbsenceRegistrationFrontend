@@ -23,7 +23,7 @@ export class AdministrationViewComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log(this.employees);
+    console.log('i am here');
   }
 
   updateView(){

@@ -41,7 +41,8 @@ export class EmployeeCreateComponent implements OnInit {
     this.router.navigateByUrl('employees');
   }
   initData(){
-    this.departmentService.getAll().subscribe(departments => {this.departments = departments; console.log(this.departments);});
+    this.departmentService.getAll().subscribe(departments => {
+      this.departments = departments;});
     this.getAlreadyExistingEmails();
   }
 
@@ -84,23 +85,25 @@ export class EmployeeCreateComponent implements OnInit {
     let password = AC.get('password').value;
     let passwordCheck = AC.get('passwordCheck').value;
     let email = AC.get('email').value;
-
-    if(password != passwordCheck){
-      AC.get('passwordCheck').setErrors({MatchPassword: true});
+    if(password && passwordCheck){
+      if(password != passwordCheck){
+        AC.get('passwordCheck').setErrors({MatchPassword: true});
+      }
+      if(password.length < minimumPasswordLength){
+        AC.get('passwordCheck').setErrors({MinimumLength: true});
+        AC.get('password').setErrors({MinimumLength: true});
+      }
+      if(password.length === 0){
+        AC.get('password').setErrors({NotEntered: true});
+      }
+      if(email.length === 0){
+        AC.get('email').setErrors({NotEntered: true});
+      }
+      else {
+        return null;
+      }
     }
-    if(password.length < minimumPasswordLength){
-      AC.get('passwordCheck').setErrors({MinimumLength: true});
-      AC.get('password').setErrors({MinimumLength: true});
-    }
-    if(password.length === 0){
-      AC.get('password').setErrors({NotEntered: true});
-    }
-    if(email.length === 0){
-      AC.get('email').setErrors({NotEntered: true});
-    }
-    else {
-      return null;
-    }
+    else return null;
   }
 
   passwordCheckIsInvalid(controlName: string){
@@ -128,10 +131,10 @@ export class EmployeeCreateComponent implements OnInit {
     const values = this.employeeGroup.value;
     const department = this.getDepartment(this.employeeGroup.controls['department'].value);
     const employee: Employee = {FirstName: values.firstName, LastName: values.lastName,
-      UserName: values.userName, Email: values.email, Password: values.password,
-      EmployeeRole: values.employeeRole, Department: department, PasswordReset: false};
+      UserName: values.userName.toLowerCase(), Email: values.email, Password: values.password,
+      EmployeeRole: values.employeeRole, Department: department, PasswordReset: true};
     if(this.doesEmailAlreadyExist(values.email)){
-      let dialogRef = this.dialog.open(UniversalErrorCatcherComponent, {
+      this.dialog.open(UniversalErrorCatcherComponent, {
         data: {
           errorMessage: 'Den angivne email eksisterer allerede på en anden bruger.',
           errorHandler: 'Angiv en unik email.',
@@ -141,7 +144,6 @@ export class EmployeeCreateComponent implements OnInit {
     }
     else{
       this.employeeService.post(employee).subscribe(emp => {
-        console.log(emp);
         this.authenticationService.register(emp).subscribe(() => {
           this.employeeCreated = true;
           setTimeout(()=> {

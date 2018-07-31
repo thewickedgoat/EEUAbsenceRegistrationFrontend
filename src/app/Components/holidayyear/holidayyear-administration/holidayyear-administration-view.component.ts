@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Output, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
 import {Employee} from '../../../entities/Employee';
-import {MatDialog} from '@angular/material';
 import {HolidayYear} from '../../../entities/HolidayYear';
 
 @Component({
@@ -34,7 +33,7 @@ export class HolidayyearAdministrationViewComponent implements OnInit {
   @Output()
   deleteHolidayYearSpecEmitter = new EventEmitter();
 
-  constructor(private dialog: MatDialog,) { }
+  constructor() { }
 
   ngOnInit() {
   }
@@ -49,7 +48,6 @@ export class HolidayyearAdministrationViewComponent implements OnInit {
   }
 
   selectEmployee(id: number){
-    console.log(id);
     this.selectEmployeeEmitter.emit(id);
   }
 

@@ -59,7 +59,7 @@ export class EmployeeComponent implements OnInit {
     }
     else {
       if(this.loggedInUser.EmployeeRole === EmployeeRole.Administrator){
-        let dialogRef = this.dialog.open(UniversalErrorCatcherComponent, {
+        this.dialog.open(UniversalErrorCatcherComponent, {
           data: {
             errorMessage: '  Denne medarbejder er endnu ikke tilføjet til ferieåret  ',
             errorHandler: '  For at tilføje medarbejderen gå til: "Ferieårsadministration."  ',
@@ -68,7 +68,7 @@ export class EmployeeComponent implements OnInit {
         });
       }
       else {
-        let dialogRef = this.dialog.open(UniversalErrorCatcherComponent, {
+        this.dialog.open(UniversalErrorCatcherComponent, {
           data: {
             errorMessage: '  Denne medarbejder er endnu ikke tilføjet til ferieåret.  ',
             errorHandler: '  Administrator tilføjer medarbejderen senere.  ',
