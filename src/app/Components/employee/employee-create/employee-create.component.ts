@@ -23,6 +23,7 @@ export class EmployeeCreateComponent implements OnInit {
   employeeRole: EmployeeRole;
   employeeCreated = false;
   emails: string[] = [];
+  usernames: string[] = [];
 
   constructor(private authenticationService: AuthenticationService,
               private departmentService: DepartmentService,
@@ -43,7 +44,7 @@ export class EmployeeCreateComponent implements OnInit {
   initData(){
     this.departmentService.getAll().subscribe(departments => {
       this.departments = departments;});
-    this.getAlreadyExistingEmails();
+    this.getAlreadyExistingEmailsAndUsernames();
   }
 
 
@@ -63,13 +64,16 @@ export class EmployeeCreateComponent implements OnInit {
   /**
    * Creates a list of all emails created in the employees
    */
-  getAlreadyExistingEmails(){
+  getAlreadyExistingEmailsAndUsernames(){
     let alreadyExistingEmails = new Array<string>();
+    let alreadyExistingUsernames = new Array<string>();
     this.employeeService.getAll().subscribe(emps => {
       for(let emp of emps){
         alreadyExistingEmails.push(emp.Email);
+        alreadyExistingUsernames.push(emp.UserName);
       }
       this.emails = alreadyExistingEmails;
+      this.usernames = alreadyExistingUsernames;
     });
   }
 
@@ -141,6 +145,17 @@ export class EmployeeCreateComponent implements OnInit {
           multipleOptions: false
         }
       });
+      return;
+    }
+    if(this.doesUsernameAlreadyExist(values.userName)){
+      this.dialog.open(UniversalErrorCatcherComponent, {
+        data: {
+          errorMessage: 'Dette brugernavn eksisterer allerede på en anden bruger.',
+          errorHandler: 'Angiv et unikt brugernavn.',
+          multipleOptions: false
+        }
+      });
+      return;
     }
     else{
       this.employeeService.post(employee).subscribe(emp => {
@@ -166,6 +181,15 @@ export class EmployeeCreateComponent implements OnInit {
     }
     else return false;
   }
+
+  doesUsernameAlreadyExist(username: string) {
+    let emailDuplicate = this.usernames.find(x => x === username);
+    if(emailDuplicate != null){
+      return true;
+    }
+    else return false;
+  }
+
 
 
   /**

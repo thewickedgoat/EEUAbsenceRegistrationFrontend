@@ -45,8 +45,7 @@ export class CalendarComponent implements OnInit {
   lastMonthInHolidayYear: boolean;
   firstMonthInHolidayYear: boolean;
 
-  holidayYearSpecs: HolidayYearSpec[];
-
+  currentHolidayYearSpecHasChanged: boolean = false;
   currentHolidayYearSpec: HolidayYearSpec;
   currentHolidayYear: HolidayYear;
   currentMonth: Month;
@@ -82,29 +81,16 @@ export class CalendarComponent implements OnInit {
   }
 
   getHolidayYear(){
-    let holidayYearsSpecs = [];
-    this.holidayYearSpecSerivce.getAll().subscribe( specs => {
-      if(specs != null){
-        for(let holidayYearSpec of specs){
-          holidayYearSpec.StartDate = this.dateformatingService.formatDate(holidayYearSpec.StartDate);
-          holidayYearSpec.EndDate = this.dateformatingService.formatDate(holidayYearSpec.EndDate);
-        }
-      }
-      this.holidayYearSpecs = specs;
-      holidayYearsSpecs = this.holidayYearSpecs;
-      if(holidayYearsSpecs != null){
-        const currentHolidayYearSpec = JSON.parse(sessionStorage.getItem('currentHolidayYearSpec'));
-        if(currentHolidayYearSpec != null){
-          currentHolidayYearSpec.StartDate = this.dateformatingService.formatDate(currentHolidayYearSpec.StartDate);
-          currentHolidayYearSpec.EndDate = this.dateformatingService.formatDate(currentHolidayYearSpec.EndDate);
-          this.currentHolidayYearSpec = currentHolidayYearSpec;
-          const currentHolidayYear = this.employee.HolidayYears.find(x => x.CurrentHolidayYear.Id === this.currentHolidayYearSpec.Id);
-          this.currentHolidayYear = currentHolidayYear;
-          this.formatPublicHolidaysAndWorkfreeDays();
-          this.initData();
-        }
-      }
-    });
+    let currentHolidayYearSpec = JSON.parse(sessionStorage.getItem('currentHolidayYearSpec'));
+    if(currentHolidayYearSpec != null){
+      currentHolidayYearSpec.StartDate = this.dateformatingService.formatDate(currentHolidayYearSpec.StartDate);
+      currentHolidayYearSpec.EndDate = this.dateformatingService.formatDate(currentHolidayYearSpec.EndDate);
+      this.currentHolidayYearSpec = currentHolidayYearSpec;
+      const currentHolidayYear = this.employee.HolidayYears.find(x => x.CurrentHolidayYear.Id === this.currentHolidayYearSpec.Id);
+      this.currentHolidayYear = currentHolidayYear;
+      this.formatPublicHolidaysAndWorkfreeDays();
+      this.initData();
+    }
   }
 
   initData(){
@@ -183,18 +169,6 @@ export class CalendarComponent implements OnInit {
     this.initData();
   }
 
-
-  /**
-   * Selects the current holidayYearSpec and redirects to the first month in that year.
-   * @param {number} id
-   */
-  selectHolidayYear(id: number){
-    let selectedHolidayYearSpec = this.holidayYearSpecs.find(x => x.Id === id);
-    const startDate = selectedHolidayYearSpec.StartDate;
-    this.router.navigateByUrl('calendar/' + this.employee.Id + '/' + startDate.getFullYear() + '/' + startDate.getMonth());
-    this.initData();
-  }
-
   /**
    * Refreshes the view.
    */
@@ -220,19 +194,62 @@ export class CalendarComponent implements OnInit {
   }
   //skal flyttes til controlleren for alle componenterne i kalender-viewet
   reloadHolidayYearAndMonth(){
-    this.holidayYearService.getById(this.currentHolidayYear.Id).subscribe(holiday => {
-      if(holiday != null){
-        this.currentHolidayYear = holiday;
-        let currentMonth = this.currentHolidayYear.Months.find(x => x.Id === this.currentMonth.Id);
-          if(currentMonth != null){
-            const dateToParse = currentMonth.MonthDate.toString();
-            const monthDate = new Date(Date.parse(dateToParse));
-            currentMonth.MonthDate = monthDate;
-            this.currentMonth = currentMonth;
-          }
-      }
-      this.initData();
+    this.holidayYearSpecSerivce.getById(this.currentHolidayYearSpec.Id).subscribe(hys => {
+      this.employeeService.getById(this.employee.Id).subscribe(emp => {
+        if(this.holidayYearSpecChanged(hys)){
+          this.getHolidayYear();
+          return;
+
+        }
+        else if(this.workfreeDaysAdded(emp)){
+          this.employee = emp;
+          this.getHolidayYear();
+          return;
+        }
+        else {
+          this.holidayYearService.getById(this.currentHolidayYear.Id).subscribe(holiday => {
+            if(holiday != null){
+              this.currentHolidayYear = holiday;
+              let currentMonth = this.currentHolidayYear.Months.find(x => x.Id === this.currentMonth.Id);
+              if(currentMonth != null){
+                const dateToParse = currentMonth.MonthDate.toString();
+                const monthDate = new Date(Date.parse(dateToParse));
+                currentMonth.MonthDate = monthDate;
+                this.currentMonth = currentMonth;
+              }
+            }
+            this.initData();
+          });
+        }
+
+      })
     });
+  }
+
+  /**
+   * Returns true if workfreeDays have been added to the employee
+   */
+  workfreeDaysAdded(employee: Employee){
+    if(this.employee.WorkfreeDays.length != employee.WorkfreeDays.length){
+      this.currentHolidayYearSpecHasChanged = true;
+      return true;
+    }
+    else {
+      this.currentHolidayYearSpecHasChanged = false;
+      return false;
+    }
+  }
+
+  holidayYearSpecChanged(hys: HolidayYearSpec){
+    if(hys.PublicHolidays.length != this.currentHolidayYearSpec.PublicHolidays.length){
+      sessionStorage.setItem('currentHolidayYearSpec', JSON.stringify(hys));
+      this.currentHolidayYearSpecHasChanged = true;
+      return true;
+    }
+    else {
+      this.currentHolidayYearSpecHasChanged = false;
+      return false;
+    }
   }
 
   //skal flyttes til controlleren
@@ -420,7 +437,6 @@ export class CalendarComponent implements OnInit {
     {
       let currentWeek = new Array<number>();
       for(let day of week){
-
         if(day != -1)
         {
           day = index;
@@ -432,7 +448,6 @@ export class CalendarComponent implements OnInit {
           day = notDayInCurrentMonth;
           currentWeek.push(day);
         }
-
       }
       datesInWeeks.push(currentWeek);
     }
@@ -444,18 +459,30 @@ export class CalendarComponent implements OnInit {
    * @param index
    */
     getWeeksInMonth(index: number){
+      let tempIndex: number;
+      if(index === 0){
+        tempIndex = 7;
+      }
+      else {
+        tempIndex = index;
+      }
+      const sunday = 0; //Sunday is indexed as 0 in the "Date" entity
       const week = 6; //A week consists of 7 days, representing Sunday - Saturday with the values of 0 - 6
-      const firstWeekIndex = this.daysInCurrentMonth[0].getDay()
-      const wholeWeekIndex = week - firstWeekIndex + 1;
-      const secondWeekIndex = this.daysInCurrentMonth[wholeWeekIndex].getDay();
-      const secondWholeWeekIndex = week + wholeWeekIndex + 1;
+      let firstWeekIndex: number;
+      if(this.daysInCurrentMonth[0].getDay() === sunday){
+        firstWeekIndex = 7;
+      }
+      else firstWeekIndex = this.daysInCurrentMonth[0].getDay();
+      const firstWholeWeekIndex = week - firstWeekIndex + 1;
+      const secondWeekIndex = this.daysInCurrentMonth[firstWholeWeekIndex].getDay();
+      const secondWholeWeekIndex = week + firstWholeWeekIndex + 1;
       const thirdWeekIndex = this.daysInCurrentMonth[secondWholeWeekIndex].getDay();
       const thirdWholeWeekIndex = week + secondWholeWeekIndex+ 1;
       const fourthWeekIndex = this.daysInCurrentMonth[thirdWholeWeekIndex].getDay();
       const fourthWholeWeekIndex = week + thirdWholeWeekIndex+ 1;
       const fifthWeekIndex = this.daysInCurrentMonth[fourthWholeWeekIndex].getDay();
       const fifthWholeWeekIndex = week + fourthWholeWeekIndex +1;
-      const lastWholeFiveWeekIndex = this.daysInCurrentMonth.length - fourthWholeWeekIndex;
+      const lastWholeFiveWeekIndex = this.daysInCurrentMonth.length-1 - fourthWholeWeekIndex;
       const amountOfWeeksInCurrentMonth =  new Array<number>();
       let firstWeek = new Array<number>();
       let secondWeek = new Array<number>();
@@ -463,50 +490,88 @@ export class CalendarComponent implements OnInit {
       let fourthWeek = new Array<number>();
       let fifthWeek = new Array<number>();
       let sixthWeek = new Array<number>();
-      //if there is 6 whole weeks in the current currentMonth
-      if (this.daysInCurrentMonth.length > 30 && index > 4 || this.daysInCurrentMonth.length > 29 && index > 5)
+      //if there is 6 whole weeks in the current currentMonth;
+      if (this.daysInCurrentMonth.length > 30 && tempIndex > 5 || this.daysInCurrentMonth.length > 29 && tempIndex > 6)
       {
         const sixthWeekIndex = this.daysInCurrentMonth[fifthWholeWeekIndex].getDay();
-        const lastWholeSixWeekIndex = this.daysInCurrentMonth.length - fifthWholeWeekIndex;
+        const lastWholeSixWeekIndex = this.daysInCurrentMonth.length-1 - fifthWholeWeekIndex;
         for(var i = 0; i <= 5; i++)
         {
           amountOfWeeksInCurrentMonth[i] = i;
         }
-        if(firstWeekIndex != 0){
-          for(var i = 0; i < firstWeekIndex; i++)
+        if(firstWeekIndex != 7){ //org. firstWeekIndex != 0
+          for(var i = 0; i < firstWeekIndex-1; i++)
           {
-
             firstWeek[i] = -1;
           }
         }
+        else if(firstWeekIndex === 7){
+          for(var i = 0; i < firstWeekIndex; i++){
+            firstWeek[i] = -1;
+            if(i === 6){
+              firstWeek[i+1] = sunday;
+            }
+          }
+        }
         for(var i = firstWeekIndex; i <=week; i++){
-          firstWeek[i] = i;
+          firstWeek[i-1] = i;
+          firstWeek[i] = sunday;
         }
         for(var i = secondWeekIndex; i <=week; i++)
         {
-          secondWeek[i] = i;
+          if(i === 6){
+            secondWeek[i-1] = i;
+            secondWeek[i] = sunday;
+          }
+          else if(i != 0){
+            secondWeek[i-1] = i;
+          }
         }
         for(var i = thirdWeekIndex; i <=week; i++)
         {
-          thirdWeek[i] = i;
+          if(i === 6){
+            thirdWeek[i-1] = i;
+            thirdWeek[i] = sunday;
+          }
+          else if(i != 0){
+            thirdWeek[i-1] = i;
+          }
         }
         for(var i = fourthWeekIndex; i <=week; i++)
         {
-          fourthWeek[i] = i;
+          if(i === 6){
+            fourthWeek[i-1] = i;
+            fourthWeek[i] = sunday;
+          }
+          else if(i != 0){
+            fourthWeek[i-1] = i;
+          }
         }
         for(var i = fifthWeekIndex; i <= week; i++){
-          fifthWeek[i] = i;
+          if(i === 6){
+            fifthWeek[i-1] = i;
+            fifthWeek[i] = sunday;
+          }
+          else if(i != 0){
+            fifthWeek[i-1] = i;
+          }
         }
         if(sixthWeekIndex < lastWholeSixWeekIndex)
         {
-          for(var i = sixthWeekIndex; i < lastWholeSixWeekIndex; i++)
+          for(var i = sixthWeekIndex; i <= lastWholeSixWeekIndex; i++)
           {
-            sixthWeek[i] = i;
+            if(i === 6){
+              sixthWeek[i-1] = i;
+              sixthWeek[i] = sunday;
+            }
+            else if(i != 0){
+              sixthWeek[i-1] = i;
+            }
           }
         }
         if(lastWholeSixWeekIndex <= week)
         {
-          for(var i = fifthWeekIndex + lastWholeSixWeekIndex; i <= fifthWeekIndex + week; i++)
+          for(var i = lastWholeSixWeekIndex; i <= week; i++)
           {
             sixthWeek[i] = -1;
           }
@@ -534,31 +599,55 @@ export class CalendarComponent implements OnInit {
         }
         for(var i = firstWeekIndex; i <=week; i++)
         {
-          firstWeek[i] = i;
+          firstWeek[i-1] = i;
+          firstWeek[i] = sunday;
         }
         for(var i = secondWeekIndex; i <=week; i++)
         {
-          secondWeek[i] = i;
+          if(i === 6){
+            secondWeek[i-1] = i;
+            secondWeek[i] = sunday;
+          }
+          else if(i != 0){
+            secondWeek[i-1] = i;
+          }
         }
         for(var i = thirdWeekIndex; i <=week; i++)
         {
-          thirdWeek[i] = i;
+          if(i === 6){
+            thirdWeek[i-1] = i;
+            thirdWeek[i] = sunday;
+          }
+          else if(i != 0){
+            thirdWeek[i-1] = i;
+          }
         }
         for(var i = fourthWeekIndex; i <=week; i++)
         {
-          fourthWeek[i] = i;
+          if(i === 6){
+            fourthWeek[i-1] = i;
+            fourthWeek[i] = sunday;
+          }
+          else if(i != 0){
+            fourthWeek[i-1] = i;
+          }
         }
         if(fifthWeekIndex < lastWholeFiveWeekIndex)
         {
-          for(var i = fifthWeekIndex; i < lastWholeFiveWeekIndex; i++)
+          for(var i = fifthWeekIndex; i <= lastWholeFiveWeekIndex; i++)
           {
-            fifthWeek[i] = i;
+            if(i === 6){
+              fifthWeek[i-1] = i;
+              fifthWeek[i] = sunday;
+            }
+            else if(i != 0){
+              fifthWeek[i-1] = i;
+            }
           }
         }
         if(lastWholeFiveWeekIndex <= week)
         {
-          for(var i = fourthWeekIndex+lastWholeFiveWeekIndex; i <= fourthWeekIndex+week; i++)
-          {
+          for(var i = lastWholeFiveWeekIndex; i <= week; i++){
             fifthWeek[i] = -1;
           }
         }
@@ -568,7 +657,6 @@ export class CalendarComponent implements OnInit {
         this.weeks.push(fourthWeek);
         this.weeks.push(fifthWeek);
       }
-
       this.amountOfWeeksInCurrentMonth = amountOfWeeksInCurrentMonth;
   }
 
@@ -596,7 +684,6 @@ export class CalendarComponent implements OnInit {
       days[i] = new Date(year, month,i+1).getDay();
       this.daysInCurrentMonth.push(new Date(year, month,i+1));
     }
-
 //This will give you a number from 0 - 6 which represents (Sunday - Saturday)
 
     //for(var i=0; i<=numOfDays; i++)

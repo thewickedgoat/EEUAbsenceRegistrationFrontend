@@ -1,6 +1,6 @@
 <app-toolbar></app-toolbar>
 <div class="container" *ngIf="employee != null">
-  <div class="row">
+  <div *ngIf="isAdmin() || employee.Id === loggedInUser.Id" class="row">
     <div class="col-md-6">
       <div class="row" style="text-align: center">
         <div *ngIf="isAdmin() && loggedInUser.Id != employee.Id">
@@ -23,10 +23,9 @@
                        formControlName="firstName"
                        [(ngModel)]="employee.FirstName">
                 <div *ngIf="nameIsInvalid('firstName')" class="invalid-feedback">
-                  <div *ngIf="employeeGroup.controls['firstName'].errors.required">
+                  <div *ngIf="employeeGroup.controls['firstName'].errors">
                     Du skal angive et fornavn.
                   </div>
-
                 </div>
               </label>
             </div>
@@ -72,7 +71,7 @@
                 </div>
               </label>
             </div>
-            <div class="row" >
+            <div *ngIf="isAdmin() || employee.Id === loggedInUser.Id" class="row" >
               <label class="center-block col-md-12">Adgangskode:
                   <input *ngIf="showPassword === false" class="form-control"
                          type="password"
@@ -80,13 +79,13 @@
                          placeholder="Adgangskode her"
                          formControlName="password"
                          [(ngModel)]="employee.Password">
-                  <a *ngIf="isNotEditable && showPassword === false" class="btn btn-outline-info" (click)="hideShowPassword()">Vis adgangskode</a>
+                  <a *ngIf="isNotEditable && showPassword === false && isAdmin() || isNotEditable && showPassword === false && employee.Id === loggedInUser.Id" class="btn btn-outline-info" (click)="hideShowPassword()">Vis adgangskode</a>
                   <input *ngIf="showPassword === true" class="form-control"
                          placeholder="Adgangskode her"
                          [ngClass]="{'is-invalid': nameIsInvalid('password'), 'is-valid': nameIsValid('password')}"
                          formControlName="password"
                          [(ngModel)]="employee.Password">
-                  <a *ngIf="isNotEditable && showPassword === true" class="btn btn-info" (click)="hideShowPassword()">Skjul adgangskode</a>
+                  <a *ngIf="isNotEditable && showPassword === true && isAdmin() || isNotEditable && showPassword === true && employee.Id === loggedInUser.Id" class="btn btn-info" (click)="hideShowPassword()">Skjul adgangskode</a>
                 <div *ngIf="nameIsInvalid('password')" class="invalid-feedback">
                   <div *ngIf="employeeGroup.controls['password'].errors['MinimumLength']">
                     Adgangskoden skal mindst være 12 tegn.
@@ -115,6 +114,15 @@
                     Adgangskoderne skal matche
                   </div>
                 </div>
+              </label>
+            </div>
+            <div class="row" *ngIf="isAdmin()">
+              <label class="center-block col-md-12">Ændre password ved logon?
+                <select class="form-control"
+                        formControlName="changePassword">
+                  <option [selected]="employee.PasswordReset" [ngValue]="true">Ja</option>
+                  <option [selected]="!employee.PasswordReset" [ngValue]="false" >Nej</option>
+                </select>
               </label>
             </div>
             <div class="row">
@@ -158,15 +166,23 @@
                        [(ngModel)]="employee.Department.Name">
                 <div *ngIf="nameIsInvalid('userName')" class="invalid-feedback">
                   <div *ngIf="employeeGroup.controls['userName'].errors">
-                    Du skal angive et brugernavn.
+                    Du skal angive en afdeling.
                   </div>
                 </div>
               </label>
             </div>
-            <button class="btn btn-warning" [disabled]="!isNotEditable" (click)="edit()">
+            <div class="row">
+              <label class="center-block col-md-12">Note:
+                <input class="form-control"
+                formControlName="note"
+                placeholder="Ingen note at vise..."
+                [(ngModel)]="employee.Note">
+              </label>
+            </div>
+            <button *ngIf="isAdmin() || employee.Id === loggedInUser.Id" class="btn btn-warning" [disabled]="!isNotEditable" (click)="edit()">
               <i class="fa fa-pencil-square-o">Rediger</i>
             </button>
-            <button class="btn btn-info" [disabled]="employeeGroup.invalid || isNotEditable" type="submit">
+            <button *ngIf="isAdmin() || employee.Id === loggedInUser.Id" class="btn btn-info" [disabled]="employeeGroup.invalid || isNotEditable" type="submit">
               <i class="fa fa-floppy-o" aria-hidden="true">Gem</i>
             </button>
             <hr>

@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
-import { EmployeeComponent } from './Components/employee/employee/employee.component';
 import {RouterModule, Routes} from '@angular/router';
 import {EmployeeService} from './services/employee.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
@@ -28,9 +27,6 @@ import { MatDialogModule} from '@angular/material/';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-import { OverviewComponent } from './Components/holidayyear/overview/overview.component';
-import { MonthComponent } from './Components/holidayyear/month/month.component';
-import { MonthViewComponent } from './Components/holidayyear/month/month-view.component';
 import { AdminOverviewComponent } from './Components/holidayyear/admin-overview/admin-overview.component';
 import { AdminOverviewViewComponent } from './Components/holidayyear/admin-overview/admin-overview-view.component';
 import { CalendarViewComponent } from './Components/calendar/calendar-view/calendar-view.component';
@@ -43,9 +39,7 @@ import { EmployeeStatisticsControllerComponent } from './Components/employee/emp
 import { EmployeeMonthStatisticsComponent } from './Components/employee/employee-statistics/employee-month-statistics/employee-month-statistics.component';
 import { EmployeeYearStatisticsComponent } from './Components/employee/employee-statistics/employee-year-statistics/employee-year-statistics.component';
 import { EmployeeDeleteDialogComponent } from './Components/employee/employee-delete-dialog/employee-delete-dialog.component';
-import { AdministrationComponent } from './Components/administration/administration/administration.component';
 import { WorkfreedaysCreateViewComponent } from './Components/workfreedays/workfreedays-create-view/workfreedays-create-view.component';
-import { AdministrationViewComponent } from './Components/administration/administration/administration-view.component';
 import {WorkfreedayService} from './services/workfreeday.service';
 import { WorkfreedaysComponent } from './Components/workfreedays/workfreedays/workfreedays.component';
 import { PublicHolidayComponent } from './Components/workfreedays/public-holiday/public-holiday.component';
@@ -60,7 +54,6 @@ import { HolidayyearCreateViewComponent } from './Components/holidayyear/holiday
 import { HolidayyearEmployeeCreateViewComponent } from './Components/holidayyear/holidayyear-employee-create-view/holidayyear-employee-create-view.component';
 import { HolidayyearAdministrationComponent } from './Components/holidayyear/holidayyear-administration/holidayyear-administration.component';
 import { HolidayyearAdministrationViewComponent } from './Components/holidayyear/holidayyear-administration/holidayyear-administration-view.component';
-import { HolidayyearListComponent } from './Components/holidayyear/holidayyear-list/holidayyear-list.component';
 import { HolidayyearRemainingEmployeeComponent } from './Components/holidayyear/holidayyear-remaining-employee/holidayyear-remaining-employee.component';
 import { PublicHolidayViewComponent } from './Components/workfreedays/public-holiday/public-holiday-view.component';
 import { HolidayyearEmployeeComponent } from './Components/holidayyear/holidayyear-employee/holidayyear-employee.component';
@@ -74,27 +67,22 @@ import { DepartmentEditDialogComponent } from './Components/department/departmen
 import { HolidayyearDeleteDialogComponent } from './Components/holidayyear/holidayyear-delete-dialog/holidayyear-delete-dialog.component';
 import { StatusComponent } from './Components/status/status/status.component';
 import { StatusListComponent } from './Components/status/status-list/status-list.component';
-import { EmployeeApprovalComponent } from './Components/employee/employee-approval/employee-approval.component';
-import { EmployeeApprovalViewComponent } from './Components/employee/employee-approval/employee-approval-view.component';
 import { StatusCreateComponent } from './Components/status/status-create/status-create.component';
 import { StatusDeleteComponent } from './Components/status/status-delete/status-delete.component';
+import { StatusEditComponent } from './Components/status/status-edit/status-edit.component';
 
 
 const routes: Routes = [
-  {path: 'employee/:id', component: EmployeeComponent, canActivate: [AuthguardGuard]},
   {path: 'employees', component: EmployeeListComponent, canActivate: [AuthguardGuard]},
   {path: 'department/create', component: DepartmentCreateComponent, canActivate: [AuthguardGuard, AdminGuard]},
   {path: 'employees/create', component: EmployeeCreateComponent, canActivate: [AuthguardGuard]},
   {path: 'employees/profile/:id', component: EmployeeEditComponent, canActivate: [AuthguardGuard]},
   {path: 'calendar/:id/:year/:month', component: CalendarComponent, canActivate: [AuthguardGuard]},
-  {path: 'overview/:id', component: OverviewComponent, canActivate: [AuthguardGuard]},
-  //{path: 'month/:month/:yearStart/:yearEnd', component: MonthComponent, canActivate: [AuthguardGuard]},
   {path: 'public-calendar/:month', component: PublicCalendarComponent, canActivate: [AuthguardGuard]},
   {path: 'login', component: LoginComponent},
   {path: 'holidayyears', component: HolidayyearAdministrationComponent, canActivate: [AuthguardGuard, AdminGuard]},
   {path: 'status', component: StatusListComponent, canActivate: [AuthguardGuard, AdminGuard]},
   {path: 'stats/:yearStart', component: AdminOverviewComponent, canActivate: [AuthguardGuard]},
-  {path: 'work', component: AdministrationComponent, canActivate: [AuthguardGuard]},
   {path: '**', redirectTo: 'login'}
 
 ];
@@ -113,7 +101,6 @@ const routes: Routes = [
     CalendarViewComponent,
     DepartmentComponent,
     DepartmentCreateComponent,
-    EmployeeComponent,
     EmployeeCreateComponent,
     EmployeeEditComponent,
     EmployeeListComponent,
@@ -122,15 +109,10 @@ const routes: Routes = [
     EmployeeYearStatisticsComponent,
     EmployeeDeleteDialogComponent,
     LoginComponent,
-    MonthComponent,
-    MonthViewComponent,
-    OverviewComponent,
     StatusViewComponent,
     StatusControllerComponent,
     ToolbarComponent,
-    AdministrationComponent,
     WorkfreedaysCreateViewComponent,
-    AdministrationViewComponent,
     WorkfreedaysComponent,
     PublicHolidayComponent,
     WorkfreedayComponent,
@@ -142,7 +124,6 @@ const routes: Routes = [
     HolidayyearEmployeeCreateViewComponent,
     HolidayyearAdministrationComponent,
     HolidayyearAdministrationViewComponent,
-    HolidayyearListComponent,
     HolidayyearRemainingEmployeeComponent,
     PublicHolidayViewComponent,
     HolidayyearEmployeeComponent,
@@ -154,10 +135,9 @@ const routes: Routes = [
     HolidayyearDeleteDialogComponent,
     StatusComponent,
     StatusListComponent,
-    EmployeeApprovalComponent,
-    EmployeeApprovalViewComponent,
     StatusCreateComponent,
     StatusDeleteComponent,
+    StatusEditComponent,
   ],
   imports: [
     BrowserModule,
@@ -184,7 +164,8 @@ const routes: Routes = [
     DepartmentEditDialogComponent,
     HolidayyearDeleteDialogComponent,
     StatusCreateComponent,
-    StatusDeleteComponent
+    StatusDeleteComponent,
+    StatusEditComponent
   ],
   providers: [
     EmployeeService,

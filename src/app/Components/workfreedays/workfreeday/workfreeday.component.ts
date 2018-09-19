@@ -9,6 +9,7 @@ import {Router} from '@angular/router';
 import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
 import {WorkfreeDay} from '../../../entities/workfreeDay';
 import {DateformatingService} from '../../../services/dateformating.service';
+import {UniversalErrorCatcherComponent} from '../../Errors/universal-error-catcher/universal-error-catcher.component';
 
 
 @Component({
@@ -75,40 +76,51 @@ export class WorkfreedayComponent implements OnInit {
   create(selectedEmployee: Employee){
     let workfreeDays = [];
     if(selectedEmployee != null){
-      let dialogRef = this.dialog.open(WorkfreedaysCreateViewComponent, {
-        data: {
-          employee: selectedEmployee
-        }
-      });
-      dialogRef.afterClosed().subscribe(result => {
-        workfreeDays = result;
-        if(workfreeDays.length > 0){
-          const workfreeDaysNotInRange = this.workfreedaysNotInRange(workfreeDays);
-          const absenceDaysToList = this.getOverlappingAbsences(selectedEmployee, workfreeDays);
-          const overlappingWorkfreeDays = this.getOverlappingWorkfreeDays(workfreeDays);
-          if(workfreeDaysNotInRange.length > 0){
-            this.workfreeDayError(selectedEmployee, null,null, null, workfreeDaysNotInRange);
-            return;
+      const currentHolidayYear = selectedEmployee.HolidayYears.find(x => x.CurrentHolidayYear.Id === this.currentHolidayYearSpec.Id);
+      if(!currentHolidayYear){
+        this.dialog.open(UniversalErrorCatcherComponent, {
+          data: {
+            errorMessage: '  Denne medarbajder er ikke tilføjet i det nuværende ferieår  ',
+            errorHandler: '  Tilføj dem først og prøv igen.'
           }
-          else{
-            if(absenceDaysToList.length > 0){
-              this.workfreeDayError(selectedEmployee, null,null, absenceDaysToList, null);
-              return;
-            }
-            else if(overlappingWorkfreeDays.length > 0){
-              this.workfreeDayError(selectedEmployee, workfreeDays, overlappingWorkfreeDays, null, null);
-              this.updateView();
+        });
+      }
+      else {
+        let dialogRef = this.dialog.open(WorkfreedaysCreateViewComponent, {
+          data: {
+            employee: selectedEmployee
+          }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          workfreeDays = result;
+          if(workfreeDays != null && workfreeDays.length > 0){
+            const workfreeDaysNotInRange = this.workfreedaysNotInRange(workfreeDays);
+            const absenceDaysToList = this.getOverlappingAbsences(selectedEmployee, workfreeDays);
+            const overlappingWorkfreeDays = this.getOverlappingWorkfreeDays(workfreeDays);
+            if(workfreeDaysNotInRange.length > 0){
+              this.workfreeDayError(selectedEmployee, null,null, null, workfreeDaysNotInRange);
               return;
             }
             else{
-              this.workfreedayService.postList(workfreeDays).subscribe(wfd => {
+              if(absenceDaysToList.length > 0){
+                this.workfreeDayError(selectedEmployee, null,null, absenceDaysToList, null);
+                return;
+              }
+              else if(overlappingWorkfreeDays.length > 0){
+                this.workfreeDayError(selectedEmployee, workfreeDays, overlappingWorkfreeDays, null, null);
                 this.updateView();
-              });
+                return;
+              }
+              else{
+                this.workfreedayService.postList(workfreeDays).subscribe(wfd => {
+                  this.updateView();
+                });
+              }
             }
           }
-        }
-        else return;
-      });
+          else return;
+        });
+      }
     }
   }
 

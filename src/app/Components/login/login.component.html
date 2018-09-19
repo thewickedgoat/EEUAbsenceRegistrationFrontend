@@ -2,14 +2,15 @@
   <div class="col-md-12 mainblock">
     <div class="row">
       <div class="col-md-12" style="text-align: center">
-        <h4 *ngIf="forgotPassword === false && changingPassword === false"><strong>Login</strong></h4>
-        <h4 *ngIf="forgotPassword === true"><strong>Glemt password</strong></h4>
-        <h4 *ngIf="changingPassword === true"><strong>Skift adgangskode</strong></h4>
+        <h4 style="color: ghostwhite" *ngIf="forgotPassword === false && changingPassword === false"><strong>Login</strong></h4>
+        <h4 style="color: ghostwhite" *ngIf="forgotPassword === true"><strong>Glemt password</strong></h4>
+        <h4 style="color: ghostwhite" *ngIf="changingPassword === true"><strong>Skift adgangskode</strong></h4>
       </div>
+      <img src="https://www.eeu.dk/templates/webitallskeleton/images/dev/logo-dk.png" class="brand" style="width: 100%;">
       <div class="col-md-12" *ngIf="forgotPassword === false && changingPassword === false">
         <form [formGroup]="loginGroup" (ngSubmit)="loginEmployee($event)" novalidate>
           <div class="form-group">
-            <label class="center-block col-md-12"><b>Brugernavn:</b>
+            <label style="color: ghostwhite" class="center-block col-md-12"><b>Brugernavn:</b>
               <input class="form-control textfield"
                      placeholder="Brugernavn her"
                      [ngClass]="{'is-invalid': nameIsInvalid('userName'), 'is-valid': nameIsValid('userName')}"
@@ -20,7 +21,7 @@
                 </div>
               </div>
             </label>
-            <label class="center-block col-md-12"><b>Adgangskode:</b>
+            <label style="color: ghostwhite" class="center-block col-md-12"><b>Adgangskode:</b>
               <input class="form-control textfield"
                      type="password"
                      id="password"
@@ -35,7 +36,7 @@
             </label>
             <div class="col-md-12" style="text-align: center">
               <button [disabled]="loginGroup.invalid" type="submit" class="btn btn-info">
-                <i class="fa fa-sign-in" aria-hidden="true">Login</i>
+                <i class="fa fa-sign-in" aria-hidden="true">Log ind</i>
               </button>
             </div>
           </div>
@@ -47,14 +48,15 @@
       <div *ngIf="forgotPassword === true" class="col-md-12">
         <form [formGroup]="forgotPasswordGroup" (ngSubmit)="resetPassword($event)" novalidate>
           <div class="form-group">
-            <label class="center-block col-md-12"><b>Angiv email:</b>
+            <label style="color: ghostwhite" class="center-block col-md-12"><b>Angiv email:</b>
               <input class="form-control textfield"
                 placeholder="Email her"
                 formControlName="email">
             </label>
-            <div style="text-align: center">
-              <button class="btn btn-info" type="submit">Send</button>
-            </div>
+          </div>
+          <div class="col-md-12" style="text-align: center">
+            <button class="btn btn-info" type="submit">Send</button>
+            <button class="btn btn-info" type="button" (click)="toggleForgotPassword()">Annuller</button>
           </div>
         </form>
       </div>
@@ -63,7 +65,7 @@
       <form [formGroup]="changePasswordGroup" (ngSumbit)="changePassword($event)" novalidate>
         <div class="form-group">
           <div class="row">
-            <label class="center-block col-md-12">Ny adgangskode:
+            <label style="color: ghostwhite" class="center-block col-md-12">Ny adgangskode:
               <input class="form-control"
                      type="password"
                      [ngClass]="{'is-invalid': passwordIsInvalid('password'), 'is-valid': passwordIsValid('password')}"
@@ -80,7 +82,7 @@
             </label>
           </div>
           <div class="row">
-            <label class="center-block col-md-12">Gentag adgangskode:
+            <label style="color: ghostwhite" class="center-block col-md-12">Bekræft adgangskode:
               <input class="form-control"
                      type="password"
                      [ngClass]="{'is-invalid': passwordIsInvalid('passwordCheck'), 'is-valid': passwordIsValid('passwordCheck')}"
@@ -101,10 +103,11 @@
       </form>
     </div>
     <div *ngIf="loggingIn" class="col-lg-12" style="text-align: center">
-      <i class="fa fa-spinner fa-spin"></i>
-      Logger ind...
+      <i style="color:ghostwhite" class="fa fa-spinner fa-spin"></i>
+      <a style="color: ghostwhite">Logger ind...</a>
     </div>
     <ngb-alert *ngIf="loginError" (close)="close()" type="danger">Forkert adgangskode eller password</ngb-alert>
     <ngb-alert *ngIf="passwordIsSent" (close)="close()" type="success">Nyt password sendt</ngb-alert>
+    <ngb-alert *ngIf="emailNotFound" (close)="close()" type="danger">Den angivne email kunne ikke findes</ngb-alert>
   </div>
 </div>

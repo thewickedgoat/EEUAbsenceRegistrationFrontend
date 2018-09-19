@@ -4,8 +4,8 @@ import {EmployeeRole} from '../../../entities/employeeRole.enum';
 import {Employee} from '../../../entities/Employee';
 import {Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
-import {UniversalErrorCatcherComponent} from '../../Errors/universal-error-catcher/universal-error-catcher.component';
 import {DepartmentEditDialogComponent} from '../department-edit-dialog/department-edit-dialog.component';
+import {UniversalErrorCatcherComponent} from '../../Errors/universal-error-catcher/universal-error-catcher.component';
 
 @Component({
   selector: 'app-department',
@@ -40,12 +40,54 @@ export class DepartmentComponent implements OnInit {
     return nameOfA > nameOfB ? 1 : (nameOfA < nameOfB ? -1 : 0);
   }
 
+  goToCalendar(employee: Employee){
+    const date = new Date();
+    if(this.isEmployeeInHolidayYear(employee)){
+      this.router
+        .navigateByUrl('calendar/' + employee.Id + '/' + date.getFullYear() + '/' + date.getMonth());
+    }
+    else {
+      if(this.loggedInUser.EmployeeRole === EmployeeRole.Administrator){
+        this.dialog.open(UniversalErrorCatcherComponent, {
+          data: {
+            errorMessage: '  Denne medarbejder er endnu ikke tilføjet til ferieåret  ',
+            errorHandler: '  For at tilføje medarbejderen gå til: "Ferieårsadministration."  ',
+            multipleOptions: false
+          }
+        });
+      }
+      else {
+        this.dialog.open(UniversalErrorCatcherComponent, {
+          data: {
+            errorMessage: '  Denne medarbejder er endnu ikke tilføjet til ferieåret.  ',
+            errorHandler: '  Administrator tilføjer medarbejderen senere.  ',
+            multipleOptions: false
+          }
+        });
+      }
+    }
+  }
+
+  /**
+   * Checks if the employee has a holidayYear that matches the current HolidayYearSpec
+   */
+  isEmployeeInHolidayYear(employee: Employee): boolean{
+    const currentHolidayYear = JSON.parse(sessionStorage.getItem('currentHolidayYearSpec'));
+    if(employee.HolidayYears != null){
+      const holidayYear = employee.HolidayYears.find(x => x.CurrentHolidayYear.Id === currentHolidayYear.Id);
+      if(holidayYear != null){
+        return true;
+      }
+      else return false;
+    }
+    else return false;
+  }
 
   /**
    * Page navigation to edit department
    * @param $event
    */
-  edit(){
+  editDepartment(){
     let dialogRef = this.dialog.open(DepartmentEditDialogComponent, {
       data: {
         department: this.department,
@@ -72,6 +114,16 @@ export class DepartmentComponent implements OnInit {
 
   delete(id){
     this.deleteEmployeeEmitter.emit(id);
+  }
+
+  /**
+   * Page navigation to edit
+   * @param employee
+   */
+  edit(employee: Employee){
+    this.router
+      .navigateByUrl('employees/profile/' + employee.Id);
+
   }
 
   /**

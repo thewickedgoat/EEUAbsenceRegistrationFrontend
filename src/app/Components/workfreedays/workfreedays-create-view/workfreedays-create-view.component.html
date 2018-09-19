@@ -1,27 +1,45 @@
-<div class="container">
+<div class="container" style="width: 400px">
   <div class="col-lg-12" style="text-align: center">
     <h2>Opret Arbejdsfridage</h2>
   </div>
   <hr>
     <form [formGroup]="workfreedayGroup" (ngSubmit)="createWorkfreeDay()" novalidate>
-      <div class="col-lg-12" style="text-align: center">
-        <label><b>Start Dato:</b>
-          <input type="date"
-                 formControlName="dateStart">
-        </label>
-        <label><b>Slut Dato:</b>
-          <input type="date"
-                 formControlName="dateEnd">
-        </label>
-        <select #t (change)="setDay(t.value)">
-          <option disabled selected>-Vælg dag-</option>
+      <label class="center-block col-md-12"><b>Start Dato:</b>
+        <input class="form-control"
+               type="date"
+               formControlName="dateStart"
+               [ngClass]="{'is-invalid': isInvalid('dateStart'), 'is-valid': isValid('dateStart')}">
+        <div *ngIf="isInvalid('dateStart')" class="invalid-feedback">
+          <div *ngIf="workfreedayGroup.controls['dateStart'].errors">
+            Du skal angive en dato.
+          </div>
+        </div>
+      </label>
+      <label class="center-block col-md-12"><b>Slut Dato:</b>
+        <input class="form-control"
+               type="date"
+               formControlName="dateEnd"
+               [ngClass]="{'is-invalid': isInvalid('dateEnd'), 'is-valid': isValid('dateEnd')}">
+        <div *ngIf="isInvalid('dateEnd')" class="invalid-feedback">
+          <div *ngIf="!endDateIsValid()">
+            Du skal angive en dato.
+          </div>
+          <div *ngIf="workfreedayGroup.controls['dateEnd'].errors['DateStartError']">
+            Slut dato kan ikke være lavere end start dato.
+          </div>
+        </div>
+      </label>
+      <label class="center-block col-md-12"><b>Ugedag: </b>
+        <select #t (change)="setDay(t.value)"
+                class="form-control"
+                formControlName="weekday">
           <option [value]="1">Mandag</option>
           <option [value]="2">Tirsdag</option>
           <option [value]="3">Onsdag</option>
           <option [value]="4">Torsdag</option>
           <option [value]="5">Fredag</option>
         </select>
-      </div>
-      <button class="btn btn-success" type="submit">Opret</button>
+      </label>
+      <button [disabled]="workfreedayGroup.invalid" class="btn btn-success" type="submit">Opret</button>
     </form>
 </div>

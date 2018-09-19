@@ -1,17 +1,16 @@
-.container{
-}
-
 
 .mainblock {
   display: block;
-  margin-left: auto;
-  margin-right: auto;
-  height: 350px;
-  width: 300px;
-  padding: 10px;
+  position:fixed;
+  top: 50%;
+  left: 50%;
+  width:18em;
+  height:25em;
+  margin-top: -15em; /*set to a negative number 1/2 of your height*/
+  margin-left: -9em; /*set to a negative number 1/2 of your width*/
   border-color: black;
   border-width: 5px;
-  background-color: rgba(220, 220, 220, 0.4);
+  background-color: #2e353d;
   border-radius: 10px;
   box-shadow: 2.5px 2.5px;
 }

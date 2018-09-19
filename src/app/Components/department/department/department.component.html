@@ -4,7 +4,7 @@
       <button class="btn btn-sm btn-danger" (click)="deleteDepartment($event)">
         <i class="fa fa-trash-o" aria-hidden="true"></i>
       </button>
-      <button class="btn btn-sm btn-warning" (click)="edit($event)">
+      <button class="btn btn-sm btn-warning" (click)="editDepartment($event)">
         <i class="fa fa-pencil" aria-hidden="true"></i>
       </button>
     </div>
@@ -13,10 +13,21 @@
   </div>
   <div class="row">
     <nav style="overflow-y: auto; overflow-x: hidden; background: linear-gradient(to bottom, #2980b9, #6dd5fa, #ffffff); border-style: solid; border-width: 1px; height: 300px; width: 300px;">
-      <div class="row" *ngFor="let employee of department.Employees">
-        <div  class="employeeDiv" *ngIf="employee.EmployeeRole != admin()">
-          <app-employee [employee]="employee"
-                        (emitter)="delete($event)"></app-employee>
+      <div class="contaier" style="text-align: left" *ngFor="let employee of department.Employees">
+        <div class="row" *ngIf="employee.EmployeeRole != admin()">
+          <div class="col-md-4" *ngIf="isAdmin()">
+            <button class="btn btn-sm btn-danger" (click)="delete(employee.Id)">
+              <i class="fa fa-trash-o" aria-hidden="true"></i>
+            </button>
+            <button class="btn btn-sm btn-warning" (click)="edit(employee)">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="col-md-8"  (click)="goToCalendar(employee)">
+            <div class="employeeDiv" style="margin: 5px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; float: left">
+              <i *ngIf="!isAdmin()" class="fa fa-user" aria-hidden="true"></i><b> {{employee.FirstName}} {{employee.LastName}}</b>
+            </div>
+          </div>
         </div>
       </div>
     </nav>

@@ -7,6 +7,7 @@ import {AbsenceService} from '../../../services/absence.service';
 import {Absence} from '../../../entities/absence';
 import {UniversalErrorCatcherComponent} from '../../Errors/universal-error-catcher/universal-error-catcher.component';
 import {StatusDeleteComponent} from '../status-delete/status-delete.component';
+import {StatusEditComponent} from '../status-edit/status-edit.component';
 
 @Component({
   selector: 'app-status-list',
@@ -76,7 +77,7 @@ export class StatusListComponent implements OnInit {
   deleteStatus(status: Status){
     let absenceWithStatus = this.absences.find(x => x.Status.Id === status.Id);
     if(absenceWithStatus){
-      let dialogRef = this.dialog.open(UniversalErrorCatcherComponent, {
+      this.dialog.open(UniversalErrorCatcherComponent, {
         data: {
           errorMessage: '  Denne fraværskode er i brug og kan derfor ikke slettes.  ',
           errorHandler: '  Deaktiver fraværskoden i stedet.',
@@ -95,5 +96,21 @@ export class StatusListComponent implements OnInit {
         else return;
       });
     }
+  }
+
+  editStatus(status: Status){
+    let dialogRef = this.dialog.open(StatusEditComponent, {
+      data: {
+        status: status,
+        statusList: this.statusList
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result != null){
+        this.statusService.put(result).subscribe( () => {
+          this.initData();
+        });
+      }
+    });
   }
 }

@@ -39,6 +39,7 @@ export class ToolbarComponent implements OnInit {
       this.formatHolidayYearSpecs(hys);
       this.setHolidayYearSpecList(hys);
       this.getCurrentHolidayYearSpec();
+      this.checkForUpdates();
     })
   }
 
@@ -48,6 +49,22 @@ export class ToolbarComponent implements OnInit {
       return true;
     }
     else return false;
+  }
+
+  checkForUpdates(){
+    if(this.currentHolidayYearSpec != null){
+      this.holidayYearSpecService.getById(this.currentHolidayYearSpec.Id).subscribe(hys => {
+        if(hys.HolidayYears.length != this.currentHolidayYearSpec.HolidayYears.length){
+          console.log('test');
+          //this.setCurrentHolidayYearSpec(hys);
+          //this.getCurrentHolidayYearSpec();
+        }
+      });
+    }
+  }
+
+  setCurrentHolidayYearSpec(holidayYearSpec: HolidayYearSpec){
+    sessionStorage.setItem('currentHolidayYearSpec', JSON.stringify(holidayYearSpec));
   }
 
   getCurrentHolidayYearSpec(){
@@ -121,7 +138,7 @@ export class ToolbarComponent implements OnInit {
   }
 
   toStatusAdministration(){
-    this.router.navigateByUrl('status');
+    this.router.navigate(['status/']);
   }
 
   /**

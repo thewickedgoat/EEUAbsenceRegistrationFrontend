@@ -27,12 +27,7 @@ export class AbsenceOverviewControllerComponent implements OnInit {
   @Input()
   holidayYear: HolidayYear;
   @Input()
-  holidayYearSpecs: HolidayYearSpec[];
-  @Input()
   currentHolidayYearSpec: HolidayYearSpec;
-
-  @Output()
-  emitter = new EventEmitter();
 
   statuses: Status[];
 

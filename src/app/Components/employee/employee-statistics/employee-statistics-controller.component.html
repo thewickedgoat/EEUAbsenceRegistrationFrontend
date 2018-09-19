@@ -1,7 +1,7 @@
 <div class="container outerShell">
   <div class="row" style="text-align: center">
     <div class="col-sm-12">
-      <h1><b><strong>Fraværsoversigt for {{holidayYearStart}} - {{holidayYearStart+1}}</strong></b></h1>
+      <h2><b><strong>Fraværsoversigt for ferieåret {{selectedHolidayYearSpec.Name}}</strong></b></h2>
       <div>
         <button type="button" class="btn btn-primary" (click)="toggleMonthYear()">
           {{toggleButtonText}}
@@ -9,7 +9,7 @@
       </div>
     </div>
   </div>
-  <div class="col-sm-12 innerShell">
+  <div class="col-sm-12 innerShell" style="box-shadow: 10px 10px 10px rgba(0,0,0,0.50);">
     <div class="col-md-12 innerFiller">
 
     </div>
@@ -85,10 +85,10 @@
         <div class="row" *ngFor="let department of departments">
           <div class="col-md-12 department">
             <div class="row">
-              <div class="col-md-8">
+              <div class="col-md-3">
                 <b><strong>{{department.Name}}</strong></b>
               </div>
-              <div *ngIf="monthView && isPermitted(department) && monthSelected" class="col-md-4" style="text-align: right">
+              <div *ngIf="monthView && isPermitted(department) && monthSelected && employeesInHolidayYear(department) > 0" class="col-md-4" style="text-align: right">
                 <button class="btn btn-info" (click)="approveMonthForDepartment(department)">Godkend afdeling</button>
               </div>
             </div>

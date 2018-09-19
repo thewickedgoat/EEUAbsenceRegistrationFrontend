@@ -76,31 +76,12 @@
                    [ngClass]="{'is-invalid': passwordCheckIsInvalid('passwordCheck'), 'is-valid': passwordCheckIsValid('passwordCheck')}"
                    placeholder="Skriv adgangskode igen"
                    formControlName="passwordCheck">
-            <!--<a *ngIf="!isNotEditable && showPassword === false" class="btn btn-outline-info" (click)="hideShowPassword()">Vis adgangskode</a>-->
-            <input *ngIf="showPassword === true" class="form-control"
-                   placeholder="Skriv adgangskode igen"
-                   [ngClass]="{'is-invalid': passwordCheckIsInvalid('passwordCheck'), 'is-valid': passwordCheckIsValid('passwordCheck')}"
-                   formControlName="passwordCheck">
-            <a *ngIf="!isNotEditable && showPassword === true" class="btn btn-info" (click)="hideShowPassword()">Skjul adgangskode</a>
             <div *ngIf="passwordCheckIsInvalid('passwordCheck')" class="invalid-feedback">
               <div >
                 Adgangskoderne skal matche
               </div>
             </div>
           </label>
-          <!--<label class="center-block col-md-12">Adgangskode:
-            <input class="form-control"
-                   type="password"
-                   id="password"
-                   placeholder="Adgangskode her"
-                   [ngClass]="{'is-invalid': nameIsInvalid('password'), 'is-valid': nameIsValid('password')}"
-                   formControlName="password">
-            <div *ngIf="nameIsInvalid('password')" class="invalid-feedback">
-              <div *ngIf="employeeGroup.controls['password'].errors">
-                Du skal angive en adgangskode.
-              </div>
-            </div>
-          </label>-->
           <label class="center-block col-md-12">Vælg en rolle:
             <select class="form-control"
                     [ngClass]="{'is-invalid': nameIsInvalid('employeeRole'), 'is-valid': nameIsValid('employeeRole')}"

@@ -14,7 +14,7 @@ import {MonthService} from '../../../services/month.service';
   selector: 'app-employee-statistics-controller',
   templateUrl: './employee-statistics-controller.component.html',
   styleUrls: ['./employee-statistics-controller.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.Emulated
 })
 export class EmployeeStatisticsControllerComponent implements OnInit {
 
@@ -89,6 +89,17 @@ export class EmployeeStatisticsControllerComponent implements OnInit {
     return months;
   }
 
+  employeesInHolidayYear(department: Department){
+    let numberOfEmployees = 0;
+    if(department.Employees != null){
+      for(let employee of department.Employees){
+        if(this.employeeIsInCurrentHolidayYear(employee)){
+          numberOfEmployees++;
+        }
+      }
+    }
+    return numberOfEmployees;
+  }
 
   employeeIsInCurrentHolidayYear(employee: Employee){
     const holidayYears = employee.HolidayYears;
@@ -106,9 +117,14 @@ export class EmployeeStatisticsControllerComponent implements OnInit {
 
   getCurrentMonthForEmployee(employee: Employee, monthNumber: number){
     const currentHolidayYear = this.getHolidayYearForEmployee(employee);
-    this.formatMonthDate(currentHolidayYear);
-    const month = currentHolidayYear.Months.find(x => x.MonthDate.getMonth() === monthNumber);
-    return month;
+    if(currentHolidayYear != null){
+      this.formatMonthDate(currentHolidayYear);
+      const month = currentHolidayYear.Months.find(x => x.MonthDate.getMonth() === monthNumber);
+      if(month != null){
+        return month;
+      }
+    }
+    else return null;
   }
 
   getHolidayYearForEmployee(employee: Employee){
@@ -117,7 +133,10 @@ export class EmployeeStatisticsControllerComponent implements OnInit {
       holidayYear.CurrentHolidayYear.StartDate = this.dateformatingService.formatDate(holidayYear.CurrentHolidayYear.StartDate);
     }
     const currentHolidayYear = holidayYears.find(x => x.CurrentHolidayYear.Id === this.selectedHolidayYearSpec.Id);
-    return currentHolidayYear;
+    if(currentHolidayYear != null){
+      return currentHolidayYear;
+    }
+    else return null;
   }
 
   approveMonthForDepartment(department: Department){

@@ -1,0 +1,26 @@
+<div class="container" style="width: 500px">
+  <div class="row">
+    <h3 class="test">Rediger navn på fraværskoden: <b>{{status.StatusCode}}</b></h3>
+  </div>
+  <hr>
+  <form [formGroup]="statusGroup" (submit)="editStatus()" novalidate>
+    <label class="center-block col-md-12"><b>Angiv nyt navn: </b>
+      <input class="form-control"
+             formControlName="statusName"
+             placeholder="Nyt navn her"
+             [ngClass]="{'is-invalid': nameIsInvalid('statusName'), 'is-valid': nameIsValid('statusName')}">
+      <div *ngIf="nameIsInvalid('statusName')" class="invalid-feedback">
+        <div *ngIf="statusGroup.controls['statusName'].errors">
+          Du skal angive et navn
+        </div>
+      </div>
+      <div *ngIf="statusNameIsInvalid('statusName')" class="invalid-feedback">
+        Der eksisterer allerede en fraværskode med dette navn
+      </div>
+    </label>
+    <div class="row">
+      <button [disabled]="statusGroup.invalid" class="btn btn-success" type="submit">Ændre</button>
+      <button class="btn btn-danger" type="button" (click)="close()">Afbryd</button>
+    </div>
+  </form>
+</div>

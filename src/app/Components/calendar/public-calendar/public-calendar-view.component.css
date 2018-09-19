@@ -16,6 +16,14 @@
   cursor: pointer;
 }
 
+.nameOverflow.a:hover{
+  overflow: visible;
+}
+
+.nameOfTwoOverflow.a:hover{
+  overflow: visible;
+}
+
 .name .tooltiptext {
   visibility: hidden;
   width: 120px;
@@ -60,6 +68,7 @@
   text-align: center;
   background: white;
   border: 2px;
+  font-size: small;
   border-style: solid;
   border-color: #020203;
   width: 28px;
@@ -81,6 +90,7 @@
   text-align: center;
   background: #98FB98;
   border: 2px;
+  font-size: small;
   border-style: solid;
   border-color: #020203;
   width: 28px;

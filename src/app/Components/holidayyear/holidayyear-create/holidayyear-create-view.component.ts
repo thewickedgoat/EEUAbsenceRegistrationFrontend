@@ -41,7 +41,7 @@ export class HolidayyearCreateViewComponent implements OnInit {
     const dateToParse = this.holidayYearGroup.controls[controlName].value;
     const date = new Date(Date.parse(dateToParse));
     if(date.getDate().toString() != 'NaN' && date.getMonth().toString() != 'Nan' && date.getFullYear().toString() != 'NaN'){
-      return dateToParse.invalid && (dateToParse.dirty || dateToParse.touched);
+      return !dateToParse.invalid && (dateToParse.dirty || dateToParse.touched);
     }
   }
 
@@ -58,7 +58,6 @@ export class HolidayyearCreateViewComponent implements OnInit {
     const startDate = new Date(values.dateStart);
     const endDate = new Date(values.dateEnd);
     const name = values.name;
-    console.log(name);
     const holidayYears = new Array<HolidayYear>();
     const publicHolidays = new Array<PublicHoliday>();
     const newHolidayYear: HolidayYearSpec = {

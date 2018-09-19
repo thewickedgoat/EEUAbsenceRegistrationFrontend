@@ -5,31 +5,31 @@
 
     <ul id="menu-content" class="menu-content collapse out">
       <li *ngIf="!isAdmin()" (click)="toCalendar()">
-        <a><i class="fa fa-calendar fa-lg"></i> Min Fraværskalender </a>
+        <a><i class="fa fa-calendar fa-lg"></i> <b><strong>Min Fraværskalender</strong></b> </a>
       </li>
       <li (click)="toPublicCalendar()">
-        <a><i class="fa fa-home fa-lg"></i> Månedskalender</a>
+        <a><i class="fa fa-home fa-lg"></i> <b><strong>Månedskalender</strong> </b></a>
       </li>
       <li (click)="toStats()">
-        <a ><i class="fa fa-bar-chart fa-lg"></i> Oversigter </a>
+        <a ><i class="fa fa-bar-chart fa-lg"></i> <b><strong>Oversigter</strong></b> </a>
       </li>
       <li (click)="toEmployees()">
-        <a ><i class="fa fa-users fa-lg"></i> Medarbejdere </a>
+        <a ><i class="fa fa-users fa-lg"></i> <b><strong>Medarbejdere</strong></b> </a>
       </li>
       <li *ngIf="!isAdmin()" (click)="toEmployeeProfile()">
-        <a><i class="fa fa-id-card-o" aria-hidden="true"></i> Min Profil </a>
+        <a><i class="fa fa-id-card-o" aria-hidden="true"></i> <b><strong>Min Profil</strong></b> </a>
       </li>
       <li *ngIf="isAdmin()" (click)="toEmployeeProfile()">
-        <a><i class="fa fa-id-card-o" aria-hidden="true"></i> Admin Profil </a>
+        <a><i class="fa fa-id-card-o" aria-hidden="true"></i> <b><strong>Admin Profil</strong></b> </a>
       </li>
       <li *ngIf="isAdmin()" (click)="toHolidayYearAdministration()">
-        <a ><i class="fa fa-wrench fa-lg"></i> Ferieårsadministration </a>
+        <a ><i class="fa fa-wrench fa-lg"></i> <b><strong>Ferieårsadministration</strong></b> </a>
       </li>
       <li *ngIf="isAdmin()" (click)="toStatusAdministration()">
-        <a><i class="fa fa-barcode fa-lg"></i> Fraværskodeoversigt </a>
+        <a><i class="fa fa-barcode fa-lg"></i> <b><strong>Fraværskodeoversigt</strong></b> </a>
       </li>
       <li>
-        <a><i class="fa fa-list-alt fa-lg"></i> Valgte Ferieår </a>
+        <a><i class="fa fa-list-alt fa-lg"></i> <b><strong>Valgte Ferieår</strong></b> </a>
         <div class="col-lg-12" style="text-align: center">
           <select #t (change)="selectHolidayYear(t.value)">
             <option disabled selected> -- Vælg ferieår --</option>
@@ -38,7 +38,7 @@
         </div>
       </li>
       <li (click)="logOut()">
-        <a><i class="fa fa-sign-out fa-lg"></i> Logud </a>
+        <a><i class="fa fa-sign-out fa-lg"></i> <b><strong>Log ud</strong></b> </a>
       </li>
     </ul>
   </div>

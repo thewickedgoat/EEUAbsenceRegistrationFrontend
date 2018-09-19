@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Inject, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {Employee} from '../../../entities/Employee';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {WorkfreeDay} from '../../../entities/workfreeDay';
 import {EmployeeRole} from '../../../entities/employeeRole.enum';
@@ -24,26 +24,33 @@ export class WorkfreedaysCreateViewComponent implements OnInit {
     this.workfreedayGroup = this.formBuilder.group({
       dateStart: ['', Validators.required],
       dateEnd: ['', Validators.required],
-    });
+      weekday: ['', Validators.required],
+    }, {validator: this.startAndEndDate});
   }
 
   ngOnInit() {
     this.employee = this.data.employee;
   }
 
+  startAndEndDate(AC: AbstractControl){
+    let dateStart = AC.get('dateStart').value;
+    let dateEnd = AC.get('dateEnd').value;
+    if(dateStart != '' && dateEnd != ''){
+      if(dateStart > dateEnd){
+        AC.get('dateEnd').setErrors({DateStartError: true});
+      }
+    }
+  }
+
   createWorkfreeDay(): void{
     const values = this.workfreedayGroup.value;
     const startDate = new Date(values.dateStart);
     const endDate = new Date(values.dateEnd);
-    endDate.setHours(3,0,0)
-    console.log(endDate);
+    endDate.setHours(3,0,0);
     const name = this.dayNames[this.dayNumber];
     let dateToCreate = startDate;
-    console.log(dateToCreate);
-    console.log('start');
     let datesToCreate = new Array<Date>();
     do{
-      console.log(dateToCreate);
       if(dateToCreate.getDay() === this.dayNumber){
         const workfreeDayDate = new Date(dateToCreate);
         datesToCreate.push(workfreeDayDate);
@@ -51,8 +58,6 @@ export class WorkfreedaysCreateViewComponent implements OnInit {
       dateToCreate.setDate(dateToCreate.getDate()+1);
     }
     while (dateToCreate <= endDate);
-    console.log('end');
-    console.log(dateToCreate);
     let workfreeDays = new Array<WorkfreeDay>();
     const employee: Employee = {
       Id: this.employee.Id,
@@ -78,5 +83,23 @@ export class WorkfreedaysCreateViewComponent implements OnInit {
   setDay(t){
     const id = parseInt(t);
     this.dayNumber = id;
+  }
+
+  isInvalid(controlName: string){
+    const control = this.workfreedayGroup.controls[controlName];
+    return control.invalid && (control.dirty || control.touched);
+  }
+
+  isValid(controlName: string){
+    const control = this.workfreedayGroup.controls[controlName];
+    return !control.invalid && (control.dirty || control.touched);
+  }
+
+  endDateIsValid(){
+    const values = this.workfreedayGroup.value;
+    if(values.dateEnd != ''){
+      return true;
+    }
+    else return false;
   }
 }

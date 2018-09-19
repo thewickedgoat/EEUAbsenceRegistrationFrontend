@@ -8,7 +8,6 @@ import {EmployeeService} from '../../../services/employee.service';
 import {HolidayYearSpec} from '../../../entities/holidayYearSpec';
 import {Department} from '../../../entities/department';
 import {EmployeeRole} from '../../../entities/employeeRole.enum';
-import {PublicHoliday} from '../../../entities/publicholiday';
 
 @Component({
   selector: 'app-public-calendar',
@@ -28,6 +27,7 @@ export class PublicCalendarComponent implements OnInit {
   currentMonthDate: Date;
   daysInCurrentMonth: Date[];
   currentEmployee: Employee;
+  powerOfTwo: boolean = false;
 
   constructor(private router: Router,
               private route: ActivatedRoute,
@@ -73,6 +73,17 @@ export class PublicCalendarComponent implements OnInit {
       dateToIterate.setMonth(dateToIterate.getMonth()+1);
     }
     while(dateToIterate < endDate);
+  }
+
+  getPowerOfTwo(){
+    if(this.powerOfTwo){
+      this.powerOfTwo = false;
+      return 0;
+    }
+    else if(!this.powerOfTwo){
+      this.powerOfTwo = true;
+      return 1;
+    }
   }
 
   employeeIsInCurrentHolidayYear(employee: Employee){

@@ -11,7 +11,6 @@ import {HolidayYearSpecService} from '../../../services/holidayyearspec.service'
 import {DepartmentDeleteDialogComponent} from '../../department/department-delete-dialog/department-delete-dialog.component';
 import {UniversalErrorCatcherComponent} from '../../Errors/universal-error-catcher/universal-error-catcher.component';
 import {AuthenticationService} from '../../../services/authentication.service';
-import {PublicHoliday} from '../../../entities/publicholiday';
 
 
 @Component({
@@ -24,7 +23,6 @@ export class EmployeeListComponent implements OnInit {
 
   loggedInUser: Employee;
   departments: Department[];
-  employees: Employee[];
 
   constructor(private employeeService: EmployeeService,
               private departmentService: DepartmentService,
@@ -57,9 +55,13 @@ export class EmployeeListComponent implements OnInit {
   }
 
 
-  deleteEmployeeFromDepartment(employeeId: number): void{
-    let employee = this.employees.find(x => x.Id === employeeId);
-    let dialogRef = this.dialog.open(EmployeeDeleteDialogComponent, {data: {employee: employee}});
+  deleteEmployeeFromDepartment(employeeId: number, department: Department): void{
+    let employee = department.Employees.find(x => x.Id === employeeId);
+    let dialogRef = this.dialog.open(EmployeeDeleteDialogComponent, {
+      data: {
+        employee: employee
+      }
+    });
     dialogRef.afterClosed().subscribe(result => {
       if(result === true){
         this.deleteEmployeeFromList(employeeId);

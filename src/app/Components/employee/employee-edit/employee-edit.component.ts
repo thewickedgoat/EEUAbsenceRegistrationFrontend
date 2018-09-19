@@ -23,6 +23,7 @@ import {UniversalErrorCatcherComponent} from '../../Errors/universal-error-catch
 })
 export class EmployeeEditComponent implements OnInit {
   currentHolidayYearSpec: HolidayYearSpec;
+  resetPassword: boolean;
   isNotEditable: boolean;
   employeeUpdated: boolean;
   employee: Employee;
@@ -33,7 +34,9 @@ export class EmployeeEditComponent implements OnInit {
   loggedInUser: Employee;
   employeeWorkfreeDaysInYear: WorkfreeDay[];
   emails: string[] = [];
+  usernames: string[] = [];
   currentEmail: string;
+  currentUsername: string;
   currentRole: number;
   employees: Employee[];
   constructor(private location: Location,
@@ -65,8 +68,10 @@ export class EmployeeEditComponent implements OnInit {
       email: [{value: '', disabled: this.isNotEditable}, Validators.required],
       password: [{value: '', disabled: this.isNotEditable}, Validators.required],
       passwordCheck: [{value: this.employee.Password, disabled: this.isNotEditable}, Validators.required],
+      changePassword: [{value: this.employee.PasswordReset, disabled: this.isNotEditable}, Validators.required],
       employeeRole:[{value: '', disabled: this.isNotEditable}, Validators.required],
-      department: [{value: '', disabled: this.isNotEditable}, Validators.required]
+      department: [{value: '', disabled: this.isNotEditable}, Validators.required],
+      note: [{value: this.employee.Note, disabled: this.isNotEditable}]
     }, {validator: this.matchPassword}
     );
   }
@@ -75,14 +80,16 @@ export class EmployeeEditComponent implements OnInit {
     this.route.paramMap.switchMap(params => this.employeeService.getById(+params.get('id')))
       .subscribe(employee => {
         this.employee = employee;
+        this.resetPassword = this.employee.PasswordReset;
         this.currentEmail = employee.Email;
-        this.currentRole = EmployeeRole.Administrator;
+        this.currentUsername = employee.UserName;
+        this.currentRole = this.loggedInUser.EmployeeRole;
         this.createFormgroup();
         this.getHolidayYearSpec();
         this.formatHolidayYearStartEnd();
         this.formatWorkfreeDays();
         this.getWorkfreeDaysInHolidayYear(this.employee.WorkfreeDays);
-        this.getAlreadyExistingEmails();
+        this.getAlreadyExistingEmailsAndUsernames();
       });
     this.departmentService.getAll().subscribe(departments => {
       this.departments = departments;
@@ -92,14 +99,17 @@ export class EmployeeEditComponent implements OnInit {
   /**
    * Creates a list of all emails created in the employees
    */
-  getAlreadyExistingEmails(){
+  getAlreadyExistingEmailsAndUsernames(){
     let alreadyExistingEmails = new Array<string>();
+    let alreadyExistingUsernames = new Array<string>();
     this.employeeService.getAll().subscribe(emps => {
       this.employees = emps;
       for(let emp of emps){
         alreadyExistingEmails.push(emp.Email);
+        alreadyExistingUsernames.push(emp.UserName);
       }
       this.emails = alreadyExistingEmails;
+      this.usernames = alreadyExistingUsernames;
     });
   }
 
@@ -149,33 +159,57 @@ export class EmployeeEditComponent implements OnInit {
     else return false;
   }
 
+  doesUsernameAlreadyExist(username: string){
+    if(username === this.currentUsername){
+      return false;
+    }
+    let usernameDuplicate = this.usernames.find(x => x === username);
+    if(usernameDuplicate != null){
+      return true;
+    }
+    else return false;
+  }
+
   /**
    * Updates the employee
    */
   updateEmployee(){
     const values = this.employeeGroup.value;
+    this.employee.PasswordReset = values.changePassword;
     this.employee.UserName = this.employee.UserName.toLowerCase();
     let department = this.departments.find( x => x.Name === values.department);
     if(department != null){
       this.employee.Department = department;
     }
     if(this.doesEmailAlreadyExist(values.email)){
-      let dialogRef = this.dialog.open(UniversalErrorCatcherComponent, {
+      this.dialog.open(UniversalErrorCatcherComponent, {
         data: {
           errorMessage: 'Den angivne email eksisterer allerede på en anden bruger.',
           errorHandler: 'Angiv en unik email.',
           multipleOptions: false
         }
       });
+      return;
+    }
+    if(this.doesUsernameAlreadyExist(values.userName)){
+      this.dialog.open(UniversalErrorCatcherComponent, {
+        data: {
+          errorMessage: 'Dette brugernavn eksisterer allerede på en anden bruger.',
+          errorHandler: 'Angiv et unikt brugernavn.',
+          multipleOptions: false
+        }
+      });
+      return;
     }
     if(this.isLastAdmin()){
-      let dialogRef = this.dialog.open(UniversalErrorCatcherComponent, {
+      this.dialog.open(UniversalErrorCatcherComponent, {
         data: {
           errorMessage: 'Denne bruger er i øjeblikket den eneste aktive Administrator.',
           errorHandler: 'Der skal være mindst en anden administrator for at kunne ændre dette.',
           multipleOptions: false
         }
       });
+      return;
     }
     else{
       this.authenticationService.update(this.employee).subscribe(() => {
@@ -185,6 +219,8 @@ export class EmployeeEditComponent implements OnInit {
       });
     }
   }
+
+
 
   /**
    * The system can't operate without an Admin
@@ -262,10 +298,12 @@ export class EmployeeEditComponent implements OnInit {
     this.employeeGroup.controls['email'].enable();
     this.employeeGroup.controls['password'].enable();
     this.employeeGroup.controls['passwordCheck'].enable();
+    this.employeeGroup.controls['changePassword'].enable();
     if(this.isAdmin()){
       this.employeeGroup.controls['userName'].enable();
       this.employeeGroup.controls['employeeRole'].enable();
       this.employeeGroup.controls['department'].enable();
+      this.employeeGroup.controls['note'].enable();
     }
     this.isNotEditable = false;
 
@@ -279,10 +317,12 @@ export class EmployeeEditComponent implements OnInit {
     this.employeeGroup.controls['lastName'].disable();
     this.employeeGroup.controls['email'].disable();
     this.employeeGroup.controls['password'].disable();
+    this.employeeGroup.controls['changePassword'].disable();
     if(this.isAdmin()){
       this.employeeGroup.controls['userName'].disable();
       this.employeeGroup.controls['employeeRole'].disable();
       this.employeeGroup.controls['department'].disable();
+      this.employeeGroup.controls['note'].disable();
     }
     setTimeout(() =>{
       this.isNotEditable = true;

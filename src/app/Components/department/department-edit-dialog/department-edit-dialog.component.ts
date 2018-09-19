@@ -27,7 +27,6 @@ export class DepartmentEditDialogComponent implements OnInit {
 
   create(){
     const values = this.formGroup.value;
-    console.log(values.changeName);
     if(values.changeName === '' || values.changeName === ' '){
       this.dialogRef.close();
     }

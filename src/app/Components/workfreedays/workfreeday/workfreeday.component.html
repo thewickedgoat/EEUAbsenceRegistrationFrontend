@@ -1,7 +1,7 @@
 <div class="container">
   <div class="col-sm-12" style="text-align: center"><h3><strong>Arbejdsfridage</strong></h3></div>
   <div>
-    <nav style="background-color: white; height: 400px; width: 300px; overflow-y: scroll">
+    <nav style="box-shadow: 10px 10px 10px rgba(0,0,0,0.50); border-style: solid; border-width: 1px; background-color: white; height: 400px; width: 300px; overflow-y: scroll">
       <ul *ngIf="employee">
         <li *ngFor="let workfreeDay of currentWorkfreeDayList" style="margin: 5px">{{workfreeDay.Name}} - {{workfreeDay.Date | date: 'dd/MM/yyyy'}}
           <button class="btn btn-danger btn-sm" (click)="delete(workfreeDay.Id)"><i class="fa fa-trash" aria-hidden="true"></i></button></li>

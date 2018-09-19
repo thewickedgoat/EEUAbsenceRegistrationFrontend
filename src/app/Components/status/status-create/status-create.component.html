@@ -1,4 +1,4 @@
-<div class="container" style="width: 400px;">
+<div class="container" style="width: 400px">
   <div class="row">
     <h2 class="test">Opret en fraværskode</h2>
   </div>
@@ -22,15 +22,15 @@
              formControlName="statusCode"
              [ngClass]="{'is-invalid': nameIsInvalid('statusCode'), 'is-valid': nameIsValid('statusCode')}">
       <div *ngIf="nameIsInvalid('statusCode')" class="invalid-feedback">
-        <div *ngIf="statusGroup.controls['statusCode'].errors">
-          Du skal angive et kode
+        <div *ngIf="statusGroup.controls['statusCode'].errors['NotEntered']">
+          Du skal angive en kode
+        </div>
+        <div *ngIf="statusGroup.controls['statusCode'].errors['TooLong']">
+          Fraværskoder må ikke være længere end 3 tegn
         </div>
       </div>
       <div *ngIf="statusCodeIsInvalid('statusCode')" class="invalid-feedback">
         Der eksisterer allerede en fraværskode med denne kode
-      </div>
-      <div *ngIf="statusCodeLengthIsInvalid('statusCode')" class="invalid-feedback">
-        Fraværskoder må ikke være længere end 3 tegn
       </div>
     </label>
     <div class="row">

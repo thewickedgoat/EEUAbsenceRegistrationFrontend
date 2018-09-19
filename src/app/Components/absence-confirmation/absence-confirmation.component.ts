@@ -36,8 +36,6 @@ export class AbsenceConfirmationComponent implements OnInit {
   isMonthApprovedByCEO: boolean;
   isMonthApprovedByAdmin: boolean;
 
-  closingOrOpening = false;
-
 
   constructor(private monthService: MonthService) {
 

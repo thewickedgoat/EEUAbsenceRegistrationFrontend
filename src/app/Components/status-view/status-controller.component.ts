@@ -35,7 +35,6 @@ export class StatusControllerComponent implements OnInit {
    */
   setStatus(status){
     if(status != null && status != true && status != false){
-      console.log('test');
       this.emitter.emit(status);
     }
     else  {

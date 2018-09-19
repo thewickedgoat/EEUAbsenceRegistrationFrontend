@@ -11,13 +11,19 @@
         <li *ngFor="let holidayYear of data.holidayYears">{{holidayYear.Employee.FirstName}} {{holidayYear.Employee.LastName}}</li>
       </ul>
     </nav>
-    <div class="row">
-      <label><b>Vil du slette alligevel?</b></label>
-    </div>
-    <div class="row">
-      <button class="btn btn-danger" (click)="delete()">Slet</button>
-      <button class="btn btn-success" (click)="cancel()">Annuller</button>
-    </div>
+    <form [formGroup]="formGroup" (ngSubmit)="delete()" novalidate>
+      <div class="row">
+        <label class="center-block col-md-12"><b>Skriv "SLET NU" for at slette</b>
+          <input class="form-control"
+                 [ngClass]="{'is-valid': deleteIsValid('confirmDelete')}"
+                 formControlName="confirmDelete">
+        </label>
+      </div>
+      <div class="row">
+        <button [disabled]="!deleteIsValid('confirmDelete')" class="btn btn-danger" type="submit" (click)="delete()">Slet</button>
+        <button class="btn btn-success" type="button" (click)="cancel()">Annuller</button>
+      </div>
+    </form>
   </div>
   <div *ngIf="!hasData">
     <div class="row">

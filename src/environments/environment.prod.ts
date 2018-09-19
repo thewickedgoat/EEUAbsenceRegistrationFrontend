@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  apiEndPoint: 'https://eeudatabase20180621115928.azurewebsites.net/api/', //'http://localhost:51017/api/',
-  tokenEndpoint: 'https://eeudatabase20180621115928.azurewebsites.net/token',
+  apiEndPoint: 'https://xn--eeufravrdatabase-0ob.azurewebsites.net/api/', //https://xn--eeufravrdatabase-0ob.azurewebsites.net/api/
+  tokenEndpoint: 'https://xn--eeufravrdatabase-0ob.azurewebsites.net', //https://xn--eeufravrdatabase-0ob.azurewebsites.net
   jwt () {
     const token = sessionStorage.getItem('token');
     if(token != null && token.length > 0) {

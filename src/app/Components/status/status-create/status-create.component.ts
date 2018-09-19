@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit, ViewEncapsulation} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Status} from '../../../entities/status';
 
 @Component({
@@ -20,12 +20,24 @@ export class StatusCreateComponent implements OnInit {
     this.statusGroup = this.formbuilder.group({
       statusName: ['', Validators.required],
       statusCode: ['', Validators.required],
-    });
+    }, {validator: this.statusValidator});
   }
 
   ngOnInit() {
   }
 
+
+  statusValidator(AC: AbstractControl){
+    let codeName = AC.get('statusCode').value;
+    const maxLength = 3;
+    if(codeName.length > maxLength){
+      AC.get('statusCode').setErrors({TooLong: true})
+    }
+    if(codeName.length === 0){
+      AC.get('statusCode').setErrors({NotEntered: true});
+    }
+    else return null;
+  }
 
   close(){
     this.dialogRef.close(null);
@@ -38,7 +50,6 @@ export class StatusCreateComponent implements OnInit {
       StatusCode: values.statusCode,
       IsDisabled: false
     };
-    console.log(status);
     this.dialogRef.close(status);
   }
 
@@ -56,9 +67,7 @@ export class StatusCreateComponent implements OnInit {
     const statusCode = this.statusGroup.controls[controlName];
     if(this.statusList != null || this.statusList.length <= 0){
       let value = statusCode.value;
-      console.log(value);
       const duplicateCode = this.statusList.find(x => x.StatusCode === value);
-      console.log(duplicateCode);
       if(duplicateCode === undefined){
         return false;
       }
@@ -67,15 +76,6 @@ export class StatusCreateComponent implements OnInit {
       }
     }
     return false;
-  }
-
-  statusCodeLengthIsInvalid(controlName: string){
-    const statusCode = this.statusGroup.controls[controlName];
-    const maxLength = 3;
-    if(statusCode.value.length > maxLength){
-      return true;
-    }
-    else return false;
   }
 
   statusNameIsInvalid(controlName: string){

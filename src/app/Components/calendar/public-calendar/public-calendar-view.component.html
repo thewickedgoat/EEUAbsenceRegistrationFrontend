@@ -1,16 +1,16 @@
 <div *ngIf="absencesInCurrentMonth != null" (click)="goToCalendar()">
   <div class="row">
-    <div *ngIf="isPowerOfTwo()" class="col-md-2 nameOfTwo">
-      <div><b>  {{employee.FirstName}} {{employee.LastName}}</b></div>
-      <span class="tooltiptext"><i class="fa fa-calendar" aria-hidden="true"></i> Gå til {{employee.FirstName}}'s kalender</span>
+    <div *ngIf="isPowerOfTwo()" class="col-md-2 nameOfTwo" style="box-shadow: 10px 10px 10px rgba(0,0,0,0.50);">
+      <div class="nameOfTwoOverflow" style="width : 150px; overflow:hidden; display:inline-block; text-overflow: ellipsis; white-space: nowrap;"><b>{{employee.FirstName}} {{employee.LastName}}</b></div>
+      <span class="tooltiptext"><i class="fa fa-calendar" aria-hidden="true"></i> Gå til {{employee.FirstName}} {{employee.LastName}}'s kalender</span>
     </div>
-    <div *ngIf="!isPowerOfTwo()" class="col-md-2 name">
-      <div><b>  {{employee.FirstName}} {{employee.LastName}}</b></div>
-      <span class="tooltiptext"><i class="fa fa-calendar" aria-hidden="true"></i> Gå til {{employee.FirstName}}'s kalender</span>
+    <div *ngIf="!isPowerOfTwo()" class="col-md-2 name" style="box-shadow: 10px 10px 10px rgba(0,0,0,0.50);">
+      <div class="nameOverflow" style="width : 150px; overflow:hidden; display:inline-block; text-overflow: ellipsis; white-space: nowrap;"><a><b>{{employee.FirstName}} {{employee.LastName}}</b></a></div>
+      <span class="tooltiptext"><i class="fa fa-calendar" aria-hidden="true"></i> Gå til {{employee.FirstName}} {{employee.LastName}}'s kalender</span>
     </div>
     <div class="col-md-10" >
       <div class="row">
-        <div *ngFor="let day of daysInCurrentMonth">
+        <div *ngFor="let day of daysInCurrentMonth" style="box-shadow: 10px 10px 10px rgba(0,0,0,0.50);">
           <div *ngIf="day.getDay() != 0 && day.getDay() !=6 && isPowerOfTwo() && !isDateLocked(day)" class="weekDayBoxOfTwo" >
             <b>{{getAbsenceCode(day.getFullYear(), day.getMonth(), day.getDate())}}</b>
           </div>

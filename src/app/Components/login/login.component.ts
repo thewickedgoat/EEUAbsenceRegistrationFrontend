@@ -15,6 +15,7 @@ import {DateformatingService} from '../../services/dateformating.service';
 })
 export class LoginComponent implements OnInit {
 
+  emailNotFound: boolean = false;
   loginError: boolean = false;
   loginGroup: FormGroup;
   changePasswordGroup: FormGroup;
@@ -70,6 +71,11 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  noEmailFound(){
+    this.emailNotFound = true;
+    setTimeout(() => {this.emailNotFound = false}, 3000)
+  }
+
   /**
    * Resets the password
    */
@@ -77,10 +83,12 @@ export class LoginComponent implements OnInit {
     let email = this.forgotPasswordGroup.controls['email'].value;
     this.authenticationService.resetPassword(email).subscribe( result => {
       this.toggleForgotPassword();
-        if(result === true){
-          this.passwordIsSent = true;
-          setTimeout(() => {this.passwordIsSent = false}, 3000)
-        }
+      this.passwordIsSent = true;
+      setTimeout(() => {this.passwordIsSent = false}, 3000)
+    }, error => {
+      if(error.status.toString() === '404'){
+        this.noEmailFound();
+      }
     });
   }
 
@@ -108,7 +116,7 @@ export class LoginComponent implements OnInit {
       this.loggingIn = true;
       setTimeout(() => {
         this.employeeService.getAll().subscribe(employees => {
-          let employeeToLogin = employees.find(x => x.UserName === username);
+          let employeeToLogin = employees.find(x => x.UserName.toLowerCase() === username.toLowerCase());
           if(employeeToLogin.PasswordReset === true){
             this.changingPassword = true;
             this.employeeToLogin = employeeToLogin;
@@ -117,7 +125,7 @@ export class LoginComponent implements OnInit {
           else {
             sessionStorage.setItem('currentEmployee', JSON.stringify(employeeToLogin));
             this.setSelectedHolidayYearSpec();
-            this.router.navigateByUrl(this.returnUrl);
+            this.router.navigate([this.returnUrl]);
           }
         });
       }, 1500);
@@ -198,7 +206,7 @@ export class LoginComponent implements OnInit {
   }
 
   /**
-   * Checks for input validation
+   * Input validation
    * @param controlName
    * @returns {boolean}
    */
@@ -208,7 +216,7 @@ export class LoginComponent implements OnInit {
   }
 
   /**
-   * Checks for input validation
+   * Input validation
    * @param controlName
    * @returns {boolean}
    */

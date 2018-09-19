@@ -38,26 +38,21 @@
             [absencesInCurrentMonth]="currentMonth.AbsencesInMonth"
           [holidayYearEnd]="currentHolidayYearSpec.EndDate"
           [holidayYearStart]="currentHolidayYearSpec.StartDate"
-          [holidayYearSpecs]="holidayYearSpecs"
-          [currentHolidayYearSpec]="currentHolidayYearSpec"
-          (emitter)="selectHolidayYear($event)"></app-absence-overview-controller>
+          [currentHolidayYearSpec]="currentHolidayYearSpec"></app-absence-overview-controller>
         </div>
         <div  class="btn btn-success" (click)="back()">
           Tilbage
         </div>
       </div>
       <div class="col-sm-7" style="text-align: center" *ngIf="amountOfWeeksInCurrentMonth">
-        <div *ngIf="!firstMonthInHolidayYear" class="btn btn-info" type="button" (click)="previousMonth()">
+        <div class="col-sm-3" *ngIf="!firstMonthInHolidayYear" class="btn btn-info" type="button" (click)="previousMonth()">
           Forrige
         </div>
-        <b>{{monthNames[currentMonth.MonthDate.getMonth()]}} {{currentMonth.MonthDate.getFullYear()}}</b>
-        <div *ngIf="!lastMonthInHolidayYear" class="btn btn-info" type="button" (click)="nextMonth()">
+        <b class="col-sm-6" style="width: 100%">{{monthNames[currentMonth.MonthDate.getMonth()]}} {{currentMonth.MonthDate.getFullYear()}}</b>
+        <div class="col-sm-3" *ngIf="!lastMonthInHolidayYear" class="btn btn-info" type="button" (click)="nextMonth()">
           Næste
         </div>
-        <div class="row">
-          <div class="WeekEndDay col-sm-1">
-            <p>Søn</p>
-          </div>
+        <div style="background-color: #2e353d;" class="row">
           <div class="WeekDay col-sm-2">
             <p>Man</p>
           </div>
@@ -76,11 +71,15 @@
           <div class="WeekEndDay col-sm-1">
             <p>Lør</p>
           </div>
+          <div class="WeekEndDay col-sm-1">
+            <p>Søn</p>
+          </div>
         </div>
       <app-calendar-view
       [currentMonth]="currentMonth"
       [weeks]="weeks"
       [datesInWeeks]="datesInWeeks"
+      [daysInCurrentMonth]="daysInCurrentMonth"
       [amountOfWeeksInCurrentMonth]="amountOfWeeksInCurrentMonth"
       [isMonthLocked]="isMonthLocked"
       [status]="status"
@@ -95,6 +94,7 @@
       [isCEO]="isCEO"
       [isAdmin]="isAdmin"
       [lockDay]="lockDay"
+      [currentHolidayYearSpecHasChanged]="currentHolidayYearSpecHasChanged"
       (deleteHoliday)="deleteHoliday($event)"
       (updateHoliday)="updateHoliday($event)"
       (emitter)="reloadHolidayYearAndMonth()"

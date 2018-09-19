@@ -23,9 +23,9 @@
       <div class="container">
         <div class="col-sm-12" style="text-align: center"><h3><strong>Medarbejdere</strong></h3></div>
        <div>
-         <nav style="background-color: white; height: 650px; width: 100%; overflow-y: auto">
+         <nav style="box-shadow: 10px 10px 10px rgba(0,0,0,0.50); border-style: solid; border-width: 1px; background-color: white; height: 650px; width: 100%; overflow-y: auto">
            <ul class="menu" *ngIf="employees != null">
-             <li class="menu" *ngFor="let employee of employees" (click)="selectEmployee(employee.Id)">{{employee.FirstName}} {{employee.LastName}}</li>
+             <li class="menu" *ngFor="let employee of employees" (click)="selectEmployee(employee.Id)"><b>{{employee.FirstName}} {{employee.LastName}}</b></li>
            </ul>
          </nav>
        </div>

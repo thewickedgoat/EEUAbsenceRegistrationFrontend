@@ -1,5 +1,5 @@
 <app-toolbar></app-toolbar>
-<div class="container" *ngIf="loggedInUser != null">
+<div class="container mainPage" *ngIf="loggedInUser != null">
   <div class="row">
     <hr>
   </div>
@@ -15,10 +15,10 @@
   </div>
   <hr>
   <div class="row">
-    <div style="text-align: center; background-color: grey; border-style: solid; margin: 5px;" *ngFor="let department of departments">
+    <div style="text-align: center; background-color: grey; border-style: solid; margin: 5px; box-shadow: 10px 10px 10px rgba(0,0,0,0.50);" *ngFor="let department of departments">
       <div class="col-xl-12">
         <app-department [department]="department"
-                        (deleteEmployeeEmitter)="deleteEmployeeFromDepartment($event)"
+                        (deleteEmployeeEmitter)="deleteEmployeeFromDepartment($event, department)"
                         (deleteDepartmentEmitter)="deleteDepartment($event)"
                         (updateDepartmentEmitter)="updateDepartment($event)"
         ></app-department>
