@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import {Absence} from '../entities/absence';
 import {environment} from '../../environments/environment';
+import {ResponseContentType, ResponseType} from '@angular/http';
 
 const url = environment.apiEndPoint + 'absence/';
 
@@ -32,5 +33,13 @@ export class AbsenceService {
     return this.http.get<Absence[]>(url + 'GetInterval/' + '?startDate=' + startDate.toLocaleDateString('ko-KR') + '&endDate=' + endDate.toLocaleDateString('ko-KR'),
       {headers: new HttpHeaders().set('Authorization', 'Bearer ' + environment.jwt())});
 
+  }
+
+  getExcel(): Observable<any>{
+    return this.http.get('http://localhost:51017/api/Excel/GetExcel', {responseType: 'blob', observe: "response", headers: new HttpHeaders().set('Authorization', 'Bearer ' + environment.jwt())});
+  }
+
+  getText(): Observable<any>{
+    return this.http.get('http://localhost:51017/api/Excel/GetText', {responseType: 'blob', observe: "response", headers: new HttpHeaders().set('Authorization', 'Bearer ' + environment.jwt())});
   }
 }

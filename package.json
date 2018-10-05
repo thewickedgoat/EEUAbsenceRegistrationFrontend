@@ -28,6 +28,7 @@
     "bootstrap": "4.0.0-beta",
     "classlist.js": "^1.1.20150312",
     "core-js": "2.4.1",
+    "file-saver": "^2.0.0-rc.3",
     "font-awesome": "4.7.0",
     "jquery": "3.3.1",
     "kuduscript": "^1.0.17",

@@ -11,6 +11,8 @@ import {HolidayYearSpecService} from '../../../services/holidayyearspec.service'
 import {DepartmentDeleteDialogComponent} from '../../department/department-delete-dialog/department-delete-dialog.component';
 import {UniversalErrorCatcherComponent} from '../../Errors/universal-error-catcher/universal-error-catcher.component';
 import {AuthenticationService} from '../../../services/authentication.service';
+import {AbsenceService} from '../../../services/absence.service';
+import saveAs from 'file-saver';
 
 
 @Component({
@@ -28,6 +30,7 @@ export class EmployeeListComponent implements OnInit {
               private departmentService: DepartmentService,
               private holidayYearSpecService: HolidayYearSpecService,
               private authenticationService: AuthenticationService,
+              private absenceService: AbsenceService,
               private router: Router,
               private dialog: MatDialog) {
 
@@ -37,13 +40,43 @@ export class EmployeeListComponent implements OnInit {
       this.initData();
   }
 
+  test() {
+    this.absenceService.getExcel().subscribe(response => {
+      if(response){
+        console.log(response.headers.get('Content-Disposition'));
+        let contentDispositionHeader = response.headers.get('Content-Disposition');
+        let result = contentDispositionHeader.split(';')[1].trim().split('=')[1];
+        //console.log(result.replace(/"/g, ''));
+        console.log(response.body);
+        console.log(response);
+        let file = new Blob([response.body], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        console.log(file);
+        saveAs(file, result);
+      }
+    });
+  }
+
+
+  test2(){
+    this.absenceService.getText().subscribe(response => {
+      if(response){
+        console.log(response);
+        console.log(response.headers());
+        let file = new Blob([<any>response], { type: 'application/octet-stream' });
+        //saveAs(file, 'Test.txt');
+      }
+    });
+  }
+
   /**
    * Based on the ID of the emitted method, deletes an employee with the given Id
    * @param id
    */
   deleteEmployeeFromList(id: number){
     this.authenticationService.delete(id).subscribe();
-    this.employeeService.delete(id).subscribe(()=> this.initData());
+    this.employeeService.delete(id).subscribe(data => {
+      this.initData();
+    });
   }
 
   /**
